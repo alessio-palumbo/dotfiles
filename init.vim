@@ -9,22 +9,60 @@ call plug#begin("~/.config/nvim/plugged")
  Plug 'scrooloose/nerdtree'
  Plug 'ryanoasis/vim-devicons'
  Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+ "  Plug 'Xuyuanp/nerdtree-git-plugin'
+
+ " Vinegar
+ " Plug 'tpope/vim-vinegar'
 
  " Fuzzy search
  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
  Plug 'junegunn/fzf.vim'
-
- " Grep
- Plug 'yegappan/grep'
 
  " Git
  Plug 'tpope/vim-fugitive'
 
  " Git diff and more
  Plug 'airblade/vim-gitgutter'
- 
+
+ " Unix commands
+  Plug 'tpope/vim-eunuch'
+
+ " Autopair
+ Plug 'jiangmiao/auto-pairs'
+ " System Shortcuts:
+ " <CR>  : Insert new indented line after return if cursor in blank brackets or quotes.
+ " <BS>  : Delete brackets in pair
+ " <M-p> : Toggle Autopairs (g:AutoPairsShortcutToggle)
+ " <M-e> : Fast Wrap (g:AutoPairsShortcutFastWrap)
+ " <M-n> : Jump to next closed pair (g:AutoPairsShortcutJump)
+ " <M-b> : BackInsert (g:AutoPairsShortcutBackInsert)
+ " If <M-p> <M-e> or <M-n> conflict with another keys or want to bind to another keys, add
+ " let g:AutoPairsShortcutToggle = '<another key>'
+ " to .vimrc, if the key is empty string '', then the shortcut will be disabled.
+
+ " Multi line selection/editing
+ Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+ " Basic usage:
+ " select words with Ctrl-N (like Ctrl-d in Sublime Text/VS Code)
+ " create cursors vertically with Ctrl-Down/Ctrl-Up
+ " select one character at a time with Shift-Arrows
+ " press n/N to get next/previous occurrence
+ " press [/] to select next/previous cursor
+ " press q to skip current and get next occurrence
+ " press Q to remove current cursor/selection
+ " start insert mode with i,a,I,A
+
  " Surrounding text
  Plug 'tpope/vim-surround'
+ " Examples:
+ " cs"'   => changes " to '
+ " cs'<q> => changes ' to <q>, cst' => revert tag to '
+ " ds"    => removes delimiters
+ " ysiw]  => wraps entire word with ] (use [ to add space in between)
+ " cs]}   => changes ] to } (use { to aadd space in between
+ " yssb/yss) => wraps entire line in ) (use ( to add space in between)
+ " ysiw<em>  => wraps entire word in between <em> tags
+ " V+S<p class="important"> => wraps entire sentence in <p> tag
 
  " Comment code
  Plug 'scrooloose/nerdcommenter'
@@ -32,12 +70,22 @@ call plug#begin("~/.config/nvim/plugged")
  Plug 'vim-airline/vim-airline'
 
  " Parenthesis
- Plug 'junegunn/rainbow_parentheses.vim'
+ " Plug 'junegunn/rainbow_parentheses.vim'
+ Plug 'luochen1990/rainbow'
+ let g:rainbow_active = 1
 
  " Indenting
  Plug 'yggdroot/indentline'
 
- "change"
+ " Trailing space
+ Plug 'bronson/vim-trailing-whitespace'
+ " Usage: FixWhitespace to clear all
+
+ " # Emmet html/css/js
+ " Plug 'mattn/emmet-vim'
+ " # Css colours
+ " Plug 'ap/vim-css-color'
+
  " Code completion
  Plug 'neoclide/coc.nvim', {'branch': 'release'}
  let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver']
@@ -51,36 +99,37 @@ call plug#begin("~/.config/nvim/plugged")
 
 call plug#end()
 
-" --------------------------------------------- 
+" ---------------------------------------------
 " ### Config Section ###
-" --------------------------------------------- 
+" ---------------------------------------------
 
-" ---------------------------------------------  
+" ---------------------------------------------
 " ### Enable theming support
-" ---------------------------------------------  
+" ---------------------------------------------
 if (has("termguicolors"))
  set termguicolors
 endif
 
-" ---------------------------------------------  
+" ---------------------------------------------
 " ### Theme
-" ---------------------------------------------  
-syntax enable 
+" ---------------------------------------------
+syntax enable
 colorscheme molokai
 highlight Normal guibg=black guifg=white
 
 " ---------------------------------------------
 " Rainbow parens
 " ---------------------------------------------
-let g:rainbow#max_level = 16
-let g:rainbow#pairs = [['(', ')'], ['[', ']']]
+" # Junegunn configs
+"let g:rainbow#max_level = 16
+"let g:rainbow#pairs = [['(', ')'], ['[', ']']]
+"" List of colors that you do not want. ANSI code or #RRGGBB
+"let g:rainbow#blacklist = [233, 234]
 
-" List of colors that you do not want. ANSI code or #RRGGBB
-let g:rainbow#blacklist = [233, 234]
 
-" ---------------------------------------------  
+" ---------------------------------------------
 " ### Navigation
-" ---------------------------------------------  
+" ---------------------------------------------
 set tabstop=4
 set shiftwidth=4
 "set softtabstop=4
@@ -107,21 +156,22 @@ nnoremap <silent> <CR> :nohlsearch<CR><CR>
 "nnoremap j gj
 "nnoremap k gk
 
-" --------------------------------------------- 
-" ### General settins
+" ---------------------------------------------
+" ### General settings
 " ---------------------------------------------
 " When editing a file, always jump to the last cursor position
 
 autocmd BufReadPost *
 \ if ! exists("g:leave_my_cursor_position_alone") |
-\ if line("'\"") > 0 && line ("'\"") <= line("$") |
+\ if line("'\"") > 0 && line ("'\"") <= line("$") | " use relative number in normal mode
 \ exe "normal g'\"" |
 \ endif |
 \ endif
 
 " Remove highlighting or matched parens which is pretty congfusing
 " let loaded_matchparen = 1
-hi MatchParen ctermbg=blue guibg=lightblue term=none cterm=none gui=italic
+" Invert current paren  highlighting as it is confusing
+hi MatchParen ctermfg=blue ctermbg=black guifg=lightblue guibg=black term=none cterm=none gui=italic
 "-- Whitespace highlight --
 " match ExtraWhitespace /\s\+$/
 " autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
@@ -129,9 +179,9 @@ hi MatchParen ctermbg=blue guibg=lightblue term=none cterm=none gui=italic
 " autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 " autocmd BufWinLeave * call clearmatches()
 
-" ---------------------------------------------  
+" ---------------------------------------------
 " ### File explorer configs - Ctrl+B toggle (nerdreee & vim-devicons)
-" ---------------------------------------------  
+" ---------------------------------------------
 
 let g:NERDTreeShowHidden = 1
 let g:NERDTreeMinimalUI = 1
@@ -144,9 +194,15 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 nnoremap <silent> <C-b> :NERDTreeToggle<CR>
 
 let g:airline_powerline_fonts = 1
-" ---------------------------------------------  
+" ---------------------------------------------
 " ### Split panes
-" ---------------------------------------------  
+" ---------------------------------------------
+
+" Notes:
+" * use :vs# to reopen the last closed split
+" * use :<C w> + the following to change windows position:
+"   * <C hjkl> to move the current window in the given direction
+"   * <C r> to rotate windows
 
 " open new split panes to right and below
 set splitright
@@ -166,9 +222,9 @@ nnoremap <A-j> <C-w>j
 nnoremap <A-k> <C-w>k
 nnoremap <A-l> <C-w>l
 
-" ---------------------------------------------  
-" ### Integrated terminal - Ctrl+N 
-" ---------------------------------------------  
+" ---------------------------------------------
+" ### Integrated terminal - Ctrl+N
+" ---------------------------------------------
 
 " start terminal in insert mode
 au BufEnter * if &buftype == 'terminal' | :startinsert | endif
@@ -178,27 +234,37 @@ function! OpenTerminal()
   split term://zsh
   resize 10
 endfunction
-nnoremap <c-n> :call OpenTerminal()<CR>
+nnoremap tt :call OpenTerminal()<CR>
 
 " turn terminal to normal mode with escape
 tnoremap <Esc> <C-\><C-n>
 
-" ---------------------------------------------  
-" Fzf - Ctrl+P to search 
-" ---------------------------------------------  
+" ---------------------------------------------
+" Fzf - Ctrl+P to search
+" ---------------------------------------------
 
-nnoremap <C-p> :FZF<CR>
+" nnoremap <C-p> :FZF<CR>
+nnoremap f :FZF<CR>
+nnoremap F :FZF<Space>
+
+" change default floating window to bottom split
+" let g:fzf_layout = { 'down': '~40%' }
+
 let g:fzf_action = {
   \ 'ctrl-t': 'tab split',
   \ 'ctrl-s': 'split',
   \ 'ctrl-v': 'vsplit'
   \}
 
-" require silversearcher-ag
-" used to ignore gitignore files
-let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 
-" --------------------------------------------- 
+" # require silversearcher-ag
+" used to ignore gitignore files
+" let $FZF_DEFAULT_COMMAND = 'ag -g ""'
+" # require ripgrep
+" let $FZF_DEFAULT_COMMAND = 'rg --files --no-ignore-vcs --hidden'
+let $FZF_DEFAULT_COMMAND = 'rg --files --follow --hidden -g !.git'
+
+" ---------------------------------------------
 " ### coc.vim default settings
 " ---------------------------------------------
 
@@ -229,11 +295,11 @@ endfunction
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
 
-" Use `[c` and `]c` to navigate diagnostics
+" Use `[c` and /`]c` to navigate diagnostics
 nmap <silent> [c <Plug>(coc-diagnostic-prev)
 nmap <silent> ]c <Plug>(coc-diagnostic-next)
 
-" Remap keys for gotos
+" Remap keys for gotos (Use <C-o> to go back, <C-i> to go next)
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
@@ -320,6 +386,8 @@ vnoremap cm :call NERDComment(0,"toggle")<CR>
 " ---------------------------------------------
 
 let g:gitgutter_set_sign_backgrounds = 0
+nmap ]g <Plug>(GitGutterNextHunk)
+nmap [g <Plug>(GitGutterPrevHunk)
 
 " ---------------------------------------------
 "  ### NERDTree
@@ -345,10 +413,10 @@ call NERDTreeHighlightFile('coffee', 'Red', 'none', 'red', '#151515')
 call NERDTreeHighlightFile('js', 'Red', 'none', '#ffa500', '#151515')
 call NERDTreeHighlightFile('php', 'Magenta', 'none', '#ff00ff', '#151515')
 
-" ---------------------------------------------                           
+" ---------------------------------------------
 " - Syntax highlighting is enabled by default
 " - ":filetype plugin indent on" is enabled by default
-" 
+"
 " - 'autoindent' is enabled
 " - 'autoread' is enabled
 " - 'background' defaults to "dark" (unless set automatically by the terminal/UI)
