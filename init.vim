@@ -76,7 +76,21 @@ call plug#begin("~/.config/nvim/plugged")
  let g:rainbow_active = 1
 
  " Indenting
- Plug 'yggdroot/indentline'
+ " Plug 'yggdroot/indentline'
+ " let g:indentLine_setConceal = 0
+ " let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+
+ " Use <Leader>ig to toggle (current mapping: nmap <silent> <Leader>ig <Plug>IndentGuidesTogglebu)
+ Plug 'nathanaelkane/vim-indent-guides'
+ " let g:indent_guides_enabled_on_vim_startup = 1
+ let g:indent_guides_guide_size = 1
+ " let g:indent_guides_auto_colors = 0
+ " autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#00005f   ctermbg=17
+ " autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#000087 ctermbg=18
+ " autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd guibg=#0087df ctermbg=32
+ " autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#005f00 ctermbg=33
+ " hi x017_NavyBlue ctermfg=17 guifg=#00005f
+" hi x018_DarkBlue ctermfg=18 guifg=#000087
 
  " Trailing space
  Plug 'bronson/vim-trailing-whitespace'
@@ -90,6 +104,9 @@ call plug#begin("~/.config/nvim/plugged")
  " Code completion
  Plug 'neoclide/coc.nvim', {'branch': 'release'}
  let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver']
+
+ " Tags
+ " Plug 'vim-scripts/taglist.vim'
 
  " Go plugin
  Plug 'fatih/vim-go'
@@ -107,6 +124,7 @@ call plug#end()
 " ---------------------------------------------
 " ### Enable theming support
 " ---------------------------------------------
+
 if (has("termguicolors"))
  set termguicolors
 endif
@@ -114,6 +132,7 @@ endif
 " ---------------------------------------------
 " ### Theme
 " ---------------------------------------------
+
 syntax enable
 colorscheme molokai
 highlight Normal guibg=black guifg=white
@@ -121,23 +140,31 @@ highlight Normal guibg=black guifg=white
 " ---------------------------------------------
 " Rainbow parens
 " ---------------------------------------------
+
 " # Junegunn configs
 "let g:rainbow#max_level = 16
 "let g:rainbow#pairs = [['(', ')'], ['[', ']']]
 "" List of colors that you do not want. ANSI code or #RRGGBB
 "let g:rainbow#blacklist = [233, 234]
 
-
 " ---------------------------------------------
 " ### Navigation
 " ---------------------------------------------
+
 set tabstop=4
 set shiftwidth=4
 "set softtabstop=4
 "set expandtab=4
 
+" # File specific rules
+ autocmd FileType json setlocal ts=2 sw=2 expandtab
+
 " Remap escape
 inoremap jk <Esc>
+
+" Map save to vscode ctrl+s
+inoremap <silent> <C-s> <Esc>:w<Cr>
+nnoremap <silent> <C-s> :w<Cr>
 
 " set diffopt+=verical
 set cursorline " highlight line the curson is on
@@ -154,14 +181,14 @@ set number relativenumber
 nnoremap <silent> <CR> :nohlsearch<CR><CR>
 
 " Remap up and down to avoid skipping wrapped lines
-"nnoremap j gj
-"nnoremap k gk
+nnoremap j gj
+nnoremap k gk
 
 " ---------------------------------------------
 " ### General settings
 " ---------------------------------------------
-" When editing a file, always jump to the last cursor position
 
+" When editing a file, always jump to the last cursor position
 autocmd BufReadPost *
 \ if ! exists("g:leave_my_cursor_position_alone") |
 \ if line("'\"") > 0 && line ("'\"") <= line("$") | " use relative number in normal mode
@@ -173,6 +200,17 @@ autocmd BufReadPost *
 " let loaded_matchparen = 1
 " Invert current paren  highlighting as it is confusing
 hi MatchParen ctermfg=blue ctermbg=black guifg=lightblue guibg=black term=none cterm=none gui=italic
+
+" Use persistent history.
+" if !isdirectory("/tmp/.vim-undo-dir")
+    " call mkdir("/tmp/.vim-undo-dir", "", 0700)
+" endif
+" set undodir=/tmp/.vim-undo-dir
+set undofile
+set noswapfile
+set ignorecase "ignore case when searching
+set smartcase  "ignore case unless a capital letter is used
+
 "-- Whitespace highlight --
 " match ExtraWhitespace /\s\+$/
 " autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
@@ -250,7 +288,7 @@ function! OpenTerminal()
   split term://zsh
   resize 10
 endfunction
-nnoremap tt :call OpenTerminal()<CR>
+nnoremap <silent> tt :call OpenTerminal()<CR>
 
 " turn terminal to normal mode with escape
 tnoremap <Esc> <C-\><C-n>
