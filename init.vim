@@ -10,6 +10,8 @@ call plug#begin("~/.config/nvim/plugged")
  Plug 'ryanoasis/vim-devicons'
  Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
  "  Plug 'Xuyuanp/nerdtree-git-plugin'
+
+ " Delete buffers
  Plug 'moll/vim-bbye'
 
  " Vinegar
@@ -103,7 +105,7 @@ call plug#begin("~/.config/nvim/plugged")
 
  " Code completion
  Plug 'neoclide/coc.nvim', {'branch': 'release'}
- let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver']
+ let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-eslint']
 
  " Tags
  " Plug 'vim-scripts/taglist.vim'
@@ -157,7 +159,7 @@ set shiftwidth=4
 "set expandtab=4
 
 " # File specific rules
- autocmd FileType json setlocal ts=2 sw=2 expandtab
+autocmd FileType json setlocal ts=2 sw=2 expandtab
 
 " Remap escape
 inoremap jk <Esc>
@@ -165,6 +167,9 @@ inoremap jk <Esc>
 " Map save to vscode ctrl+s
 inoremap <silent> <C-s> <Esc>:w<Cr>
 nnoremap <silent> <C-s> :w<Cr>
+
+" Put a line break under the cursor
+nnoremap <silent> <leader>n i<Cr><Esc>
 
 " set diffopt+=verical
 set cursorline " highlight line the curson is on
@@ -178,11 +183,21 @@ set number relativenumber
 :augroup END
 
 " use enter to clear search highlighting
-nnoremap <silent> <CR> :nohlsearch<CR><CR>
+nnoremap <silent> <CR> :nohlsearch<CR>
 
 " Remap up and down to avoid skipping wrapped lines
 nnoremap j gj
 nnoremap k gk
+
+" Shortcut to open init.vim
+nnoremap <silent> <leader>cf :e $MYVIMRC<CR>
+
+" Clear whitespace
+nnoremap <silent> <leader>ww :FixWhitespace<CR>
+
+" Copy\Paste clip shortcuts
+vnoremap <silent> <leader>y "+y
+nnoremap <silent> <leader>p "+p
 
 " ---------------------------------------------
 " ### General settings
@@ -195,6 +210,10 @@ autocmd BufReadPost *
 \ exe "normal g'\"" |
 \ endif |
 \ endif
+
+" Set local directory to the pwd of the open buffer. (This allows both
+" terminal and NERDTree to sync with the current file)
+autocmd BufEnter * silent! lcd %:p:h
 
 " Remove highlighting or matched parens which is pretty congfusing
 " let loaded_matchparen = 1
@@ -218,6 +237,10 @@ set smartcase  "ignore case unless a capital letter is used
 " autocmd InsertLeave * match ExtraWhitespace /\s\+$/
 " autocmd BufWinLeave * call clearmatches()
 
+" TODO AutoPairs plugin - Do not use on vim files to avoid commented line to
+" collapse on each other when deleting a comment
+" au FileType vim let b:AutoPairs = ''
+
 " ---------------------------------------------
 " ### File explorer configs - Ctrl+B toggle (nerdreee & vim-devicons)
 " ---------------------------------------------
@@ -231,6 +254,10 @@ let g:NERDTreeStatusline = ''
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " Toggle
 nnoremap <silent> <C-b> :NERDTreeToggle<CR>
+
+" ---------------------------------------------
+"  ### Airline + Tabline
+" ---------------------------------------------
 
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
@@ -246,7 +273,15 @@ nmap <leader>7 <Plug>AirlineSelectTab7
 nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
 
-nnoremap <Leader>q :Bdelete<CR>
+" nnoremap <silent> <Leader>q :Bdelete<CR>
+function! DeleteBuffer()
+    if &buftype ==# 'terminal'
+        Bdelete!
+    else
+        Bdelete
+    endif
+endfunction
+map <silent> <leader>q :call DeleteBuffer()<CR>
 
 " ---------------------------------------------
 " ### Split panes
@@ -257,6 +292,8 @@ nnoremap <Leader>q :Bdelete<CR>
 " * use :<C w> + the following to change windows position:
 "   * <C hjkl> to move the current window in the given direction
 "   * <C r> to rotate windows
+"   * <C q> to close the current split
+"   * <C o> to close all split but the current one (:on has the same effect)
 
 " open new split panes to right and below
 set splitright
@@ -283,23 +320,33 @@ nnoremap <A-l> <C-w>l
 " start terminal in insert mode
 au BufEnter * if &buftype == 'terminal' | :startinsert | endif
 
-" open terminal on ctrl+n
+" Open terminal split in current directory
 function! OpenTerminal()
   split term://zsh
-  resize 10
+  resize 15
 endfunction
-nnoremap <silent> tt :call OpenTerminal()<CR>
+" let $LOCAL_DIR=expand('%:p:h')
+nnoremap <silent> ts :call OpenTerminal()<CR>
+
+" start terminal in new buffer
+nnoremap <silent> tt :edit term://zsh<CR>
+
+" add terminal to tab list
+let g:airline#extensions#tabline#ignore_bufadd_pat = '!defx|gundo|nerd_tree|startify|tagbar|undotree|vimfiler'
 
 " turn terminal to normal mode with escape
 tnoremap <Esc> <C-\><C-n>
 
 " ---------------------------------------------
-" Fzf - Ctrl+P to search
+" ### Fzf
 " ---------------------------------------------
 
-" nnoremap <C-p> :FZF<CR>
-nnoremap f :FZF<CR>
-nnoremap F :FZF<Space>
+" ff => current dir, fh => home dir, fr => root dir
+nnoremap ff :FZF<CR>
+nnoremap fh :FZF $HOME<CR>
+nnoremap fr :FZF /<CR>
+" # require silversearcher-ag
+nnoremap fg :Ag<CR>
 
 " change default floating window to bottom split
 " let g:fzf_layout = { 'down': '~40%' }
@@ -310,13 +357,11 @@ let g:fzf_action = {
   \ 'ctrl-v': 'vsplit'
   \}
 
-
-" # require silversearcher-ag
-" used to ignore gitignore files
-" let $FZF_DEFAULT_COMMAND = 'ag -g ""'
 " # require ripgrep
 " let $FZF_DEFAULT_COMMAND = 'rg --files --no-ignore-vcs --hidden'
 let $FZF_DEFAULT_COMMAND = 'rg --files --follow --hidden -g !.git'
+" TODO add preview
+" let g:fzf_preview_window = ['right:50%', 'ctrl-/']
 
 " ---------------------------------------------
 " ### coc.vim default settings
@@ -386,6 +431,16 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 " ---------------------------------------------
+" ### Coc-plugins
+" ---------------------------------------------
+
+" #### MarkMap (Currently not working)
+" Create markmap from the whole file
+nmap <Leader>m <Plug>(coc-markmap-create)
+" Create markmap from the selected lines
+vmap <Leader>m <Plug>(coc-markmap-create-v)
+
+" ---------------------------------------------
 " ### vim-go
 " ---------------------------------------------
 
@@ -427,15 +482,6 @@ autocmd FileType go nmap <leader>r  <Plug>(go-run)
 autocmd FileType go nmap <leader>t  <Plug>(go-test)
 
 " ---------------------------------------------
-" ### Add spaces after comment delimiters by default
-" ---------------------------------------------
-" Add spaces after comment delimiters by default
-let g:NERDSpaceDelims = 1
-" Remap comment toggle
-nnoremap <silent> cm :call NERDComment(0,"toggle")<CR>
-vnoremap <silent> cm :call NERDComment(0,"toggle")<CR>
-
-" ---------------------------------------------
 "  ### git gutter
 " ---------------------------------------------
 
@@ -445,10 +491,20 @@ nmap ]g <Plug>(GitGutterNextHunk)
 nmap [g <Plug>(GitGutterPrevHunk)
 
 " ---------------------------------------------
+" ### NERDCommenter
+" ---------------------------------------------
+
+" Add spaces after comment delimiters by default
+let g:NERDSpaceDelims = 1
+" Remap comment toggle
+nnoremap <silent> cm :call NERDComment(0,"toggle")<CR>
+vnoremap <silent> cm :call NERDComment(0,"toggle")<CR>
+
+" ---------------------------------------------
 "  ### NERDTree
 " ---------------------------------------------
 
-" NERDTress File highlighting
+" NERDTree File highlighting
 function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
  exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
  exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
@@ -468,6 +524,8 @@ call NERDTreeHighlightFile('coffee', 'Red', 'none', 'red', '#151515')
 call NERDTreeHighlightFile('js', 'Red', 'none', '#ffa500', '#151515')
 call NERDTreeHighlightFile('php', 'Magenta', 'none', '#ff00ff', '#151515')
 
+" ---------------------------------------------
+" ############ Neovim Defaults #############
 " ---------------------------------------------
 " - Syntax highlighting is enabled by default
 " - ":filetype plugin indent on" is enabled by default
