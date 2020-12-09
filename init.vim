@@ -29,6 +29,18 @@ call plug#begin("~/.config/nvim/plugged")
 
  " Unix commands
   Plug 'tpope/vim-eunuch'
+" :Delete: Delete a buffer and the file on disk simultaneously.
+" :Unlink: Like :Delete, but keeps the now empty buffer.
+" :Move: Rename a buffer and the file on disk simultaneously.
+" :Rename: Like :Move, but relative to the current file's containing directory.
+" :Chmod: Change the permissions of the current file.
+" :Mkdir: Create a directory, defaulting to the parent of the current file.
+" :Cfind: Run find and load the results into the quickfix list.
+" :Clocate: Run locate and load the results into the quickfix list.
+" :Lfind/:Llocate: Like above, but use the location list.
+" :Wall: Write every open window. Handy for kicking off tools like guard.
+" :SudoWrite: Write a privileged file with sudo.
+" :SudoEdit: Edit a privileged file with sudo.
 
  " Autopair
  Plug 'jiangmiao/auto-pairs'
@@ -276,7 +288,11 @@ nmap <leader>9 <Plug>AirlineSelectTab9
 " nnoremap <silent> <Leader>q :Bdelete<CR>
 function! DeleteBuffer()
     if &buftype ==# 'terminal'
+		let current_window = winnr()
         Bdelete!
+        " Remove current split after closing a split terminal, unless it's the
+        " main window.
+		if (current_window != 1 && winnr() == current_window) | q! | endif
     else
         Bdelete
     endif
