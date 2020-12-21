@@ -113,7 +113,7 @@ call plug#begin("~/.config/nvim/plugged")
  " # Emmet html/css/js
  " Plug 'mattn/emmet-vim'
  " # Css colours
- " Plug 'ap/vim-css-color'
+ Plug 'ap/vim-css-color'
 
  " Code completion
  Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -123,7 +123,7 @@ call plug#begin("~/.config/nvim/plugged")
  " Plug 'vim-scripts/taglist.vim'
 
  " Go plugin
- Plug 'fatih/vim-go'
+ Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
  " Rust
  Plug 'rust-lang/rust.vim'
@@ -170,7 +170,14 @@ set shiftwidth=4
 "set softtabstop=4
 "set expandtab=4
 
-" # File specific rules
+" Keep editing line in the center of the screen
+augroup VCenterCursor
+  au!
+  au BufEnter,WinEnter,WinNew,VimResized *,*.*
+        \ let &scrolloff=winheight(win_getid())/2
+augroup END
+
+" File specific rules
 autocmd FileType json setlocal ts=2 sw=2 expandtab
 
 " Remap escape
@@ -241,6 +248,7 @@ set undofile
 set noswapfile
 set ignorecase "ignore case when searching
 set smartcase  "ignore case unless a capital letter is used
+set title titlestring=%<%F titlelen=70
 
 "-- Whitespace highlight --
 " match ExtraWhitespace /\s\+$/
@@ -352,6 +360,26 @@ let g:airline#extensions#tabline#ignore_bufadd_pat = '!defx|gundo|nerd_tree|star
 
 " turn terminal to normal mode with escape
 tnoremap <Esc> <C-\><C-n>
+
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+" ----------------------------------
+" let g:terminal_color_0  = '#2e3436'
+" let g:terminal_color_1  = '#cc0000'
+" let g:terminal_color_2  = '#4e9a06'
+" let g:terminal_color_3  = '#c4a000'
+let g:terminal_color_4  = '#22A9F1'
+" let g:terminal_color_5  = '#75507b'
+" let g:terminal_color_6  = '#0b939b'
+" let g:terminal_color_7  = '#d3d7cf'
+" let g:terminal_color_8  = '#555753'
+" let g:terminal_color_9  = '#ef2929'
+" let g:terminal_color_10 = '#8ae234'
+" let g:terminal_color_11 = '#fce94f'
+" let g:terminal_color_12 = '#729fcf'
+" let g:terminal_color_13 = '#ad7fa8'
+" let g:terminal_color_14 = '#00f5e9'
+" let g:terminal_color_15 = '#eeeeec'
+" ----------------------------------
 
 " ---------------------------------------------
 " ### Fzf
@@ -480,6 +508,10 @@ let g:go_fmt_command = "goimports"
 
 " Status line types/signatures
 let g:go_auto_type_info = 1
+
+" Add go pls support
+let g:go_def_mode='gopls'
+let g:go_info_mode='gopls'
 
 " Run :GoBuild or :GoTestCompile based on the go file
 function! s:build_go_files()
