@@ -179,6 +179,7 @@ augroup END
 
 " File specific rules
 autocmd FileType json setlocal ts=2 sw=2 expandtab
+autocmd FileType go setlocal ts=8 sw=8
 
 " Remap escape
 inoremap jk <Esc>
