@@ -28,7 +28,7 @@ call plug#begin("~/.config/nvim/plugged")
  Plug 'airblade/vim-gitgutter'
 
  " Unix commands
-  Plug 'tpope/vim-eunuch'
+ Plug 'tpope/vim-eunuch'
 " :Delete: Delete a buffer and the file on disk simultaneously.
 " :Unlink: Like :Delete, but keeps the now empty buffer.
 " :Move: Rename a buffer and the file on disk simultaneously.
@@ -117,7 +117,7 @@ call plug#begin("~/.config/nvim/plugged")
 
  " Code completion
  Plug 'neoclide/coc.nvim', {'branch': 'release'}
- let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-eslint']
+ let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-eslint', 'coc-git']
 
  " Tags
  " Plug 'vim-scripts/taglist.vim'
@@ -128,6 +128,16 @@ call plug#begin("~/.config/nvim/plugged")
  " Rust
  Plug 'rust-lang/rust.vim'
  " Plug 'racer-rust/vim-racer'
+
+ " Protobuffers
+ Plug 'dense-analysis/ale'
+ Plug 'bufbuild/vim-buf'
+ let g:ale_linters = {
+ \   'proto': ['buf-lint'],
+ \}
+ let g:ale_lint_on_text_changed = 'never'
+ let g:ale_linters_explicit = 1
+ let g:ale_disable_lsp = 1
 
 call plug#end()
 
@@ -179,6 +189,7 @@ augroup END
 
 " File specific rules
 autocmd FileType json setlocal ts=2 sw=2 expandtab
+autocmd FileType proto setlocal ts=2 sw=2 expandtab
 autocmd FileType go setlocal ts=8 sw=8
 
 " Remap escape
@@ -217,6 +228,7 @@ nnoremap <silent> <leader>ww :FixWhitespace<CR>
 
 " Copy\Paste clip shortcuts
 vnoremap <silent> <leader>y "+y
+vnoremap <silent> <leader>p "+p
 nnoremap <silent> <leader>p "+p
 
 " ---------------------------------------------
@@ -282,7 +294,7 @@ nnoremap <silent> <C-b> :NERDTreeToggle<CR>
 
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#buffer_nr_show = 1
+let g:airline#extensions#tabline#buffer_nr_show = 0
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 nmap <leader>1 <Plug>AirlineSelectTab1
 nmap <leader>2 <Plug>AirlineSelectTab2
@@ -293,6 +305,8 @@ nmap <leader>6 <Plug>AirlineSelectTab6
 nmap <leader>7 <Plug>AirlineSelectTab7
 nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
+nmap <leader>- <Plug>AirlineSelectPrevTab
+nmap <leader>+ <Plug>AirlineSelectNextTab
 
 " nnoremap <silent> <Leader>q :Bdelete<CR>
 function! DeleteBuffer()
@@ -417,7 +431,7 @@ set hidden
 " Better display for messages
 set cmdheight=2
 " Smaller updatetime for CursorHold & CursorHoldI
-set updatetime=300
+set updatetime=100
 " don't give |ins-completion-menu| messages.
 set shortmess+=c
 " always show signcolumns
@@ -448,6 +462,8 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+" Use gb to go back after go to definition
+map gb <C-o>
 
 " Use U to show documentation in preview window
 nnoremap <silent> U :call <SID>show_documentation()<CR>
