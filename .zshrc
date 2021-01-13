@@ -63,6 +63,7 @@ fpath=($fpath ~/.zsh/completion)
 # else
 #   export EDITOR='mvim'
 # fi
+export EDITOR=nvim
 
 # Compilation flags
 # export ARCHFLAGS="-arch x86_64"
@@ -87,8 +88,8 @@ alias gtc='git commit -m '
 alias gts='git status'
 alias gtp='git pull `git symbolic-ref --short HEAD`'
 alias gtpr='git pull --rebase'
-alias gcm='git checkout master'
-alias gcmp='git checkout master && git pull'
+alias gcm='git checkout main'
+alias gcmp='git checkout main && git pull'
 alias gc-='git checkout -'
 alias gtalias='cat ~/.zshrc | grep "alias g"'
 alias glm='git log --author=$(git config user.name)'
@@ -133,6 +134,9 @@ ght () {
 ##### Other Aliases
 
 ## General Utils
+alias se='sudoedit'
+alias cdh='cd $HOME'
+alias vz='vim $HOME/.zshrc'
 
 # random hash
 alias randh='openssl rand -base64 48'
@@ -157,8 +161,14 @@ Total time: %{time_total}
 alias cclip="xclip -sel clip"
 alias pclip="xclip -o"
 
+# Limit pushd stacksize to elements from 0 to 5
+DIRSTACKSIZE=6
 # return list of dirs in stack
-alias ldir="dirs | spl"
+alias lsd="dirs -v"
+alias cld="dirs -c"
+jd() {
+	[[ ! -z "$1" ]] && cd ~"$1"
+}
 
 # tmux
 alias ts='tmux new-session -s'
@@ -194,15 +204,15 @@ alias awl='AWS_SECRET_ACCESS_KEY=DUMMY_TEST_KEY AWS_ACCESS_KEY_ID=DUMMY_TEST_ID 
 ##### Path Languages
 
 # Ruby
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
-# export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"
+source /usr/local/share/chruby/chruby.sh
+source /usr/local/share/chruby/auto.sh
+# export PATH="$HOME/.rbenv/bin:$PATH"
 # start ruby server
 # alias ruby_s='ruby -run -e httpd . -p 8000'
 
 # Go
-export PATH="$HOME/dev/go/bin:/usr/local/go/bin:$HOME/go/bin:$PATH"
-export GOPATH="$HOME/dev/go"
+export PATH="$HOME/Dev/go/bin:/usr/local/go/bin:$PATH"
+export GOPATH="$HOME/Dev/go"
 
 # Nvm node
 export NVM_DIR="$HOME/.nvm"
@@ -318,9 +328,10 @@ remouse() {
 #     tr : \\n
 #     sed 's/:/\n/g'
 #     awk '{ gsub(":", "\n") } 1'
+# TODO handle separator arg
 spl() { tr " " "\n" }
 
-# jq
+## jq
 # format a stringified json payload from clipboard
 fclip () { jq -r <<<"$(pblip)" }
 # format a stringified inner field from clipboard
