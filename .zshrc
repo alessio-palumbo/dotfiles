@@ -28,7 +28,7 @@ plugins=(
   zsh-autosuggestions
   zsh-syntax-highlighting
   autojump
-  go
+  golang
   docker
   docker-compose
   aws
@@ -108,7 +108,7 @@ gbc () {
     merged="--merged"
     [[ ! -z $1 ]] && [[ $1 == "-f" ]] && merged=""
     git for-each-ref --format '%(refname:short)' "$merged" HEAD refs/heads/ |\
-        grep -v master | xargs git branch -D 2>/dev/null ||\
+        grep -v main | xargs git branch -D 2>/dev/null ||\
         echo "No unmerged branches found. Use -f to remove unmerged (ecluding master)"
 }
 
@@ -137,6 +137,8 @@ ght () {
 alias se='sudoedit'
 alias cdh='cd $HOME'
 alias vz='vim $HOME/.zshrc'
+alias vim='nvim'
+alias oldvim='\vim'
 
 # random hash
 alias randh='openssl rand -base64 48'
@@ -329,7 +331,10 @@ remouse() {
 #     sed 's/:/\n/g'
 #     awk '{ gsub(":", "\n") } 1'
 # TODO handle separator arg
-spl() { tr " " "\n" }
+spl() {
+	[[ ! -z "$1" ]] && DELIM="$1" || DELIM=" "
+	tr "$DELIM" "\n"
+}
 
 ## jq
 # format a stringified json payload from clipboard

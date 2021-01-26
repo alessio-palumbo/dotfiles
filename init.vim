@@ -11,11 +11,13 @@ call plug#begin("~/.config/nvim/plugged")
  Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
  "  Plug 'Xuyuanp/nerdtree-git-plugin'
 
+ " Fancy vim startup page
+ Plug 'mhinz/vim-startify'
+ let g:startify_session_dir = '~/.config/nvim/session'
+ let g:startify_session_persistence = 1
+
  " Delete buffers
  Plug 'moll/vim-bbye'
-
- " Vinegar
- " Plug 'tpope/vim-vinegar'
 
  " Fuzzy search
  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
@@ -26,6 +28,9 @@ call plug#begin("~/.config/nvim/plugged")
 
  " Git diff and more
  Plug 'airblade/vim-gitgutter'
+
+ " Wakatime
+ Plug 'wakatime/vim-wakatime'
 
  " Unix commands
  Plug 'tpope/vim-eunuch'
@@ -118,6 +123,9 @@ call plug#begin("~/.config/nvim/plugged")
  " Code completion
  Plug 'neoclide/coc.nvim', {'branch': 'release'}
  let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-eslint', 'coc-git']
+
+ " Format for C languages (C, C++, Obj-C, Js, Java, Ts, Protobuf)
+ Plug 'rhysd/vim-clang-format'
 
  " Tags
  " Plug 'vim-scripts/taglist.vim'
@@ -462,8 +470,19 @@ nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
+
+" Avoid leaving buffers opened after looking up definitions
+function! GoBackAndClose()
+	let prev_buffer = bufnr()
+	execute "normal \<C-O>"
+	let curr_buffer = bufnr()
+	if curr_buffer != prev_buffer
+		execute "bd " . prev_buffer
+	endif
+endfunction
 " Use gb to go back after go to definition
-map gb <C-o>
+nnoremap <silent> gb :call GoBackAndClose()<CR>
+map gf <C-i>
 
 " Use U to show documentation in preview window
 nnoremap <silent> U :call <SID>show_documentation()<CR>
