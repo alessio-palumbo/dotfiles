@@ -216,6 +216,9 @@ autocmd FileType go setlocal ts=8 sw=8
 
 " Remap escape
 inoremap jk <Esc>
+inoremap jj <Esc>o
+" Add mapping to go to end of line when in insert mode
+inoremap <C-e> <C-o>A
 
 " Map save to vscode ctrl+s
 inoremap <silent> <C-s> <Esc>:w<Cr>
@@ -506,6 +509,15 @@ endfunction
 " Use gb to go back after go to definition
 nnoremap <silent> gb :call GoBackAndClose()<CR>
 map gf <C-i>
+
+" Vscode-like multi word selection
+nmap <expr> <silent> <C-d> <SID>select_current_word()
+function! s:select_current_word()
+  if !get(b:, 'coc_cursors_activated', 0)
+    return "\<Plug>(coc-cursors-word)"
+  endif
+  return "*\<Plug>(coc-cursors-word):nohlsearch\<CR>"
+endfunc
 
 " Use U to show documentation in preview window
 nnoremap <silent> U :call <SID>show_documentation()<CR>
