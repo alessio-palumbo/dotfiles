@@ -1,0 +1,42 @@
+{
+  "languageserver": {
+    "go": {
+      "command": "gopls",
+      "rootPatterns": [
+        "go.mod",
+        ".vim/",
+        ".git/",
+        ".hg/"
+      ],
+      "trace.server": "verbose",
+      "filetypes": [
+        "go"
+      ],
+      "initializationOptions": {
+        "usePlaceholders": true
+      }
+    }
+  },
+  "coc.preferences.formatOnSaveFiletypes": [
+    "go",
+    "python",
+    "markdown",
+    "javascriptreact",
+    "javascript",
+    "typescriptreact",
+    "typescript",
+    "json",
+    "jsonc"
+  ],
+  "eslint.filetypes": [
+    "javascript",
+    "typescript",
+    "typescriptreact"
+  ],
+  "suggest.echodocSupport": true,
+  "suggest.maxCompleteItemCount": 20,
+  "suggest.noselect": false,
+  "prettier.formatterPriority": -1,
+  "git.addGBlameToVirtualText": true,
+  "diagnostic.displayByAle": true
+}

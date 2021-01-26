@@ -115,14 +115,23 @@ call plug#begin("~/.config/nvim/plugged")
  Plug 'bronson/vim-trailing-whitespace'
  " Usage: FixWhitespace to clear all
 
- " # Emmet html/css/js
- " Plug 'mattn/emmet-vim'
  " # Css colours
  Plug 'ap/vim-css-color'
 
  " Code completion
  Plug 'neoclide/coc.nvim', {'branch': 'release'}
- let g:coc_global_extensions = ['coc-emmet', 'coc-css', 'coc-html', 'coc-json', 'coc-prettier', 'coc-tsserver', 'coc-eslint', 'coc-git']
+ let g:coc_global_extensions = [
+			 \'coc-git',
+			 \'coc-emmet',
+			 \'coc-html',
+			 \'coc-css',
+			 \'coc-json',
+			 \'coc-prettier',
+			 \'coc-eslint',
+			 \'coc-tsserver',
+			 \'coc-tslint-plugin',
+			 \'coc-yank'
+			 \]
 
  " Format for C languages (C, C++, Obj-C, Js, Java, Ts, Protobuf)
  Plug 'rhysd/vim-clang-format'
@@ -136,6 +145,11 @@ call plug#begin("~/.config/nvim/plugged")
  " Rust
  Plug 'rust-lang/rust.vim'
  " Plug 'racer-rust/vim-racer'
+
+ " Js, Ts and Jsx
+ Plug 'pangloss/vim-javascript'
+ Plug 'leafgarland/typescript-vim'
+ Plug 'maxmellon/vim-jsx-pretty'
 
  " Protobuffers
  Plug 'dense-analysis/ale'
@@ -460,6 +474,15 @@ endfunction
 
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
+" position. Coc only does snippet and additional edit on confirm.
+" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
+if exists('*complete_info')
+  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+else
+  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+endif
 
 " Use `[c` and /`]c` to navigate diagnostics
 nmap <silent> [c <Plug>(coc-diagnostic-prev)
