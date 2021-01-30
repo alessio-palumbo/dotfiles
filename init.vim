@@ -87,7 +87,11 @@ call plug#begin("~/.config/nvim/plugged")
  " Comment code
  Plug 'scrooloose/nerdcommenter'
 
- Plug 'vim-airline/vim-airline'
+ " Airline (disabled as slows things down)
+ " Plug 'vim-airline/vim-airline'
+
+ Plug 'itchyny/lightline.vim'
+ Plug 'mengelbrecht/lightline-bufferline'
 
  " Parenthesis
  " Plug 'junegunn/rainbow_parentheses.vim'
@@ -150,16 +154,6 @@ call plug#begin("~/.config/nvim/plugged")
  Plug 'pangloss/vim-javascript'
  Plug 'leafgarland/typescript-vim'
  Plug 'maxmellon/vim-jsx-pretty'
-
- " Protobuffers
- Plug 'dense-analysis/ale'
- Plug 'bufbuild/vim-buf'
- let g:ale_linters = {
- \   'proto': ['buf-lint'],
- \}
- let g:ale_lint_on_text_changed = 'never'
- let g:ale_linters_explicit = 1
- let g:ale_disable_lsp = 1
 
 call plug#end()
 
@@ -314,28 +308,9 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 nnoremap <silent> <C-b> :NERDTreeToggle<CR>
 
 " ---------------------------------------------
-"  ### Airline + Tabline
+"  ### Buffers
 " ---------------------------------------------
 
-let g:airline_powerline_fonts = 1
-let g:airline_extensions = ['branch', 'tabline']
-let g:airline#extensions#tagbar#enabled = 0
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#buffer_nr_show = 0
-let g:airline#extensions#tabline#buffer_idx_mode = 1
-nmap <leader>1 <Plug>AirlineSelectTab1
-nmap <leader>2 <Plug>AirlineSelectTab2
-nmap <leader>3 <Plug>AirlineSelectTab3
-nmap <leader>4 <Plug>AirlineSelectTab4
-nmap <leader>5 <Plug>AirlineSelectTab5
-nmap <leader>6 <Plug>AirlineSelectTab6
-nmap <leader>7 <Plug>AirlineSelectTab7
-nmap <leader>8 <Plug>AirlineSelectTab8
-nmap <leader>9 <Plug>AirlineSelectTab9
-nmap <leader>- <Plug>AirlineSelectPrevTab
-nmap <leader>= <Plug>AirlineSelectNextTab
-
-" nnoremap <silent> <Leader>q :Bdelete<CR>
 function! DeleteBuffer()
     if &buftype ==# 'terminal'
 		let current_window = winnr()
@@ -348,6 +323,122 @@ function! DeleteBuffer()
     endif
 endfunction
 map <silent> <leader>q :call DeleteBuffer()<CR>
+map <silent> <leader>!q :Bdelete!<CR>
+
+" ---------------------------------------------
+"  ### Lightline + Bufferline
+" ---------------------------------------------
+
+set noshowmode
+set showtabline=2
+
+let g:lightline = {
+      \ 'colorscheme': 'one',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'branch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'branch': 'LightlineFugitive',
+      \   'filetype': 'LightlineFiletype',
+      \   'fileformat': 'LightlineFileformat',
+      \   'readonly': 'LightlineReadonly',
+      \   'modified': 'LightlineModified',
+      \ },
+      \ 'tabline': {
+      \   'left': [ ['buffers'] ],
+      \   'right': [ ['close'] ]
+      \ },
+      \ 'component_expand': {
+      \   'buffers': 'lightline#bufferline#buffers'
+      \ },
+      \ 'component_type': {
+      \   'buffers': 'tabsel'
+      \ },
+      \ 'separator': { 'left': '', 'right': '' },
+	  \ 'subseparator': { 'left': '', 'right': '' }
+	  \ }
+
+function! LightlineFugitive()
+  if exists('*fugitive#head')
+    let branch = fugitive#head()
+    return branch !=# '' ? ' '.branch : ''
+  endif
+  return fugitive#head()
+endfunction
+
+function! LightlineFiletype()
+    return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
+endfunction
+
+function! LightlineFileformat()
+    return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
+endfunction
+
+function! LightlineModified()
+  return &modified ? '●' : ''
+endfunction
+
+function! LightlineReadonly()
+  return &readonly ? '' : ''
+endfunction
+
+let g:lightline#bufferline#show_number = 2
+let g:lightline#bufferline#enable_nerdfont = 1
+let g:lightline#bufferline#enable_devicons = 1
+let g:lightline#bufferline#unicode_symbols = 1
+let g:lightline#bufferline#number_map = {
+\ 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴',
+\ 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹'}
+
+nmap <Leader>1 <Plug>lightline#bufferline#go(1)
+nmap <Leader>2 <Plug>lightline#bufferline#go(2)
+nmap <Leader>3 <Plug>lightline#bufferline#go(3)
+nmap <Leader>4 <Plug>lightline#bufferline#go(4)
+nmap <Leader>5 <Plug>lightline#bufferline#go(5)
+nmap <Leader>6 <Plug>lightline#bufferline#go(6)
+nmap <Leader>7 <Plug>lightline#bufferline#go(7)
+nmap <Leader>8 <Plug>lightline#bufferline#go(8)
+nmap <Leader>9 <Plug>lightline#bufferline#go(9)
+nmap <Leader>0 <Plug>lightline#bufferline#go(10)
+
+nmap <BS>1 <Plug>lightline#bufferline#delete(1)
+nmap <BS>2 <Plug>lightline#bufferline#delete(2)
+nmap <BS>3 <Plug>lightline#bufferline#delete(3)
+nmap <BS>4 <Plug>lightline#bufferline#delete(4)
+nmap <BS>5 <Plug>lightline#bufferline#delete(5)
+nmap <BS>6 <Plug>lightline#bufferline#delete(6)
+nmap <BS>7 <Plug>lightline#bufferline#delete(7)
+nmap <BS>8 <Plug>lightline#bufferline#delete(8)
+nmap <BS>9 <Plug>lightline#bufferline#delete(9)
+nmap <BS>0 <Plug>lightline#bufferline#delete(10)
+
+nmap <TAB> :bnext<CR>
+nmap <S-TAB> :bprev<CR>
+
+" ---------------------------------------------
+"  ### Airline + Tabline
+" ---------------------------------------------
+
+" Mode is already shown by the airline so hide it
+" set noshowmode
+" let g:airline_powerline_fonts = 1
+" let g:airline_extensions = ['branch', 'tabline']
+" let g:airline#extensions#tagbar#enabled = 0
+" let g:airline#extensions#tabline#enabled = 1
+" let g:airline#extensions#tabline#buffer_nr_show = 0
+" let g:airline#extensions#tabline#buffer_idx_mode = 1
+" nmap <leader>1 <Plug>AirlineSelectTab1
+" nmap <leader>2 <Plug>AirlineSelectTab2
+" nmap <leader>3 <Plug>AirlineSelectTab3
+" nmap <leader>4 <Plug>AirlineSelectTab4
+" nmap <leader>5 <Plug>AirlineSelectTab5
+" nmap <leader>6 <Plug>AirlineSelectTab6
+" nmap <leader>7 <Plug>AirlineSelectTab7
+" nmap <leader>8 <Plug>AirlineSelectTab8
+" nmap <leader>9 <Plug>AirlineSelectTab9
+" nmap <leader>- <Plug>AirlineSelectPrevTab
+" nmap <leader>= <Plug>AirlineSelectNextTab
 
 " ---------------------------------------------
 " ### Split panes
