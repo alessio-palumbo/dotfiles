@@ -61,7 +61,7 @@ call plug#begin("~/.config/nvim/plugged")
  " to .vimrc, if the key is empty string '', then the shortcut will be disabled.
 
  " Multi line selection/editing
- Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+ " Plug 'mg979/vim-visual-multi', {'branch': 'master'}
  " Basic usage:
  " select words with Ctrl-N (like Ctrl-d in Sublime Text/VS Code)
  " create cursors vertically with Ctrl-Down/Ctrl-Up
@@ -225,7 +225,7 @@ inoremap <silent> <C-s> <Esc>:w<Cr>
 nnoremap <silent> <C-s> :w<Cr>
 
 " Put a line break under the cursor
-nnoremap <silent> <leader>n i<Cr><Esc>
+nnoremap <silent> <leader>n a<Cr><Esc>
 
 " set diffopt+=verical
 set cursorline " highlight line the curson is on
@@ -318,6 +318,8 @@ nnoremap <silent> <C-b> :NERDTreeToggle<CR>
 " ---------------------------------------------
 
 let g:airline_powerline_fonts = 1
+let g:airline_extensions = ['branch', 'tabline']
+let g:airline#extensions#tagbar#enabled = 0
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#buffer_nr_show = 0
 let g:airline#extensions#tabline#buffer_idx_mode = 1
@@ -331,7 +333,7 @@ nmap <leader>7 <Plug>AirlineSelectTab7
 nmap <leader>8 <Plug>AirlineSelectTab8
 nmap <leader>9 <Plug>AirlineSelectTab9
 nmap <leader>- <Plug>AirlineSelectPrevTab
-nmap <leader>+ <Plug>AirlineSelectNextTab
+nmap <leader>= <Plug>AirlineSelectNextTab
 
 " nnoremap <silent> <Leader>q :Bdelete<CR>
 function! DeleteBuffer()
