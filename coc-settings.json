@@ -37,6 +37,5 @@
   "suggest.maxCompleteItemCount": 20,
   "suggest.noselect": false,
   "prettier.formatterPriority": -1,
-  "git.addGBlameToVirtualText": true,
-  "diagnostic.displayByAle": true
+  "git.addGBlameToVirtualText": true
 }

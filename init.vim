@@ -1,159 +1,159 @@
 call plug#begin("~/.config/nvim/plugged")
-" Plugin Section
+  " Plugin Section
 
-" Theme
-" Plug 'dracula/vim'
- Plug 'tomasr/molokai'
+  " Theme
+  " Plug 'dracula/vim'
+  Plug 'tomasr/molokai'
 
- " File manager
- Plug 'scrooloose/nerdtree'
- Plug 'ryanoasis/vim-devicons'
- Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
- "  Plug 'Xuyuanp/nerdtree-git-plugin'
+  " File manager
+  Plug 'scrooloose/nerdtree'
+  Plug 'ryanoasis/vim-devicons'
+  Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+  "  Plug 'Xuyuanp/nerdtree-git-plugin'
 
- " Fancy vim startup page
- Plug 'mhinz/vim-startify'
- let g:startify_session_dir = '~/.config/nvim/session'
- let g:startify_session_persistence = 1
+  " Fancy vim startup page
+  Plug 'mhinz/vim-startify'
+  let g:startify_session_dir = '~/.config/nvim/session'
+  let g:startify_session_persistence = 1
 
- " Delete buffers
- Plug 'moll/vim-bbye'
+  " Delete buffers
+  Plug 'moll/vim-bbye'
 
- " Fuzzy search
- Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
- Plug 'junegunn/fzf.vim'
+  " Fuzzy search
+  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+  Plug 'junegunn/fzf.vim'
 
- " Git
- Plug 'tpope/vim-fugitive'
+  " Git
+  Plug 'tpope/vim-fugitive'
 
- " Git diff and more
- Plug 'airblade/vim-gitgutter'
+  " Git diff and more
+  Plug 'airblade/vim-gitgutter'
 
- " Wakatime
- Plug 'wakatime/vim-wakatime'
+  " Wakatime
+  Plug 'wakatime/vim-wakatime'
 
- " Unix commands
- Plug 'tpope/vim-eunuch'
-" :Delete: Delete a buffer and the file on disk simultaneously.
-" :Unlink: Like :Delete, but keeps the now empty buffer.
-" :Move: Rename a buffer and the file on disk simultaneously.
-" :Rename: Like :Move, but relative to the current file's containing directory.
-" :Chmod: Change the permissions of the current file.
-" :Mkdir: Create a directory, defaulting to the parent of the current file.
-" :Cfind: Run find and load the results into the quickfix list.
-" :Clocate: Run locate and load the results into the quickfix list.
-" :Lfind/:Llocate: Like above, but use the location list.
-" :Wall: Write every open window. Handy for kicking off tools like guard.
-" :SudoWrite: Write a privileged file with sudo.
-" :SudoEdit: Edit a privileged file with sudo.
+  " Unix commands
+  Plug 'tpope/vim-eunuch'
+    " :Delete: Delete a buffer and the file on disk simultaneously.
+    " :Unlink: Like :Delete, but keeps the now empty buffer.
+    " :Move: Rename a buffer and the file on disk simultaneously.
+    " :Rename: Like :Move, but relative to the current file's containing directory.
+    " :Chmod: Change the permissions of the current file.
+    " :Mkdir: Create a directory, defaulting to the parent of the current file.
+    " :Cfind: Run find and load the results into the quickfix list.
+    " :Clocate: Run locate and load the results into the quickfix list.
+    " :Lfind/:Llocate: Like above, but use the location list.
+    " :Wall: Write every open window. Handy for kicking off tools like guard.
+    " :SudoWrite: Write a privileged file with sudo.
+    " :SudoEdit: Edit a privileged file with sudo.
 
- " Autopair
- Plug 'jiangmiao/auto-pairs'
- " System Shortcuts:
- " <CR>  : Insert new indented line after return if cursor in blank brackets or quotes.
- " <BS>  : Delete brackets in pair
- " <M-p> : Toggle Autopairs (g:AutoPairsShortcutToggle)
- " <M-e> : Fast Wrap (g:AutoPairsShortcutFastWrap)
- " <M-n> : Jump to next closed pair (g:AutoPairsShortcutJump)
- " <M-b> : BackInsert (g:AutoPairsShortcutBackInsert)
- " If <M-p> <M-e> or <M-n> conflict with another keys or want to bind to another keys, add
- " let g:AutoPairsShortcutToggle = '<another key>'
- " to .vimrc, if the key is empty string '', then the shortcut will be disabled.
+  " Autopair
+  Plug 'jiangmiao/auto-pairs'
+    " System Shortcuts:
+    " <CR>  : Insert new indented line after return if cursor in blank brackets or quotes.
+    " <BS>  : Delete brackets in pair
+    " <M-p> : Toggle Autopairs (g:AutoPairsShortcutToggle)
+    " <M-e> : Fast Wrap (g:AutoPairsShortcutFastWrap)
+    " <M-n> : Jump to next closed pair (g:AutoPairsShortcutJump)
+    " <M-b> : BackInsert (g:AutoPairsShortcutBackInsert)
+    " If <M-p> <M-e> or <M-n> conflict with another keys or want to bind to another keys, add
+    " let g:AutoPairsShortcutToggle = '<another key>'
+    " to .vimrc, if the key is empty string '', then the shortcut will be disabled.
 
- " Multi line selection/editing
- " Plug 'mg979/vim-visual-multi', {'branch': 'master'}
- " Basic usage:
- " select words with Ctrl-N (like Ctrl-d in Sublime Text/VS Code)
- " create cursors vertically with Ctrl-Down/Ctrl-Up
- " select one character at a time with Shift-Arrows
- " press n/N to get next/previous occurrence
- " press [/] to select next/previous cursor
- " press q to skip current and get next occurrence
- " press Q to remove current cursor/selection
- " start insert mode with i,a,I,A
+    " Multi line selection/editing
+    " Plug 'mg979/vim-visual-multi', {'branch': 'master'}
+    " Basic usage:
+    " select words with Ctrl-N (like Ctrl-d in Sublime Text/VS Code)
+    " create cursors vertically with Ctrl-Down/Ctrl-Up
+    " select one character at a time with Shift-Arrows
+    " press n/N to get next/previous occurrence
+    " press [/] to select next/previous cursor
+    " press q to skip current and get next occurrence
+    " press Q to remove current cursor/selection
+    " start insert mode with i,a,I,A
 
- " Surrounding text
- Plug 'tpope/vim-surround'
- " Examples:
- " cs"'   => changes " to '
- " cs'<q> => changes ' to <q>, cst' => revert tag to '
- " ds"    => removes delimiters
- " ysiw]  => wraps entire word with ] (use [ to add space in between)
- " cs]}   => changes ] to } (use { to aadd space in between
- " yssb/yss) => wraps entire line in ) (use ( to add space in between)
- " ysiw<em>  => wraps entire word in between <em> tags
- " V+S<p class="important"> => wraps entire sentence in <p> tag
+  " Surrounding text
+  Plug 'tpope/vim-surround'
+    " Examples:
+    " cs"'   => changes " to '
+    " cs'<q> => changes ' to <q>, cst' => revert tag to '
+    " ds"    => removes delimiters
+    " ysiw]  => wraps entire word with ] (use [ to add space in between)
+    " cs]}   => changes ] to } (use { to aadd space in between
+    " yssb/yss) => wraps entire line in ) (use ( to add space in between)
+    " ysiw<em>  => wraps entire word in between <em> tags
+    " V+S<p class="important"> => wraps entire sentence in <p> tag
 
- " Comment code
- Plug 'scrooloose/nerdcommenter'
+  " Comment code
+  Plug 'scrooloose/nerdcommenter'
 
- " Airline (disabled as slows things down)
- " Plug 'vim-airline/vim-airline'
+  " Airline (disabled as slows things down)
+  " Plug 'vim-airline/vim-airline'
 
- Plug 'itchyny/lightline.vim'
- Plug 'mengelbrecht/lightline-bufferline'
+  " Lighter airline with tabline
+  Plug 'itchyny/lightline.vim'
+  Plug 'mengelbrecht/lightline-bufferline'
 
- " Parenthesis
- " Plug 'junegunn/rainbow_parentheses.vim'
- Plug 'luochen1990/rainbow'
- let g:rainbow_active = 1
+  " Parenthesis
+  Plug 'luochen1990/rainbow'
+  let g:rainbow_active = 1
 
- " Indenting
- " Plug 'yggdroot/indentline'
- " let g:indentLine_setConceal = 0
- " let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+  " Indenting
+  " Plug 'yggdroot/indentline'
+  " let g:indentLine_setConceal = 0
+  " let g:indentLine_char_list = ['|', '¦', '┆', '┊']
 
- " Use <Leader>ig to toggle (current mapping: nmap <silent> <Leader>ig <Plug>IndentGuidesTogglebu)
- Plug 'nathanaelkane/vim-indent-guides'
- " let g:indent_guides_enabled_on_vim_startup = 1
- let g:indent_guides_guide_size = 1
- " let g:indent_guides_auto_colors = 0
- " autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#00005f   ctermbg=17
- " autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#000087 ctermbg=18
- " autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd guibg=#0087df ctermbg=32
- " autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#005f00 ctermbg=33
- " hi x017_NavyBlue ctermfg=17 guifg=#00005f
-" hi x018_DarkBlue ctermfg=18 guifg=#000087
+  Plug 'nathanaelkane/vim-indent-guides'
+  let g:indent_guides_guide_size = 1
+    " Use <Leader>ig to toggle (current mapping: nmap <silent> <Leader>ig <Plug>IndentGuidesTogglebu)
+    " let g:indent_guides_enabled_on_vim_startup = 1
+    " let g:indent_guides_auto_colors = 0
+    " autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#00005f   ctermbg=17
+    " autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#000087 ctermbg=18
+    " autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd guibg=#0087df ctermbg=32
+    " autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#005f00 ctermbg=33
+    " hi x017_NavyBlue ctermfg=17 guifg=#00005f
+    " hi x018_DarkBlue ctermfg=18 guifg=#000087
 
- " Trailing space
- Plug 'bronson/vim-trailing-whitespace'
- " Usage: FixWhitespace to clear all
+  " Trailing space
+  Plug 'bronson/vim-trailing-whitespace'
+    " Usage: FixWhitespace to clear all
 
- " # Css colours
- Plug 'ap/vim-css-color'
+  " Css colours
+  Plug 'ap/vim-css-color'
 
- " Code completion
- Plug 'neoclide/coc.nvim', {'branch': 'release'}
- let g:coc_global_extensions = [
-			 \'coc-git',
-			 \'coc-emmet',
-			 \'coc-html',
-			 \'coc-css',
-			 \'coc-json',
-			 \'coc-prettier',
-			 \'coc-eslint',
-			 \'coc-tsserver',
-			 \'coc-tslint-plugin',
-			 \'coc-yank'
-			 \]
+  " Code completion
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  let g:coc_global_extensions = [
+    \'coc-git',
+    \'coc-emmet',
+    \'coc-html',
+    \'coc-css',
+    \'coc-json',
+    \'coc-prettier',
+    \'coc-eslint',
+    \'coc-tsserver',
+    \'coc-tslint-plugin',
+    \'coc-yank'
+    \]
 
- " Format for C languages (C, C++, Obj-C, Js, Java, Ts, Protobuf)
- Plug 'rhysd/vim-clang-format'
+  " Format for C languages (C, C++, Obj-C, Js, Java, Ts, Protobuf)
+  Plug 'rhysd/vim-clang-format'
 
- " Tags
- " Plug 'vim-scripts/taglist.vim'
+  " Tags
+  " Plug 'vim-scripts/taglist.vim'
 
- " Go plugin
- Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+  " Go plugin
+  Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
- " Rust
- Plug 'rust-lang/rust.vim'
- " Plug 'racer-rust/vim-racer'
+  " Rust
+  Plug 'rust-lang/rust.vim'
+  " Plug 'racer-rust/vim-racer'
 
- " Js, Ts and Jsx
- Plug 'pangloss/vim-javascript'
- Plug 'leafgarland/typescript-vim'
- Plug 'maxmellon/vim-jsx-pretty'
+  " Js, Ts and Jsx
+  Plug 'pangloss/vim-javascript'
+  Plug 'leafgarland/typescript-vim'
+  Plug 'maxmellon/vim-jsx-pretty'
 
 call plug#end()
 
@@ -166,7 +166,7 @@ call plug#end()
 " ---------------------------------------------
 
 if (has("termguicolors"))
- set termguicolors
+  set termguicolors
 endif
 
 " ---------------------------------------------
@@ -200,7 +200,7 @@ set shiftwidth=4
 augroup VCenterCursor
   au!
   au BufEnter,WinEnter,WinNew,VimResized *,*.*
-        \ let &scrolloff=winheight(win_getid())/2
+    \ let &scrolloff=winheight(win_getid())/2
 augroup END
 
 " File specific rules
@@ -256,11 +256,11 @@ nnoremap <silent> <leader>p "+p
 
 " When editing a file, always jump to the last cursor position
 autocmd BufReadPost *
-\ if ! exists("g:leave_my_cursor_position_alone") |
-\ if line("'\"") > 0 && line ("'\"") <= line("$") | " use relative number in normal mode
-\ exe "normal g'\"" |
-\ endif |
-\ endif
+  \ if ! exists("g:leave_my_cursor_position_alone") |
+  \ if line("'\"") > 0 && line ("'\"") <= line("$") | " use relative number in normal mode
+  \ exe "normal g'\"" |
+  \ endif |
+  \ endif
 
 " Set local directory to the pwd of the open buffer. (This allows both
 " terminal and NERDTree to sync with the current file)
@@ -312,15 +312,15 @@ nnoremap <silent> <C-b> :NERDTreeToggle<CR>
 " ---------------------------------------------
 
 function! DeleteBuffer()
-    if &buftype ==# 'terminal'
-		let current_window = winnr()
-        Bdelete!
-        " Remove current split after closing a split terminal, unless it's the
-        " main window.
-		if (current_window != 1 && winnr() == current_window) | q! | endif
-    else
-        Bdelete
-    endif
+  if &buftype ==# 'terminal'
+    let current_window = winnr()
+      Bdelete!
+      " Remove current split after closing a split terminal, unless it's the
+      " main window.
+    if (current_window != 1 && winnr() == current_window) | q! | endif
+  else
+      Bdelete
+  endif
 endfunction
 map <silent> <leader>q :call DeleteBuffer()<CR>
 map <silent> <leader>!q :Bdelete!<CR>
@@ -333,31 +333,31 @@ set noshowmode
 set showtabline=2
 
 let g:lightline = {
-      \ 'colorscheme': 'one',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'branch', 'readonly', 'filename', 'modified' ] ]
-      \ },
-      \ 'component_function': {
-      \   'branch': 'LightlineFugitive',
-      \   'filetype': 'LightlineFiletype',
-      \   'fileformat': 'LightlineFileformat',
-      \   'readonly': 'LightlineReadonly',
-      \   'modified': 'LightlineModified',
-      \ },
-      \ 'tabline': {
-      \   'left': [ ['buffers'] ],
-      \   'right': [ ['close'] ]
-      \ },
-      \ 'component_expand': {
-      \   'buffers': 'lightline#bufferline#buffers'
-      \ },
-      \ 'component_type': {
-      \   'buffers': 'tabsel'
-      \ },
-      \ 'separator': { 'left': '', 'right': '' },
-	  \ 'subseparator': { 'left': '', 'right': '' }
-	  \ }
+  \ 'colorscheme': 'one',
+  \ 'active': {
+  \   'left': [ [ 'mode', 'paste' ],
+  \             [ 'branch', 'readonly', 'filename', 'modified' ] ]
+  \ },
+  \ 'component_function': {
+  \   'branch': 'LightlineFugitive',
+  \   'filetype': 'LightlineFiletype',
+  \   'fileformat': 'LightlineFileformat',
+  \   'readonly': 'LightlineReadonly',
+  \   'modified': 'LightlineModified',
+  \ },
+  \ 'tabline': {
+  \   'left': [ ['buffers'] ],
+  \   'right': [ ['close'] ]
+  \ },
+  \ 'component_expand': {
+  \   'buffers': 'lightline#bufferline#buffers'
+  \ },
+  \ 'component_type': {
+  \   'buffers': 'tabsel'
+  \ },
+  \ 'separator': { 'left': '', 'right': '' },
+  \ 'subseparator': { 'left': '', 'right': '' }
+  \ }
 
 function! LightlineFugitive()
   if exists('*fugitive#head')
@@ -368,11 +368,11 @@ function! LightlineFugitive()
 endfunction
 
 function! LightlineFiletype()
-    return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
 endfunction
 
 function! LightlineFileformat()
-    return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
+  return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
 endfunction
 
 function! LightlineModified()
@@ -558,9 +558,9 @@ set signcolumn=yes
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+  \ pumvisible() ? "\<C-n>" :
+  \ <SID>check_back_space() ? "\<TAB>" :
+  \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 function! s:check_back_space() abort
@@ -571,14 +571,11 @@ endfunction
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
 
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current
-" position. Coc only does snippet and additional edit on confirm.
-" <cr> could be remapped by other vim plugin, try `:verbose imap <CR>`.
-if exists('*complete_info')
-  inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-else
-  inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-endif
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+inoremap <silent><expr> <cr>
+  \ pumvisible() ? coc#_select_confirm() :
+  \ "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " Use `[c` and /`]c` to navigate diagnostics
 nmap <silent> [c <Plug>(coc-diagnostic-prev)
@@ -592,12 +589,12 @@ nmap <silent> gr <Plug>(coc-references)
 
 " Avoid leaving buffers opened after looking up definitions
 function! GoBackAndClose()
-	let prev_buffer = bufnr()
-	execute "normal \<C-O>"
-	let curr_buffer = bufnr()
-	if curr_buffer != prev_buffer
-		execute "bd " . prev_buffer
-	endif
+  let prev_buffer = bufnr()
+  execute "normal \<C-O>"
+  let curr_buffer = bufnr()
+  if curr_buffer != prev_buffer
+    execute "bd " . prev_buffer
+  endif
 endfunction
 " Use gb to go back after go to definition
 nnoremap <silent> gb :call GoBackAndClose()<CR>
@@ -718,8 +715,8 @@ vnoremap <silent> cm :call NERDComment(0,"toggle")<CR>
 
 " NERDTree File highlighting
 function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
- exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
- exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
+  exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
+  exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
 endfunction
 
 call NERDTreeHighlightFile('jade', 'green', 'none', 'green', '#151515')
