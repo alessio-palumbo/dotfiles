@@ -519,11 +519,18 @@ let g:terminal_color_4  = '#22A9F1'
 " ---------------------------------------------
 
 " ff => current dir, fh => home dir, fr => root dir
-nnoremap ff :FZF<CR>
+nnoremap ff :Files<CR>
+nnoremap fp :ProjectFiles<CR>
 nnoremap fh :FZF $HOME<CR>
 nnoremap fr :FZF /<CR>
+
 " # require silversearcher-ag
 nnoremap fg :Ag<CR>
+
+" Check git commit history
+nnoremap fc :Commits<CR>
+" Check git status
+nnoremap fs :GFiles?<CR>
 
 " change default floating window to bottom split
 " let g:fzf_layout = { 'down': '~40%' }
@@ -539,6 +546,13 @@ let g:fzf_action = {
 let $FZF_DEFAULT_COMMAND = 'rg --files --follow --hidden -g !.git'
 " TODO add preview
 " let g:fzf_preview_window = ['right:50%', 'ctrl-/']
+
+" Use git root if project is inside a git repo
+function! s:find_git_root()
+  return system('git rev-parse --show-toplevel 2> /dev/null')[:-2]
+endfunction
+
+command! ProjectFiles execute 'Files' s:find_git_root()
 
 " ---------------------------------------------
 " ### coc.vim default settings
