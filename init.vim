@@ -155,6 +155,10 @@ call plug#begin("~/.config/nvim/plugged")
   Plug 'leafgarland/typescript-vim'
   Plug 'maxmellon/vim-jsx-pretty'
 
+  " Ruby
+  Plug 'vim-ruby/vim-ruby'
+  Plug 'tpope/vim-rails'
+
 call plug#end()
 
 " ---------------------------------------------
@@ -589,7 +593,9 @@ inoremap <silent><expr> <c-space> coc#refresh()
 " format on enter, <cr> could be remapped by other vim plugin
 inoremap <silent><expr> <cr>
   \ pumvisible() ? coc#_select_confirm() :
-  \ "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+  \ "\<C-g>u\<CR>"
+" Add the following for formatting code after selection
+" \<c-r>=coc#on_enter()\<CR>
 
 " Use `[c` and /`]c` to navigate diagnostics
 nmap <silent> [c <Plug>(coc-diagnostic-prev)

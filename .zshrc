@@ -208,6 +208,8 @@ alias awl='AWS_SECRET_ACCESS_KEY=DUMMY_TEST_KEY AWS_ACCESS_KEY_ID=DUMMY_TEST_ID 
 # Ruby
 source /usr/local/share/chruby/chruby.sh
 source /usr/local/share/chruby/auto.sh
+export GEM_HOME=$HOME/.gem
+export GEM_PATH=$HOME/.gem
 # export PATH="$HOME/.rbenv/bin:$PATH"
 # start ruby server
 # alias ruby_s='ruby -run -e httpd . -p 8000'
