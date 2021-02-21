@@ -255,6 +255,12 @@ vnoremap <silent> <leader>y "+y
 vnoremap <silent> <leader>p "+p
 nnoremap <silent> <leader>p "+p
 
+if has('unix')
+  set clipboard=unnamedplus
+else
+  set clipboard=unnamed
+endif
+
 " ---------------------------------------------
 " ### General settings
 " ---------------------------------------------
