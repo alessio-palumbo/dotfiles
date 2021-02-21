@@ -134,7 +134,8 @@ call plug#begin("~/.config/nvim/plugged")
     \'coc-eslint',
     \'coc-tsserver',
     \'coc-tslint-plugin',
-    \'coc-yank'
+    \'coc-yank',
+    \'coc-pyright'
     \]
 
   " Format for C languages (C, C++, Obj-C, Js, Java, Ts, Protobuf)
@@ -197,8 +198,8 @@ highlight Normal guibg=black guifg=white
 
 set tabstop=4
 set shiftwidth=4
+set expandtab
 "set softtabstop=4
-"set expandtab=4
 
 " Keep editing line in the center of the screen
 augroup VCenterCursor
@@ -497,6 +498,13 @@ let g:airline#extensions#tabline#ignore_bufadd_pat = '!defx|gundo|nerd_tree|star
 
 " turn terminal to normal mode with escape
 tnoremap <Esc> <C-\><C-n>
+
+" Prepend terminal pwd to edit a file under that directory
+if has('unix')
+  tnoremap <C-N> pwd\|xclip -selection clipboard<CR><C-\><C-n>:e <C-r>+/
+else
+  tnoremap <C-N> pwd|pbcopy<CR><C-\><C-n>:e <C-r>+/
+endif
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 " ----------------------------------
