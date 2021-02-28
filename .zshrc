@@ -350,5 +350,17 @@ cdf() {
     [ -n "$2" ] && cd $(ls | awk "/$2/" | head -n 1)
 }
 
+# Vim script to be called when in vim termianl to change window local directory to pwd
+if [[ -n "$VIM_TERMINAL" ]]; then
+  cdv() {
+    printf -- '\033]51;["call", "Tapi_lcd", "%q"]\007' "$(pwd)"
+  }
+elif [[ -n "$NVIM_LISTEN_ADDRESS" ]]; then
+  cdv() {
+    # Requires neovim-remote installed
+    nvr --servername "$VIM_SERVERNAME" --remote-expr "$(printf -- 'Tapi_lcd(0, "%q")' "$(pwd)")"
+  }
+fi
+
 # Source fzf (should be kept last)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

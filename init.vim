@@ -504,13 +504,21 @@ let g:airline#extensions#tabline#ignore_bufadd_pat = '!defx|gundo|nerd_tree|star
 
 " turn terminal to normal mode with escape
 tnoremap <Esc> <C-\><C-n>
+tnoremap <C-N> cdv<CR><C-\><C-n>:e<space>
 
-" Prepend terminal pwdwd to edit a file under that directory
-if has('unix') && !has('macunix')
-  tnoremap <C-N> pwd\|xclip -selection clipboard<CR><C-\><C-n>:e <C-r>+/
-else
-  tnoremap <C-N> pwd\|pbcopy<CR><C-\><C-n>:cd <C-r>+<CR>:e
-endif
+" Change terminal window local directory to the terminal working directory
+" when called.
+fu Tapi_lcd(buf, cwd) abort
+    if has('nvim')
+        exe 'lcd '..a:cwd
+        return ''
+    endif
+    let winid = bufwinid(a:buf)
+    if winid == -1 || empty(a:cwd)
+        return
+    endif
+    call win_execute(winid, 'lcd '..a:cwd)
+endfu
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 " ----------------------------------
