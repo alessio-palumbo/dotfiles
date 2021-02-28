@@ -201,11 +201,11 @@ set shiftwidth=4
 set expandtab
 "set softtabstop=4
 
-" Keep editing line in the center of the screen
+" Keep editing line in the center of the screen (excluding terminal)
 augroup VCenterCursor
   au!
   au BufEnter,WinEnter,WinNew,VimResized *,*.*
-    \ let &scrolloff=winheight(win_getid())/2
+    \ if &buftype != 'terminal' | let &scrolloff=winheight(win_getid())/2 | endif
 augroup END
 
 " File specific rules
@@ -255,7 +255,7 @@ vnoremap <silent> <leader>y "+y
 vnoremap <silent> <leader>p "+p
 nnoremap <silent> <leader>p "+p
 
-if has('unix')
+if has('unix') && !has('macunix')
   set clipboard=unnamedplus
 else
   set clipboard=unnamed
@@ -505,11 +505,11 @@ let g:airline#extensions#tabline#ignore_bufadd_pat = '!defx|gundo|nerd_tree|star
 " turn terminal to normal mode with escape
 tnoremap <Esc> <C-\><C-n>
 
-" Prepend terminal pwd to edit a file under that directory
-if has('unix')
+" Prepend terminal pwdwd to edit a file under that directory
+if has('unix') && !has('macunix')
   tnoremap <C-N> pwd\|xclip -selection clipboard<CR><C-\><C-n>:e <C-r>+/
 else
-  tnoremap <C-N> pwd|pbcopy<CR><C-\><C-n>:e <C-r>+/
+  tnoremap <C-N> pwd\|pbcopy<CR><C-\><C-n>:cd <C-r>+<CR>:e
 endif
 
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
