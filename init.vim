@@ -261,6 +261,9 @@ else
   set clipboard=unnamed
 endif
 
+" Enable mouse
+set mouse=a
+
 " ---------------------------------------------
 " ### General settings
 " ---------------------------------------------
