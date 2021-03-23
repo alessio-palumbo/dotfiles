@@ -13,8 +13,6 @@ call plug#begin("~/.config/nvim/plugged")
 
   " Fancy vim startup page
   Plug 'mhinz/vim-startify'
-  let g:startify_session_dir = '~/.config/nvim/session'
-  let g:startify_session_persistence = 1
 
   " Delete buffers
   Plug 'moll/vim-bbye'
@@ -210,6 +208,7 @@ augroup END
 
 " File specific rules
 autocmd FileType json setlocal ts=2 sw=2 expandtab
+autocmd FileType javascript setlocal ts=2 sw=2 expandtab
 autocmd FileType proto setlocal ts=2 sw=2 expandtab
 autocmd FileType go setlocal ts=8 sw=8
 
@@ -308,7 +307,28 @@ set title titlestring=%<%F titlelen=70
 " au FileType vim let b:AutoPairs = ''
 
 " ---------------------------------------------
-" ### File explorer configs - Ctrl+B toggle (nerdreee & vim-devicons)
+" ### Vim-startify
+" ---------------------------------------------
+
+let g:startify_session_dir = '~/.config/nvim/session'
+let g:startify_session_persistence = 1
+
+" Save session before exit if unsaved, to cater for involontary :q when
+" multiple tabs are open. Do not save if only startify buffer is open.
+autocmd VimLeave * if (v:this_session == "" && len(getbufinfo({'buflisted':1})) > 0) | :SS! temp-session | endif
+
+let g:startify_lists = [
+  \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+  \ { 'type': 'sessions',  'header': ['   Sessions']       },
+  \ { 'type': 'files',     'header': ['   MRU']            },
+  \ { 'type': 'dir',       'header': ['   MRU '. getcwd()] },
+  \ { 'type': 'commands',  'header': ['   Commands']       },
+  \ ]
+
+let g:startify_marks = [ {'v': '~/.config/nvim/init.vim'}, {'z': '~/.zshrc'} ]
+
+" ---------------------------------------------
+" ### NERDTree configs - Ctrl+B to toggle
 " ---------------------------------------------
 
 let g:NERDTreeShowHidden = 1
@@ -318,8 +338,12 @@ let g:NERDTreeStatusline = ''
 
 " Automaticaly close nvim if NERDTree is only thing left open
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-" Toggle
-nnoremap <silent> <C-b> :NERDTreeToggle<CR>
+
+" Toggle NERDTree in current buffer dir.
+nnoremap <silent> <C-b> :NERDTreeToggle %<CR>
+
+" Toggle NERDTree in VCS root directory, if available.
+" nnoremap <silent> <C-b> :NERDTreeToggle %<CR>
 
 " ---------------------------------------------
 "  ### Buffers
@@ -336,6 +360,7 @@ function! DeleteBuffer()
       Bdelete
   endif
 endfunction
+
 map <silent> <leader>q :call DeleteBuffer()<CR>
 map <silent> <leader>!q :Bdelete!<CR>
 
@@ -404,6 +429,12 @@ let g:lightline#bufferline#unicode_symbols = 1
 let g:lightline#bufferline#number_map = {
 \ 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴',
 \ 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹'}
+
+" Enable click on tabs.
+if has('tablineat')
+  let g:lightline#bufferline#clickable = 1
+  let g:lightline.component_raw = {'buffers': 1}
+endif
 
 nmap <Leader>1 <Plug>lightline#bufferline#go(1)
 nmap <Leader>2 <Plug>lightline#bufferline#go(2)
@@ -734,6 +765,10 @@ endfunction
 autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
 autocmd FileType go nmap <leader>r  <Plug>(go-run)
 autocmd FileType go nmap <leader>t  <Plug>(go-test)
+
+" Automatically add/remove json tags to Go structs.
+autocmd FileType go nmap <silent>tg :GoAddTags<CR>
+autocmd FileType go nmap <silent>tr :GoRemoveTags<CR>
 
 " ---------------------------------------------
 "  ### git gutter
