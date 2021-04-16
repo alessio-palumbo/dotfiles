@@ -214,6 +214,7 @@ autocmd FileType go setlocal ts=8 sw=8
 
 " Remap escape
 inoremap jk <Esc>
+tnoremap jk <C-\><C-n>
 inoremap jj <Esc>o
 " Add mapping to go to end of line when in insert mode
 inoremap <C-e> <C-o>A
@@ -242,6 +243,12 @@ nnoremap <silent> <CR> :nohlsearch<CR>
 " Remap up and down to avoid skipping wrapped lines
 nnoremap j gj
 nnoremap k gk
+
+" Use C + navigation keys for wider movements.
+nnoremap <C-j> }
+nnoremap <C-k> {
+nnoremap <C-h> 2b
+nnoremap <C-l> 2e
 
 " Shortcut to open init.vim
 nnoremap <silent> <leader>cf :e $MYVIMRC<CR>
@@ -315,7 +322,7 @@ let g:startify_session_persistence = 1
 
 " Save session before exit if unsaved, to cater for involontary :q when
 " multiple tabs are open. Do not save if only startify buffer is open.
-autocmd VimLeave * if (v:this_session == "" && len(getbufinfo({'buflisted':1})) > 0) | :SS! temp-session | endif
+autocmd VimLeave * if (v:this_session == "" && len(getbufinfo({'buflisted':1})) > 0) | :SS! aaa-temp-session | endif
 
 let g:startify_lists = [
   \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
@@ -325,7 +332,7 @@ let g:startify_lists = [
   \ { 'type': 'commands',  'header': ['   Commands']       },
   \ ]
 
-let g:startify_marks = [ {'v': '~/.config/nvim/init.vim'}, {'z': '~/.zshrc'} ]
+let g:startify_bookmarks = [ {'v': '~/.config/nvim/init.vim'}, {'z': '~/.zshrc'} ]
 
 " ---------------------------------------------
 " ### NERDTree configs - Ctrl+B to toggle
@@ -335,6 +342,7 @@ let g:NERDTreeShowHidden = 1
 let g:NERDTreeMinimalUI = 1
 let g:NERDTreeIgnore = []
 let g:NERDTreeStatusline = ''
+let NERDTreeHighlightCursorline = 0
 
 " Automaticaly close nvim if NERDTree is only thing left open
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
@@ -458,8 +466,8 @@ nmap <BS>8 <Plug>lightline#bufferline#delete(8)
 nmap <BS>9 <Plug>lightline#bufferline#delete(9)
 nmap <BS>0 <Plug>lightline#bufferline#delete(10)
 
-nmap <TAB> :bnext<CR>
-nmap <S-TAB> :bprev<CR>
+nmap <silent><TAB> :bnext<CR>
+nmap <silent><S-TAB> :bprev<CR>
 
 " ---------------------------------------------
 "  ### Airline + Tabline
@@ -538,7 +546,12 @@ let g:airline#extensions#tabline#ignore_bufadd_pat = '!defx|gundo|nerd_tree|star
 
 " turn terminal to normal mode with escape
 tnoremap <Esc> <C-\><C-n>
+
+" edit file from the directory the terminal is currently in
 tnoremap <C-N> cdv<CR><C-\><C-n>:e<space>
+" maintain behavior of mapping above for normal buffer
+nnoremap <C-N> :e<space>
+
 
 " Change terminal window local directory to the terminal working directory
 " when called.
@@ -578,14 +591,16 @@ let g:terminal_color_4  = '#22A9F1'
 " ### Fzf
 " ---------------------------------------------
 
-" ff => current dir, fh => home dir, fr => root dir
-nnoremap ff :Files<CR>
+" fp => git root of project, ff => current dir, fh => home dir, fr => root dir
 nnoremap fp :ProjectFiles<CR>
-nnoremap fh :FZF $HOME<CR>
-nnoremap fr :FZF /<CR>
+nnoremap ff :Files<CR>
+nnoremap fh :Files $HOME<CR>
+nnoremap fr :Files /<CR>
 
 " # require silversearcher-ag
-nnoremap fg :Ag<CR>
+nnoremap fg :ProjectAg<CR>
+nnoremap fa :Ag<CR>
+nnoremap fi :AgIn<space>
 
 " Check git commit history
 nnoremap fc :Commits<CR>
@@ -603,9 +618,7 @@ let g:fzf_action = {
 
 " # require ripgrep
 " let $FZF_DEFAULT_COMMAND = 'rg --files --no-ignore-vcs --hidden'
-let $FZF_DEFAULT_COMMAND = 'rg --files --follow --hidden -g !.git'
-" TODO add preview
-" let g:fzf_preview_window = ['right:50%', 'ctrl-/']
+let $FZF_DEFAULT_COMMAND = 'rg --files --follow --hidden --glob !.git'
 
 " Use git root if project is inside a git repo
 function! s:find_git_root()
@@ -613,6 +626,19 @@ function! s:find_git_root()
 endfunction
 
 command! ProjectFiles execute 'Files' s:find_git_root()
+
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+
+" Call ag from git root
+command! -nargs=* ProjectAg
+  \ call fzf#vim#ag(<q-args>, extend(s:find_git_root(), g:fzf_layout))
+
+" Call ag at the specified subpath/ or git root subpath
+function! s:ag_in(...)
+  call fzf#vim#ag(join(a:000[1:], ' '), extend({'dir': a:1}, g:fzf_layout))
+endfunction
+
+command! -nargs=+ -complete=dir AgIn call s:ag_in(<f-args>)
 
 " ---------------------------------------------
 " ### coc.vim default settings
@@ -677,13 +703,13 @@ nnoremap <silent> gb :call GoBackAndClose()<CR>
 map gf <C-i>
 
 " Vscode-like multi word selection
-nmap <expr> <silent> <C-d> <SID>select_current_word()
-function! s:select_current_word()
-  if !get(b:, 'coc_cursors_activated', 0)
-    return "\<Plug>(coc-cursors-word)"
-  endif
-  return "*\<Plug>(coc-cursors-word):nohlsearch\<CR>"
-endfunc
+" nmap <expr> <silent> <C-d> <SID>select_current_word()
+" function! s:select_current_word()
+  " if !get(b:, 'coc_cursors_activated', 0)
+    " return "\<Plug>(coc-cursors-word)"
+  " endif
+  " return "*\<Plug>(coc-cursors-word):nohlsearch\<CR>"
+" endfunc
 
 " Use U to show documentation in preview window
 nnoremap <silent> U :call <SID>show_documentation()<CR>
@@ -764,7 +790,9 @@ endfunction
 " Ex: `\b` for building, `\r` for running and `\b` for running test.
 autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
 autocmd FileType go nmap <leader>r  <Plug>(go-run)
-autocmd FileType go nmap <leader>t  <Plug>(go-test)
+" autocmd FileType go nmap <leader>t  <Plug>(go-test)
+" Run go test for function under cursor
+autocmd FileType go nmap <leader>t  <Plug>(go-test-func)
 
 " Automatically add/remove json tags to Go structs.
 autocmd FileType go nmap <silent>tg :GoAddTags<CR>
