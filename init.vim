@@ -148,7 +148,7 @@ call plug#begin("~/.config/nvim/plugged")
   " Rust
   Plug 'rust-lang/rust.vim'
   " Plug 'racer-rust/vim-racer'
-
+  let g:rustfmt_autosave = 1
   " Js, Ts and Jsx
   Plug 'pangloss/vim-javascript'
   Plug 'leafgarland/typescript-vim'
@@ -371,6 +371,7 @@ endfunction
 
 map <silent> <leader>q :call DeleteBuffer()<CR>
 map <silent> <leader>!q :Bdelete!<CR>
+tnoremap jkq <C-\><C-n> :call DeleteBuffer()<CR>
 
 " ---------------------------------------------
 "  ### Lightline + Bufferline
