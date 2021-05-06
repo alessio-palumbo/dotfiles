@@ -35,6 +35,8 @@
     "yaml",
     "json"
   ],
+  "yaml.format.enable": true,
+  "yaml.format.bracketSpacing": false,
   "eslint.autoFixOnSave": true,
   "suggest.echodocSupport": true,
   "suggest.maxCompleteItemCount": 20,

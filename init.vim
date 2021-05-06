@@ -133,7 +133,8 @@ call plug#begin("~/.config/nvim/plugged")
     \'coc-tsserver',
     \'coc-tslint-plugin',
     \'coc-yank',
-    \'coc-pyright'
+    \'coc-pyright',
+    \'coc-yaml'
     \]
 
   " Format for C languages (C, C++, Obj-C, Js, Java, Ts, Protobuf)
@@ -211,6 +212,10 @@ autocmd FileType json setlocal ts=2 sw=2 expandtab
 autocmd FileType javascript setlocal ts=2 sw=2 expandtab
 autocmd FileType proto setlocal ts=2 sw=2 expandtab
 autocmd FileType go setlocal ts=8 sw=8
+
+" add yaml stuffs
+au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 
 " Remap escape
 inoremap jk <Esc>
@@ -349,6 +354,7 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 
 " Toggle NERDTree in current buffer dir.
 nnoremap <silent> <C-b> :NERDTreeToggle %<CR>
+tnoremap <silent> <C-b> <C-\><C-n> :NERDTreeToggle .<CR>
 
 " Toggle NERDTree in VCS root directory, if available.
 " nnoremap <silent> <C-b> :NERDTreeToggle %<CR>
