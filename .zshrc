@@ -45,6 +45,9 @@ plugins=(
 # Add version control identities to ssh-agent at startup
 zstyle :omz:plugins:ssh-agent identities id_rsa #id_rsa_bb
 
+# Avoid exiting terminal when pressing ctrl+D
+setopt ignore_eof
+
 source $ZSH/oh-my-zsh.sh
 
 # eksctl
@@ -265,7 +268,7 @@ mkcode() {
 	mktouch $1 && "$EDITOR" "$(basename "$1")"
 }
 
-__mkconfirm() {
+mkconfirm() {
 	dest="$1"
 
     echo -n "Directory $dest does not exist. Create? [Yy/Nn] "
@@ -301,6 +304,24 @@ cpd() {
     [[ ! -d "$dest" ]] && { __mkconfirm "$dest" || return }
 
     cp -r "$1" "$dest" && echo -n "Successfully copied $1 to $dest"
+}
+
+ased() {
+	desc="Usage: [ased 'search_term' 'replace_regex'] Find all the files containing the given search_term and applies the given regex."
+	print_usage "$1" "$desc" && return
+
+    force=false
+    search=$1
+    replace=$2
+    [[ "$#" -lt 2 ]] && { echo "Expecting a search term and a replace regex string"; return }
+    if [[ "$#" -eq 3 ]]; then
+      [[ "$1" != "-f" ]] && { echo "First arg should be -f to force replace"; return }
+      force=true
+      search=$2
+      replace=$3
+    fi
+    # Make sure we are in a git repo, to be safe, unless force is used.
+    git rev-parse 2>/dev/null || [[ "$force" = true ]] && ag -Ql "$search" | xargs sed -i "" "$replace"
 }
 
 # kubectrl aliases
