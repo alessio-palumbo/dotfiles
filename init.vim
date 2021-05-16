@@ -605,8 +605,7 @@ nnoremap fh :Files $HOME<CR>
 nnoremap fr :Files /<CR>
 
 " # require silversearcher-ag
-nnoremap fg :ProjectAg<CR>
-nnoremap fa :Ag<CR>
+nnoremap fg :Ag<CR>
 nnoremap fi :AgIn<space>
 
 " Check git commit history
@@ -614,18 +613,12 @@ nnoremap fc :Commits<CR>
 " Check git status
 nnoremap fs :GFiles?<CR>
 
-" change default floating window to bottom split
-" let g:fzf_layout = { 'down': '~40%' }
-
-let g:fzf_action = {
-  \ 'ctrl-t': 'tab split',
-  \ 'ctrl-s': 'split',
-  \ 'ctrl-v': 'vsplit'
-  \}
-
 " # require ripgrep
 " let $FZF_DEFAULT_COMMAND = 'rg --files --no-ignore-vcs --hidden'
 let $FZF_DEFAULT_COMMAND = 'rg --files --follow --hidden --glob !.git'
+
+" let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+let g:fzf_layout = { 'down': '~40%' }
 
 " Use git root if project is inside a git repo
 function! s:find_git_root()
@@ -634,15 +627,21 @@ endfunction
 
 command! ProjectFiles execute 'Files' s:find_git_root()
 
-let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
+command! -bang -nargs=* Ag
+  \ call fzf#vim#ag(<q-args>,
+  \                 fzf#vim#with_preview({
+  \                   'options': '--delimiter : --nth 4..',
+  \                   'dir': s:find_git_root(),
+  \                 }),
+  \                 <bang>0)
 
-" Call ag from git root
-command! -nargs=* ProjectAg
-  \ call fzf#vim#ag(<q-args>, extend(s:find_git_root(), g:fzf_layout))
-
-" Call ag at the specified subpath/ or git root subpath
+" Call ag from the specified path
 function! s:ag_in(...)
-  call fzf#vim#ag(join(a:000[1:], ' '), extend({'dir': a:1}, g:fzf_layout))
+  call fzf#vim#ag(join(a:000[1:], ' '),
+  \               fzf#vim#with_preview({
+  \                 'options': '--delimiter : --nth 4..',
+  \                 'dir': a:1,
+  \               }))
 endfunction
 
 command! -nargs=+ -complete=dir AgIn call s:ag_in(<f-args>)
