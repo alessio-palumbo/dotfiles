@@ -14,12 +14,23 @@ call plug#begin("~/.config/nvim/plugged")
   " Fancy vim startup page
   Plug 'mhinz/vim-startify'
 
+  " Notes/diary taking
+  Plug 'vimwiki/vimwiki'
+    " <Leader>ww – Open the default wiki index file
+    " <Leader>ws – Select and open wiki index file
+    " <Enter> – Follow/Create wiki link
+    " <Backspace> – Go back to parent(previous) wiki link
+    " <Tab> – Find next wiki link
+    " <Shift-Tab> – Find previous wiki link
+
   " Delete buffers
   Plug 'moll/vim-bbye'
 
   " Fuzzy search
   Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
   Plug 'junegunn/fzf.vim'
+  " Show register content when hitting '"' or '@' (normal) or 'C-R' (insert)
+  Plug 'junegunn/vim-peekaboo'
 
   " Git
   Plug 'tpope/vim-fugitive'
@@ -338,6 +349,17 @@ let g:startify_lists = [
   \ ]
 
 let g:startify_bookmarks = [ {'v': '~/.config/nvim/init.vim'}, {'z': '~/.zshrc'} ]
+
+" ---------------------------------------------
+" ### Vim-wiki
+" ---------------------------------------------
+
+" required settings
+autocmd FileType plugin on
+syntax on
+" Use markdown syntax instead of vimwiki
+let g:vimwiki_list = [{'path': '~/vimwiki/',
+                      \ 'syntax': 'markdown', 'ext': '.md'}]
 
 " ---------------------------------------------
 " ### NERDTree configs - Ctrl+B to toggle
