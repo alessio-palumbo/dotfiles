@@ -16,12 +16,6 @@ call plug#begin("~/.config/nvim/plugged")
 
   " Notes/diary taking
   Plug 'vimwiki/vimwiki'
-    " <Leader>ww – Open the default wiki index file
-    " <Leader>ws – Select and open wiki index file
-    " <Enter> – Follow/Create wiki link
-    " <Backspace> – Go back to parent(previous) wiki link
-    " <Tab> – Find next wiki link
-    " <Shift-Tab> – Find previous wiki link
 
   " Delete buffers
   Plug 'moll/vim-bbye'
@@ -354,12 +348,23 @@ let g:startify_bookmarks = [ {'v': '~/.config/nvim/init.vim'}, {'z': '~/.zshrc'}
 " ### Vim-wiki
 " ---------------------------------------------
 
-" required settings
+" <Leader>ww – Open the default wiki index file
+" <Leader>ws – Select and open wiki index file
+" <Enter> – Follow/Create wiki link
+" <Backspace> – Go back to parent(previous) wiki link
+"
+" Required settings
 autocmd FileType plugin on
-syntax on
+" syntax on
+
 " Use markdown syntax instead of vimwiki
 let g:vimwiki_list = [{'path': '~/vimwiki/',
                       \ 'syntax': 'markdown', 'ext': '.md'}]
+
+" Remap the following to avoid changing Tab and S-Tab current behaviours
+nmap <Leader>wf <Plug>VimwikiFollowLink
+nmap <Leader>wn <Plug>VimwikiNextLink
+nmap <Leader>wp <Plug>VimwikiPrevLink
 
 " ---------------------------------------------
 " ### NERDTree configs - Ctrl+B to toggle
@@ -717,12 +722,12 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
-" Avoid leaving buffers opened after looking up definitions
+" Avoid leaving buffers opened after looking up definitions (unless modified)
 function! GoBackAndClose()
   let prev_buffer = bufnr()
   execute "normal \<C-O>"
   let curr_buffer = bufnr()
-  if curr_buffer != prev_buffer
+  if (curr_buffer != prev_buffer) && !(getbufinfo(prev_buffer)[0].changed)
     execute "bd " . prev_buffer
   endif
 endfunction
