@@ -311,6 +311,9 @@ set noswapfile
 set ignorecase "ignore case when searching
 set smartcase  "ignore case unless a capital letter is used
 set title titlestring=%<%F titlelen=70
+" This exclude newlines from a selection during visual/selection
+" E.g. `v$` will only select up and including the last char/whitespace on the line.
+set selection=old
 
 "-- Whitespace highlight --
 " match ExtraWhitespace /\s\+$/
@@ -631,7 +634,8 @@ nnoremap ff :Files<CR>
 nnoremap fh :Files $HOME<CR>
 nnoremap fr :Files /<CR>
 
-" # require silversearcher-ag
+" Use silversearcher to look for term inside the files in the directory
+" Note: Use ' before a search term to indicate exact match
 nnoremap fg :Ag<CR>
 nnoremap fi :AgIn<space>
 
