@@ -142,6 +142,13 @@ call plug#begin("~/.config/nvim/plugged")
     \'coc-yaml'
     \]
 
+  " Snippets utility and manager
+  Plug 'SirVer/ultisnips'
+  Plug 'honza/vim-snippets'
+    let g:UltiSnipsExpandTrigger="<tab>"
+    " list all snippets for current filetype
+    let g:UltiSnipsListSnippets="<c-l"
+
   " Format for C languages (C, C++, Obj-C, Js, Java, Ts, Protobuf)
   Plug 'rhysd/vim-clang-format'
 
@@ -185,6 +192,8 @@ endif
 syntax enable
 colorscheme molokai
 highlight Normal guibg=black guifg=white
+highlight Visual guibg=orange guifg=RoyalBlue
+highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
 
 " ---------------------------------------------
 " Rainbow parens
@@ -226,6 +235,7 @@ autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 inoremap jk <Esc>
 tnoremap jk <C-\><C-n>
 inoremap jj <Esc>o
+
 " Add mapping to go to end of line when in insert mode
 inoremap <C-e> <C-o>A
 

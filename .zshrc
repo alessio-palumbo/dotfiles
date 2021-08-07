@@ -95,7 +95,7 @@ alias gcm='git checkout main'
 alias gcmp='git checkout main && git pull --rebase'
 alias gc-='git checkout -'
 alias gtalias='cat ~/.zshrc | grep "alias g"'
-alias glm='git log --author=$(git config user.name)'
+alias glm='git log --author=$(git config user.email)'
 alias gdc='git diff --cached'
 # git colorized logs
 alias glg='git log --date-order --all --graph --format="%C(green)%h%Creset %C(yellow)%an%Creset %C(blue bold)%ar%Creset %C(red bold)%d%Creset%s"'

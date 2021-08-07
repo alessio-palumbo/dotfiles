@@ -41,5 +41,7 @@
   "suggest.echodocSupport": true,
   "suggest.maxCompleteItemCount": 20,
   "suggest.noselect": false,
-  "git.addGBlameToVirtualText": true
+  "git.addGBlameToVirtualText": true,
+  "diagnostic.infoSign": "?",
+  "diagnostic.errorSign": "x"
 }
