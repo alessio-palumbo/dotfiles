@@ -16,6 +16,8 @@ call plug#begin("~/.config/nvim/plugged")
 
   " Notes/diary taking
   Plug 'vimwiki/vimwiki'
+  " Markdown preview in buffer
+  Plug 'ellisonleao/glow.nvim', {'do': ':GlowInstall', 'branch': 'main'}
 
   " Delete buffers
   Plug 'moll/vim-bbye'
@@ -139,21 +141,25 @@ call plug#begin("~/.config/nvim/plugged")
     \'coc-tslint-plugin',
     \'coc-yank',
     \'coc-pyright',
-    \'coc-yaml'
+    \'coc-yaml',
+    \'coc-rust-analyzer'
     \]
 
   " Snippets utility and manager
-  Plug 'SirVer/ultisnips'
-  Plug 'honza/vim-snippets'
-    let g:UltiSnipsExpandTrigger="<tab>"
-    " list all snippets for current filetype
-    let g:UltiSnipsListSnippets="<c-l"
+  " Plug 'SirVer/ultisnips'
+  " Plug 'honza/vim-snippets'
+    " let g:UltiSnipsExpandTrigger="<tab>"
+    " " list all snippets for current filetype
+    " let g:UltiSnipsListSnippets="<c-l"
 
   " Format for C languages (C, C++, Obj-C, Js, Java, Ts, Protobuf)
   Plug 'rhysd/vim-clang-format'
 
   " Tags
   " Plug 'vim-scripts/taglist.vim'
+
+  " Indenting pluging
+  Plug 'pseewald/anyfold'
 
   " Go plugin
   Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
@@ -223,6 +229,7 @@ augroup END
 
 " File specific rules
 autocmd FileType json setlocal ts=2 sw=2 expandtab
+autocmd FileType css setlocal ts=2 sw=2 expandtab
 autocmd FileType javascript setlocal ts=2 sw=2 expandtab
 autocmd FileType proto setlocal ts=2 sw=2 expandtab
 autocmd FileType go setlocal ts=8 sw=8
@@ -256,6 +263,10 @@ set number relativenumber
 :  autocmd BufEnter,FocusGained,InsertLeave * set relativenumber
 :  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
 :augroup END
+
+" Activate folding plugin on all files
+autocmd Filetype * AnyFoldActivate
+set foldlevel=99
 
 " use enter to clear search highlighting
 nnoremap <silent> <CR> :nohlsearch<CR>

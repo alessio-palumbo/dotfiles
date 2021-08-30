@@ -43,5 +43,9 @@
   "suggest.noselect": false,
   "git.addGBlameToVirtualText": true,
   "diagnostic.infoSign": "?",
-  "diagnostic.errorSign": "x"
+  "diagnostic.errorSign": "x",
+  "rust-analyzer.checkOnSave.command": "clippy",
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  }
 }
