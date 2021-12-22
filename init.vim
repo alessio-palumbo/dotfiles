@@ -142,7 +142,10 @@ call plug#begin("~/.config/nvim/plugged")
     \'coc-yank',
     \'coc-pyright',
     \'coc-yaml',
-    \'coc-rust-analyzer'
+    \'coc-rust-analyzer',
+    \'coc-styled-components',
+    \'coc-go',
+    \'coc-solargraph'
     \]
 
   " Snippets utility and manager
@@ -160,9 +163,14 @@ call plug#begin("~/.config/nvim/plugged")
 
   " Indenting pluging
   Plug 'pseewald/anyfold'
+  " zM => close all folds (foldlevel=0)
+  " zR => open all folds
+  " za => toggle fold (1 level)
+  " zA => toggle fold (all level recursively)
 
   " Go plugin
   Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+  Plug 'sebdah/vim-delve'
 
   " Rust
   Plug 'rust-lang/rust.vim'
@@ -228,10 +236,7 @@ augroup VCenterCursor
 augroup END
 
 " File specific rules
-autocmd FileType json setlocal ts=2 sw=2 expandtab
-autocmd FileType css setlocal ts=2 sw=2 expandtab
-autocmd FileType javascript setlocal ts=2 sw=2 expandtab
-autocmd FileType proto setlocal ts=2 sw=2 expandtab
+autocmd FileType json,proto,html,css,javascript setlocal ts=2 sw=2 expandtab
 autocmd FileType go setlocal ts=8 sw=8
 
 " add yaml stuffs
@@ -274,12 +279,6 @@ nnoremap <silent> <CR> :nohlsearch<CR>
 " Remap up and down to avoid skipping wrapped lines
 nnoremap j gj
 nnoremap k gk
-
-" Use C + navigation keys for wider movements.
-nnoremap <C-j> }
-nnoremap <C-k> {
-nnoremap <C-h> 2b
-nnoremap <C-l> 2e
 
 " Shortcut to open init.vim
 nnoremap <silent> <leader>cf :e $MYVIMRC<CR>
@@ -346,6 +345,11 @@ set selection=old
 " TODO AutoPairs plugin - Do not use on vim files to avoid commented line to
 " collapse on each other when deleting a comment
 " au FileType vim let b:AutoPairs = ''
+
+
+" REMOVE ME IF NOT NEEDED
+nnoremap d" :execute "normal \<Plug>Dsurround\""<CR>
+nnoremap d' :execute "normal \<Plug>Dsurround'"<CR>
 
 " ---------------------------------------------
 " ### Vim-startify
@@ -429,6 +433,8 @@ endfunction
 map <silent> <leader>q :call DeleteBuffer()<CR>
 map <silent> <leader>!q :Bdelete!<CR>
 tnoremap jkq <C-\><C-n> :call DeleteBuffer()<CR>
+" Switch between text and terminal buffer
+tnoremap <C-^> <C-\><C-n> :b #<CR>
 
 " ---------------------------------------------
 "  ### Lightline + Bufferline
@@ -551,6 +557,9 @@ nmap <silent><S-TAB> :bprev<CR>
 " nmap <leader>- <Plug>AirlineSelectPrevTab
 " nmap <leader>= <Plug>AirlineSelectNextTab
 
+" " add terminal to tab list
+" let g:airline#extensions#tabline#ignore_bufadd_pat = '!defx|gundo|nerd_tree|startify|tagbar|undotree|vimfiler'
+
 " ---------------------------------------------
 " ### Split panes
 " ---------------------------------------------
@@ -568,18 +577,18 @@ set splitright
 set splitbelow
 
 " use alt+hjkl to move between split/vsplit panels
-tnoremap <A-h> <C-\><C-n><C-w>h
-tnoremap <A-j> <C-\><C-n><C-w>j
-tnoremap <A-k> <C-\><C-n><C-w>k
-tnoremap <A-l> <C-\><C-n><C-w>l
-inoremap <A-h> <C-\><C-N><C-w>h
-inoremap <A-j> <C-\><C-N><C-w>j
-inoremap <A-k> <C-\><C-N><C-w>k
-inoremap <A-l> <C-\><C-N><C-w>l
-nnoremap <A-h> <C-w>h
-nnoremap <A-j> <C-w>j
-nnoremap <A-k> <C-w>k
-nnoremap <A-l> <C-w>l
+tnoremap <C-h> <C-\><C-n><C-w>h
+tnoremap <C-j> <C-\><C-n><C-w>j
+tnoremap <C-k> <C-\><C-n><C-w>k
+tnoremap <C-l> <C-\><C-n><C-w>l
+inoremap <C-h> <C-\><C-N><C-w>h
+inoremap <C-j> <C-\><C-N><C-w>j
+inoremap <C-k> <C-\><C-N><C-w>k
+inoremap <C-l> <C-\><C-N><C-w>l
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
 
 " ---------------------------------------------
 " ### Integrated terminal - Ctrl+N
@@ -598,9 +607,6 @@ nnoremap <silent> ts :call OpenTerminal()<CR>
 
 " start terminal in new buffer
 nnoremap <silent> tt :edit term://zsh<CR>
-
-" add terminal to tab list
-let g:airline#extensions#tabline#ignore_bufadd_pat = '!defx|gundo|nerd_tree|startify|tagbar|undotree|vimfiler'
 
 " turn terminal to normal mode with escape
 tnoremap <Esc> <C-\><C-n>
@@ -830,6 +836,11 @@ let g:go_fmt_command = "goimports"
 " Status line types/signatures
 let g:go_auto_type_info = 1
 
+" Show name of failed test
+let g:go_test_show_name=1
+" Set quickfix window height
+let g:go_list_height = 10
+
 " Add go pls support
 let g:go_def_mode='gopls'
 let g:go_info_mode='gopls'
@@ -855,6 +866,15 @@ autocmd FileType go nmap <leader>t  <Plug>(go-test-func)
 " Automatically add/remove json tags to Go structs.
 autocmd FileType go nmap <silent>tg :GoAddTags<CR>
 autocmd FileType go nmap <silent>tr :GoRemoveTags<CR>
+
+" ---------------------------------------------
+"  ### Delve
+" ---------------------------------------------
+
+autocmd FileType go nnoremap <leader>a :DlvToggleBreakpoint<CR>
+autocmd FileType go nnoremap <leader>s :DlvToggleTracepoint<CR>
+autocmd FileType go nnoremap <leader>ca :DlvClearAll<CR>
+autocmd FileType go nnoremap <leader>d :DlvDebug<CR>
 
 " ---------------------------------------------
 "  ### git gutter

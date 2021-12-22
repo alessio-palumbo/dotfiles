@@ -17,6 +17,9 @@
       }
     }
   },
+  "go.goplsOptions": {
+    "staticcheck": true
+  },
   "coc.preferences.formatOnSaveFiletypes": [
     "go",
     "python",
@@ -26,7 +29,8 @@
     "typescriptreact",
     "typescript",
     "json",
-    "jsonc"
+    "jsonc",
+    "html"
   ],
   "prettier.disableLanguages": [
     "html",
@@ -35,6 +39,7 @@
     "yaml",
     "json"
   ],
+  "prettier.singleQuote": true,
   "yaml.format.enable": true,
   "yaml.format.bracketSpacing": false,
   "eslint.autoFixOnSave": true,
@@ -44,6 +49,8 @@
   "git.addGBlameToVirtualText": true,
   "diagnostic.infoSign": "?",
   "diagnostic.errorSign": "x",
+  "diagnostic.checkCurrentLine": true,
+  "codeLens.enable": true,
   "rust-analyzer.checkOnSave.command": "clippy",
   "emmet.includeLanguages": {
     "javascript": "javascriptreact"

@@ -138,7 +138,6 @@ ght () {
 
 ## General Utils
 alias se='sudoedit'
-alias cdh='cd $HOME'
 alias vz='vim $HOME/.zshrc'
 alias vim='nvim'
 alias oldvim='\vim'
@@ -382,6 +381,9 @@ elif [[ -n "$NVIM_LISTEN_ADDRESS" ]]; then
     # Requires neovim-remote installed
     nvr --servername "$VIM_SERVERNAME" --remote-expr "$(printf -- 'Tapi_lcd(0, "%q")' "$(pwd)")"
   }
+
+  # Make sure we are not nesting nvim sessions
+  alias nvim=nvr
 fi
 
 # Source fzf (should be kept last)
