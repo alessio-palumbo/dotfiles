@@ -34,8 +34,9 @@ plugins=(
   aws
   kubectl
   kops
+  gcloud
   ssh-agent
-  cargo
+  rust
  # vi-mode
 )
 
@@ -132,6 +133,20 @@ ght () {
     [ $# -eq 1 ] && SKIP=$1
     [ $# -eq 2 ] && FMT=$2
     gh $SKIP $FMT
+}
+
+gblt () {
+    cmd="git branch --sort=-committerdate -v"
+    lines=$1
+    if [[ "$lines" =~ "^[0-9]+$" ]]; then
+        if [[ "$lines" -eq 0 ]]; then
+            eval "$cmd" | awk 'NR==1 {print $1}'
+        else
+            eval "$cmd" | head -"$lines"
+        fi
+        return
+    fi
+    eval "$cmd"
 }
 
 ##### Other Aliases
@@ -353,10 +368,54 @@ remouse() {
 #     tr : \\n
 #     sed 's/:/\n/g'
 #     awk '{ gsub(":", "\n") } 1'
-# TODO handle separator arg
 spl() {
 	[[ ! -z "$1" ]] && DELIM="$1" || DELIM=" "
 	tr "$DELIM" "\n"
+}
+
+# Print the given line number from a file.
+# If no file is provided it assumes the file is the output of a pipe.
+pln() {
+    USAGE="Usage: pln <line_number> [optional]<file>"
+    [[ "$#" -eq 0 ]] || [[ "$1" == -h ]] && echo "$USAGE"; return
+    sed "${1}q;d" $2
+}
+
+awkat() {
+    usage='print_usage "-h" "Usage: Concat string with awk output\n
+        => awkat <string> [opt]-o <lines to offset> [opt]-l <lines to return>"
+        [opt]-f <filename> [opt]-a (append instead of prepend); return'
+
+    offset=0
+    lines=0
+    file=''
+    append='false'
+    str=''
+
+    while test $# -gt 0; do
+        case "$1" in
+            -h) eval "$usage" ;;
+            -o) [[ -z "$2" ]] && eval "$usage"
+                offset=$2; shift 2 ;;
+            -l) [[ -z "$2" ]] && eval "$usage"
+                lines=$2; shift 2 ;;
+            -f) [[ -z "$2" ]] && eval "$usage"
+                file=$2; shift 2 ;;
+            -a) append='true'; shift ;;
+            -*) echo ">>> unknown flag: $1!"; eval "$usage" ;;
+            *) str="$1"; shift ;;
+        esac
+    done
+
+    arg="NR>$offset"
+    [[ $lines -gt 0 ]] && arg+="&&NR<=$(($lines+$offset))"
+
+    if [[ "$append" == 'true' ]]; then
+        arg+=' {print $1 s}'
+    else
+        arg+=' {print s $1}'
+    fi
+    awk "$arg" s=$str $file
 }
 
 ## jq
@@ -364,6 +423,14 @@ spl() {
 fclip () { jq -r <<<"$(pblip)" }
 # format a stringified inner field from clipboard
 finner () { jq -r ."$1" <<<"$(pclip)" | jq . }
+# output a csv from a json array input
+jqv () { jq -r '(.[0] | keys_unsorted) as $keys | $keys, map([.[ $keys[] ]])[] | @csv' }
+
+# cp latest downloaded file
+cpl () {
+    latest=$(ls -t $HOME/Downloads | head -1)
+    cp -r $HOME/Downloads/"$latest" . && echo "$latest"
+}
 
 # alias cd into path (uses ~/bin/op script)
 cdf() {
