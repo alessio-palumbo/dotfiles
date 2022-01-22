@@ -28,6 +28,9 @@ call plug#begin("~/.config/nvim/plugged")
   " Show register content when hitting '"' or '@' (normal) or 'C-R' (insert)
   Plug 'junegunn/vim-peekaboo'
 
+  " Improved Motion/Partial search
+  Plug 'justinmk/vim-sneak'
+
   " Git
   Plug 'tpope/vim-fugitive'
 
@@ -300,6 +303,20 @@ endif
 " Enable mouse
 set mouse=a
 
+" Keeps the cursor under current word instead of jumping to next when
+" selecting word.
+nnoremap * :keepjumps normal! mi*`i<CR>
+
+" --------------------------------------------
+" ### vim-sneak
+" --------------------------------------------
+
+nmap <leader>s <Plug>Sneak_s
+nmap <leader>S <Plug>Sneak_S
+nmap <leader>f <Plug>Sneak_f
+nmap <leader>F <Plug>Sneak_F
+let g:sneak#label = 1
+
 " ---------------------------------------------
 " ### General settings
 " ---------------------------------------------
@@ -426,7 +443,8 @@ function! DeleteBuffer()
       " main window.
     if (current_window != 1 && winnr() == current_window) | q! | endif
   else
-      Bdelete
+    Bdelete
+    if len(getbufinfo({'buflisted':1})) == 0 | q | endif
   endif
 endfunction
 
@@ -753,6 +771,8 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
 nmap <silent> gr <Plug>(coc-references)
 
+nmap <silent> gv :vsp<CR><Plug>(coc-definition)
+
 " Avoid leaving buffers opened after looking up definitions (unless modified)
 function! GoBackAndClose()
   let prev_buffer = bufnr()
@@ -783,7 +803,7 @@ nmap <leader>rn <Plug>(coc-rename)
 
 " Remap for format selected region
 vmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+" nmap <leader>f  <Plug>(coc-format-selected)
 " Show all diagnostics
 nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
 " Manage extensions
@@ -872,7 +892,7 @@ autocmd FileType go nmap <silent>tr :GoRemoveTags<CR>
 " ---------------------------------------------
 
 autocmd FileType go nnoremap <leader>a :DlvToggleBreakpoint<CR>
-autocmd FileType go nnoremap <leader>s :DlvToggleTracepoint<CR>
+autocmd FileType go nnoremap <leader>A :DlvToggleTracepoint<CR>
 autocmd FileType go nnoremap <leader>ca :DlvClearAll<CR>
 autocmd FileType go nnoremap <leader>d :DlvDebug<CR>
 
