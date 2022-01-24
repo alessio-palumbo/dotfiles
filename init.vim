@@ -285,6 +285,7 @@ nnoremap k gk
 
 " Shortcut to open init.vim
 nnoremap <silent> <leader>cf :e $MYVIMRC<CR>
+nnoremap <silent> <leader>z :e $HOME/.zshrc<CR>
 
 " Clear whitespace
 nnoremap <silent> <leader>ww :FixWhitespace<CR>
@@ -436,12 +437,11 @@ tnoremap <silent> <C-b> <C-\><C-n> :NERDTreeToggle .<CR>
 " ---------------------------------------------
 
 function! DeleteBuffer()
+  let is_split = (winnr() != 1)
   if &buftype ==# 'terminal'
-    let current_window = winnr()
-      Bdelete!
-      " Remove current split after closing a split terminal, unless it's the
-      " main window.
-    if (current_window != 1 && winnr() == current_window) | q! | endif
+    Bdelete!
+    if is_split | q! | endif
+  elseif is_split | q
   else
     Bdelete
     if len(getbufinfo({'buflisted':1})) == 0 | q | endif
