@@ -308,17 +308,6 @@ set mouse=a
 " selecting word.
 nnoremap * :keepjumps normal! mi*`i<CR>
 
-" --------------------------------------------
-" ### vim-sneak
-" --------------------------------------------
-
-nmap <leader>s <Plug>Sneak_s
-nmap <leader>S <Plug>Sneak_S
-nmap <leader>f <Plug>Sneak_f
-nmap <leader>F <Plug>Sneak_F
-let g:sneak#label = 1
-
-" ---------------------------------------------
 " ### General settings
 " ---------------------------------------------
 
@@ -369,16 +358,39 @@ set selection=old
 nnoremap d" :execute "normal \<Plug>Dsurround\""<CR>
 nnoremap d' :execute "normal \<Plug>Dsurround'"<CR>
 
+function! GenUUID()
+  silent! let exists = system('command -v uuidgen')
+  if exists !~ '\w\+'
+    echo 'command not found: uuidgen'
+    return 0
+  endif
+  :r !uuidgen | tr "[A-Z]" "[a-z]"
+endfunction
+
+nnoremap <silent> <leader>u :call GenUUID()<CR>
+
+" Go to next capital letter. Useful when editing camelcase words.
+nmap <silent> <leader>e :call search('[A-Z]', 'W')<CR>
+
+" Copy a number of lines from cursor and paste them below the selection.
+function! CopyLinesBelow(...)
+  let line = a:1
+  execute "normal! V" . line . "jy" . line . "jp"
+endfunction
+
+command! -nargs=+ -complete=file -bar CopyLines call CopyLinesBelow(<q-args>)
+nnoremap <leader>cp :CopyLines<space>
+
 " ---------------------------------------------
 " ### Vim-startify
-" ---------------------------------------------
+" ---------------------------------------------:vs
 
 let g:startify_session_dir = '~/.config/nvim/session'
 let g:startify_session_persistence = 1
 
-" Save session before exit if unsaved, to cater for involontary :q when
+" Save session before exit, to cater for involontary :q when
 " multiple tabs are open. Do not save if only startify buffer is open.
-autocmd VimLeave * if (v:this_session == "" && len(getbufinfo({'buflisted':1})) > 0) | :SS! aaa-temp-session | endif
+autocmd VimLeave * if (len(getbufinfo({'buflisted':1})) > 0) | :SS! aaa-temp-session | endif
 
 let g:startify_lists = [
   \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
@@ -412,6 +424,19 @@ nmap <Leader>wf <Plug>VimwikiFollowLink
 nmap <Leader>wn <Plug>VimwikiNextLink
 nmap <Leader>wp <Plug>VimwikiPrevLink
 
+" --------------------------------------------
+" ### vim-sneak
+" --------------------------------------------
+
+nmap <leader>s <Plug>Sneak_s
+nmap <leader>S <Plug>Sneak_S
+vmap <leader>s <Plug>Sneak_s
+vmap <leader>S <Plug>Sneak_S
+nmap <leader>f <Plug>Sneak_f
+nmap <leader>F <Plug>Sneak_F
+let g:sneak#label = 1
+
+" ---------------------------------------------
 " ---------------------------------------------
 " ### NERDTree configs - Ctrl+B to toggle
 " ---------------------------------------------
@@ -437,7 +462,7 @@ tnoremap <silent> <C-b> <C-\><C-n> :NERDTreeToggle .<CR>
 " ---------------------------------------------
 
 function! DeleteBuffer()
-  let is_split = (winnr() != 1)
+  let is_split = (winnr() > 1) && !(exists("g:NERDTree") && g:NERDTree.IsOpen())
   if &buftype ==# 'terminal'
     Bdelete!
     if is_split | q! | endif
@@ -594,7 +619,7 @@ nmap <silent><S-TAB> :bprev<CR>
 set splitright
 set splitbelow
 
-" use alt+hjkl to move between split/vsplit panels
+" use ctrl+hjkl to move between split/vsplit panels
 tnoremap <C-h> <C-\><C-n><C-w>h
 tnoremap <C-j> <C-\><C-n><C-w>j
 tnoremap <C-k> <C-\><C-n><C-w>k
@@ -607,6 +632,8 @@ nnoremap <C-h> <C-w>h
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
+
+nnoremap <silent> <leader>v :vs<CR>
 
 " ---------------------------------------------
 " ### Integrated terminal - Ctrl+N
