@@ -2,7 +2,6 @@ call plug#begin("~/.config/nvim/plugged")
   " Plugin Section
 
   " Theme
-  " Plug 'dracula/vim'
   Plug 'tomasr/molokai'
 
   " File manager
@@ -16,14 +15,14 @@ call plug#begin("~/.config/nvim/plugged")
 
   " Notes/diary taking
   Plug 'vimwiki/vimwiki'
-  " Markdown preview in buffer
+  " Markdown preview in buffer (:Glow to toggle)
   Plug 'ellisonleao/glow.nvim', {'do': ':GlowInstall', 'branch': 'main'}
 
   " Delete buffers
   Plug 'moll/vim-bbye'
 
   " Fuzzy search
-  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+  Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
   Plug 'junegunn/fzf.vim'
   " Show register content when hitting '"' or '@' (normal) or 'C-R' (insert)
   Plug 'junegunn/vim-peekaboo'
@@ -68,18 +67,6 @@ call plug#begin("~/.config/nvim/plugged")
     " let g:AutoPairsShortcutToggle = '<another key>'
     " to .vimrc, if the key is empty string '', then the shortcut will be disabled.
 
-    " Multi line selection/editing
-    " Plug 'mg979/vim-visual-multi', {'branch': 'master'}
-    " Basic usage:
-    " select words with Ctrl-N (like Ctrl-d in Sublime Text/VS Code)
-    " create cursors vertically with Ctrl-Down/Ctrl-Up
-    " select one character at a time with Shift-Arrows
-    " press n/N to get next/previous occurrence
-    " press [/] to select next/previous cursor
-    " press q to skip current and get next occurrence
-    " press Q to remove current cursor/selection
-    " start insert mode with i,a,I,A
-
   " Surrounding text
   Plug 'tpope/vim-surround'
     " Examples:
@@ -95,9 +82,6 @@ call plug#begin("~/.config/nvim/plugged")
   " Comment code
   Plug 'scrooloose/nerdcommenter'
 
-  " Airline (disabled as slows things down)
-  " Plug 'vim-airline/vim-airline'
-
   " Lighter airline with tabline
   Plug 'itchyny/lightline.vim'
   Plug 'mengelbrecht/lightline-bufferline'
@@ -105,23 +89,6 @@ call plug#begin("~/.config/nvim/plugged")
   " Parenthesis
   Plug 'luochen1990/rainbow'
   let g:rainbow_active = 1
-
-  " Indenting
-  " Plug 'yggdroot/indentline'
-  " let g:indentLine_setConceal = 0
-  " let g:indentLine_char_list = ['|', '¦', '┆', '┊']
-
-  Plug 'nathanaelkane/vim-indent-guides'
-  let g:indent_guides_guide_size = 1
-    " Use <Leader>ig to toggle (current mapping: nmap <silent> <Leader>ig <Plug>IndentGuidesTogglebu)
-    " let g:indent_guides_enabled_on_vim_startup = 1
-    " let g:indent_guides_auto_colors = 0
-    " autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=#00005f   ctermbg=17
-    " autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#000087 ctermbg=18
-    " autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd guibg=#0087df ctermbg=32
-    " autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#005f00 ctermbg=33
-    " hi x017_NavyBlue ctermfg=17 guifg=#00005f
-    " hi x018_DarkBlue ctermfg=18 guifg=#000087
 
   " Trailing space
   Plug 'bronson/vim-trailing-whitespace'
@@ -151,13 +118,6 @@ call plug#begin("~/.config/nvim/plugged")
     \'coc-solargraph'
     \]
 
-  " Snippets utility and manager
-  " Plug 'SirVer/ultisnips'
-  " Plug 'honza/vim-snippets'
-    " let g:UltiSnipsExpandTrigger="<tab>"
-    " " list all snippets for current filetype
-    " let g:UltiSnipsListSnippets="<c-l"
-
   " Format for C languages (C, C++, Obj-C, Js, Java, Ts, Protobuf)
   Plug 'rhysd/vim-clang-format'
 
@@ -177,8 +137,7 @@ call plug#begin("~/.config/nvim/plugged")
 
   " Rust
   Plug 'rust-lang/rust.vim'
-  " Plug 'racer-rust/vim-racer'
-  let g:rustfmt_autosave = 1
+
   " Js, Ts and Jsx
   Plug 'pangloss/vim-javascript'
   Plug 'leafgarland/typescript-vim'
@@ -213,18 +172,10 @@ highlight Visual guibg=orange guifg=RoyalBlue
 highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
 
 " ---------------------------------------------
-" Rainbow parens
-" ---------------------------------------------
-
-" # Junegunn configs
-"let g:rainbow#max_level = 16
-"let g:rainbow#pairs = [['(', ')'], ['[', ']']]
-"" List of colors that you do not want. ANSI code or #RRGGBB
-"let g:rainbow#blacklist = [233, 234]
-
-" ---------------------------------------------
 " ### Navigation
 " ---------------------------------------------
+
+let mapleader="'"
 
 set tabstop=4
 set shiftwidth=4
@@ -237,14 +188,6 @@ augroup VCenterCursor
   au BufEnter,WinEnter,WinNew,VimResized *,*.*
     \ if &buftype != 'terminal' | let &scrolloff=winheight(win_getid())/2 | endif
 augroup END
-
-" File specific rules
-autocmd FileType json,proto,html,css,javascript setlocal ts=2 sw=2 expandtab
-autocmd FileType go setlocal ts=8 sw=8
-
-" add yaml stuffs
-au! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml
-autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 
 " Remap escape
 inoremap jk <Esc>
@@ -261,7 +204,6 @@ nnoremap <silent> <C-s> :w<Cr>
 " Put a line break under the cursor
 nnoremap <silent> <leader>n a<Cr><Esc>
 
-" set diffopt+=verical
 set cursorline " highlight line the curson is on
 set copyindent " copy original indentation on autoindeting
 
@@ -287,27 +229,13 @@ nnoremap k gk
 nnoremap <silent> <leader>cf :e $MYVIMRC<CR>
 nnoremap <silent> <leader>z :e $HOME/.zshrc<CR>
 
-" Clear whitespace
-nnoremap <silent> <leader>ww :FixWhitespace<CR>
-
-" Copy\Paste clip shortcuts
-vnoremap <silent> <leader>y "+y
-vnoremap <silent> <leader>p "+p
-nnoremap <silent> <leader>p "+p
-
-if has('unix') && !has('macunix')
-  set clipboard=unnamedplus
-else
-  set clipboard=unnamed
-endif
-
 " Enable mouse
 set mouse=a
 
-" Keeps the cursor under current word instead of jumping to next when
-" selecting word.
+" Keeps the cursor under current word instead of jumping to next when selecting word.
 nnoremap * :keepjumps normal! mi*`i<CR>
 
+" ---------------------------------------------
 " ### General settings
 " ---------------------------------------------
 
@@ -323,16 +251,9 @@ autocmd BufReadPost *
 " terminal and NERDTree to sync with the current file)
 autocmd BufEnter * silent! lcd %:p:h
 
-" Remove highlighting or matched parens which is pretty congfusing
-" let loaded_matchparen = 1
 " Invert current paren  highlighting as it is confusing
-hi MatchParen ctermfg=blue ctermbg=black guifg=lightblue guibg=black term=none cterm=none gui=italic
+hi MatchParen ctermfg=blue ctermbg=black guifg=orange guibg=black term=none cterm=none gui=italic
 
-" Use persistent history.
-" if !isdirectory("/tmp/.vim-undo-dir")
-    " call mkdir("/tmp/.vim-undo-dir", "", 0700)
-" endif
-" set undodir=/tmp/.vim-undo-dir
 set undofile
 set noswapfile
 set ignorecase "ignore case when searching
@@ -342,21 +263,140 @@ set title titlestring=%<%F titlelen=70
 " E.g. `v$` will only select up and including the last char/whitespace on the line.
 set selection=old
 
-"-- Whitespace highlight --
-" match ExtraWhitespace /\s\+$/
-" autocmd BufWinEnter * match ExtraWhitespace /\s\+$/
-" autocmd InsertEnter * match ExtraWhitespace /\s\+\%#\@<!$/
-" autocmd InsertLeave * match ExtraWhitespace /\s\+$/
-" autocmd BufWinLeave * call clearmatches()
+" Share clipboard with OS
+if has('unix') && !has('macunix')
+  set clipboard=unnamedplus
+else
+  set clipboard=unnamed
+endif
 
-" TODO AutoPairs plugin - Do not use on vim files to avoid commented line to
-" collapse on each other when deleting a comment
-" au FileType vim let b:AutoPairs = ''
+" File specific rules
+autocmd FileType json,proto,html,css,javascript setlocal ts=2 sw=2 expandtab
+autocmd FileType go setlocal ts=8 sw=8
 
+autocmd! BufNewFile,BufReadPost *.{yaml,yml} set filetype=yaml
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 
-" REMOVE ME IF NOT NEEDED
-nnoremap d" :execute "normal \<Plug>Dsurround\""<CR>
-nnoremap d' :execute "normal \<Plug>Dsurround'"<CR>
+" ---------------------------------------------
+" ### Split panes
+" ---------------------------------------------
+
+" Notes:
+" * use :vs# to reopen the last closed split
+" * use :<C w> + the following to change windows position:
+"   * <C hjkl> to move the current window in the given direction
+"   * <C r> to rotate windows
+"   * <C q> to close the current split
+"   * <C o> to close all split but the current one (:on has the same effect)
+
+" open new split panes to right and below
+set splitright
+set splitbelow
+
+" use ctrl+hjkl to move between split/vsplit panels
+tnoremap <C-h> <C-\><C-n><C-w>h
+tnoremap <C-j> <C-\><C-n><C-w>j
+tnoremap <C-k> <C-\><C-n><C-w>k
+tnoremap <C-l> <C-\><C-n><C-w>l
+inoremap <C-h> <C-\><C-N><C-w>h
+inoremap <C-j> <C-\><C-N><C-w>j
+inoremap <C-k> <C-\><C-N><C-w>k
+inoremap <C-l> <C-\><C-N><C-w>l
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+
+nnoremap <silent> <leader>v :vs<CR>
+
+" ---------------------------------------------
+"  ### Buffers
+" ---------------------------------------------
+
+function! DeleteBuffer()
+  let is_split = (winnr() > 1) && !(exists("g:NERDTree") && g:NERDTree.IsOpen())
+  if &buftype ==# 'terminal'
+    Bdelete!
+    if is_split | q! | endif
+  elseif is_split | q
+  else
+    Bdelete
+    if len(getbufinfo({'buflisted':1})) == 0 | q | endif
+  endif
+endfunction
+
+map <silent> <leader>q :call DeleteBuffer()<CR>
+map <silent> <leader>!q :Bdelete!<CR>
+tnoremap jkq <C-\><C-n> :call DeleteBuffer()<CR>
+" Switch between text and terminal buffer
+tnoremap <C-^> <C-\><C-n> :b #<CR>
+
+" ---------------------------------------------
+" ### Integrated terminal - Ctrl+N
+" ---------------------------------------------
+
+" start terminal in insert mode
+au BufEnter * if &buftype == 'terminal' | :startinsert | endif
+
+" Open terminal split in current directory
+function! OpenTerminal()
+  split term://zsh
+  resize 15
+endfunction
+" let $LOCAL_DIR=expand('%:p:h')
+nnoremap <silent> ts :call OpenTerminal()<CR>
+
+" start terminal in new buffer
+nnoremap <silent> tt :edit term://zsh<CR>
+
+" turn terminal to normal mode with escape
+tnoremap <Esc> <C-\><C-n>
+
+" edit file from the directory the terminal is currently in
+tnoremap <C-N> cdv<CR><C-\><C-n>:e<space>
+" maintain behavior of mapping above for normal buffer
+nnoremap <C-N> :e<space>
+
+" Change terminal window local directory to the terminal working directory
+" when called.
+fu Tapi_lcd(buf, cwd) abort
+    if has('nvim')
+        exe 'lcd '..a:cwd
+        return ''
+    endif
+    let winid = bufwinid(a:buf)
+    if winid == -1 || empty(a:cwd)
+        return
+    endif
+    call win_execute(winid, 'lcd '..a:cwd)
+endfu
+
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+" ----------------------------------
+" let g:terminal_color_0  = '#2e3436'
+" let g:terminal_color_1  = '#cc0000'
+" let g:terminal_color_2  = '#4e9a06'
+" let g:terminal_color_3  = '#c4a000'
+let g:terminal_color_4  = '#22A9F1'
+" let g:terminal_color_5  = '#75507b'
+" let g:terminal_color_6  = '#0b939b'
+" let g:terminal_color_7  = '#d3d7cf'
+" let g:terminal_color_8  = '#555753'
+" let g:terminal_color_9  = '#ef2929'
+" let g:terminal_color_10 = '#8ae234'
+" let g:terminal_color_11 = '#fce94f'
+" let g:terminal_color_12 = '#729fcf'
+" let g:terminal_color_13 = '#ad7fa8'
+" let g:terminal_color_14 = '#00f5e9'
+" let g:terminal_color_15 = '#eeeeec'
+" ----------------------------------
+
+" ---------------------------------------------
+" ### Utilities
+" ---------------------------------------------
+
+" Clear whitespace
+nnoremap <silent> <leader>ww :FixWhitespace<CR>
 
 function! GenUUID()
   silent! let exists = system('command -v uuidgen')
@@ -364,7 +404,7 @@ function! GenUUID()
     echo 'command not found: uuidgen'
     return 0
   endif
-  :r !uuidgen | tr "[A-Z]" "[a-z]"
+  execute "normal! i" . system("uuidgen | tr '[A-Z]' '[a-z]'")[:-2]
 endfunction
 
 nnoremap <silent> <leader>u :call GenUUID()<CR>
@@ -420,6 +460,7 @@ let g:vimwiki_list = [{'path': '~/vimwiki/',
                       \ 'syntax': 'markdown', 'ext': '.md'}]
 
 " Remap the following to avoid changing Tab and S-Tab current behaviours
+nmap <Leader>wk <Plug>VimwikiIndex
 nmap <Leader>wf <Plug>VimwikiFollowLink
 nmap <Leader>wn <Plug>VimwikiNextLink
 nmap <Leader>wp <Plug>VimwikiPrevLink
@@ -428,56 +469,16 @@ nmap <Leader>wp <Plug>VimwikiPrevLink
 " ### vim-sneak
 " --------------------------------------------
 
+let g:sneak#label = 1
+
+" Double character forward/backward search
 nmap <leader>s <Plug>Sneak_s
 nmap <leader>S <Plug>Sneak_S
 vmap <leader>s <Plug>Sneak_s
 vmap <leader>S <Plug>Sneak_S
+" Single character forward/backward search
 nmap <leader>f <Plug>Sneak_f
 nmap <leader>F <Plug>Sneak_F
-let g:sneak#label = 1
-
-" ---------------------------------------------
-" ---------------------------------------------
-" ### NERDTree configs - Ctrl+B to toggle
-" ---------------------------------------------
-
-let g:NERDTreeShowHidden = 1
-let g:NERDTreeMinimalUI = 1
-let g:NERDTreeIgnore = []
-let g:NERDTreeStatusline = ''
-let NERDTreeHighlightCursorline = 0
-
-" Automaticaly close nvim if NERDTree is only thing left open
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-" Toggle NERDTree in current buffer dir.
-nnoremap <silent> <C-b> :NERDTreeToggle %<CR>
-tnoremap <silent> <C-b> <C-\><C-n> :NERDTreeToggle .<CR>
-
-" Toggle NERDTree in VCS root directory, if available.
-" nnoremap <silent> <C-b> :NERDTreeToggle %<CR>
-
-" ---------------------------------------------
-"  ### Buffers
-" ---------------------------------------------
-
-function! DeleteBuffer()
-  let is_split = (winnr() > 1) && !(exists("g:NERDTree") && g:NERDTree.IsOpen())
-  if &buftype ==# 'terminal'
-    Bdelete!
-    if is_split | q! | endif
-  elseif is_split | q
-  else
-    Bdelete
-    if len(getbufinfo({'buflisted':1})) == 0 | q | endif
-  endif
-endfunction
-
-map <silent> <leader>q :call DeleteBuffer()<CR>
-map <silent> <leader>!q :Bdelete!<CR>
-tnoremap jkq <C-\><C-n> :call DeleteBuffer()<CR>
-" Switch between text and terminal buffer
-tnoremap <C-^> <C-\><C-n> :b #<CR>
 
 " ---------------------------------------------
 "  ### Lightline + Bufferline
@@ -575,126 +576,6 @@ nmap <BS>0 <Plug>lightline#bufferline#delete(10)
 
 nmap <silent><TAB> :bnext<CR>
 nmap <silent><S-TAB> :bprev<CR>
-
-" ---------------------------------------------
-"  ### Airline + Tabline
-" ---------------------------------------------
-
-" Mode is already shown by the airline so hide it
-" set noshowmode
-" let g:airline_powerline_fonts = 1
-" let g:airline_extensions = ['branch', 'tabline']
-" let g:airline#extensions#tagbar#enabled = 0
-" let g:airline#extensions#tabline#enabled = 1
-" let g:airline#extensions#tabline#buffer_nr_show = 0
-" let g:airline#extensions#tabline#buffer_idx_mode = 1
-" nmap <leader>1 <Plug>AirlineSelectTab1
-" nmap <leader>2 <Plug>AirlineSelectTab2
-" nmap <leader>3 <Plug>AirlineSelectTab3
-" nmap <leader>4 <Plug>AirlineSelectTab4
-" nmap <leader>5 <Plug>AirlineSelectTab5
-" nmap <leader>6 <Plug>AirlineSelectTab6
-" nmap <leader>7 <Plug>AirlineSelectTab7
-" nmap <leader>8 <Plug>AirlineSelectTab8
-" nmap <leader>9 <Plug>AirlineSelectTab9
-" nmap <leader>- <Plug>AirlineSelectPrevTab
-" nmap <leader>= <Plug>AirlineSelectNextTab
-
-" " add terminal to tab list
-" let g:airline#extensions#tabline#ignore_bufadd_pat = '!defx|gundo|nerd_tree|startify|tagbar|undotree|vimfiler'
-
-" ---------------------------------------------
-" ### Split panes
-" ---------------------------------------------
-
-" Notes:
-" * use :vs# to reopen the last closed split
-" * use :<C w> + the following to change windows position:
-"   * <C hjkl> to move the current window in the given direction
-"   * <C r> to rotate windows
-"   * <C q> to close the current split
-"   * <C o> to close all split but the current one (:on has the same effect)
-
-" open new split panes to right and below
-set splitright
-set splitbelow
-
-" use ctrl+hjkl to move between split/vsplit panels
-tnoremap <C-h> <C-\><C-n><C-w>h
-tnoremap <C-j> <C-\><C-n><C-w>j
-tnoremap <C-k> <C-\><C-n><C-w>k
-tnoremap <C-l> <C-\><C-n><C-w>l
-inoremap <C-h> <C-\><C-N><C-w>h
-inoremap <C-j> <C-\><C-N><C-w>j
-inoremap <C-k> <C-\><C-N><C-w>k
-inoremap <C-l> <C-\><C-N><C-w>l
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
-
-nnoremap <silent> <leader>v :vs<CR>
-
-" ---------------------------------------------
-" ### Integrated terminal - Ctrl+N
-" ---------------------------------------------
-
-" start terminal in insert mode
-au BufEnter * if &buftype == 'terminal' | :startinsert | endif
-
-" Open terminal split in current directory
-function! OpenTerminal()
-  split term://zsh
-  resize 15
-endfunction
-" let $LOCAL_DIR=expand('%:p:h')
-nnoremap <silent> ts :call OpenTerminal()<CR>
-
-" start terminal in new buffer
-nnoremap <silent> tt :edit term://zsh<CR>
-
-" turn terminal to normal mode with escape
-tnoremap <Esc> <C-\><C-n>
-
-" edit file from the directory the terminal is currently in
-tnoremap <C-N> cdv<CR><C-\><C-n>:e<space>
-" maintain behavior of mapping above for normal buffer
-nnoremap <C-N> :e<space>
-
-
-" Change terminal window local directory to the terminal working directory
-" when called.
-fu Tapi_lcd(buf, cwd) abort
-    if has('nvim')
-        exe 'lcd '..a:cwd
-        return ''
-    endif
-    let winid = bufwinid(a:buf)
-    if winid == -1 || empty(a:cwd)
-        return
-    endif
-    call win_execute(winid, 'lcd '..a:cwd)
-endfu
-
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-" ----------------------------------
-" let g:terminal_color_0  = '#2e3436'
-" let g:terminal_color_1  = '#cc0000'
-" let g:terminal_color_2  = '#4e9a06'
-" let g:terminal_color_3  = '#c4a000'
-let g:terminal_color_4  = '#22A9F1'
-" let g:terminal_color_5  = '#75507b'
-" let g:terminal_color_6  = '#0b939b'
-" let g:terminal_color_7  = '#d3d7cf'
-" let g:terminal_color_8  = '#555753'
-" let g:terminal_color_9  = '#ef2929'
-" let g:terminal_color_10 = '#8ae234'
-" let g:terminal_color_11 = '#fce94f'
-" let g:terminal_color_12 = '#729fcf'
-" let g:terminal_color_13 = '#ad7fa8'
-" let g:terminal_color_14 = '#00f5e9'
-" let g:terminal_color_15 = '#eeeeec'
-" ----------------------------------
 
 " ---------------------------------------------
 " ### Fzf
@@ -849,14 +730,11 @@ nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
 nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
 
 " ---------------------------------------------
-" ### Coc-plugins
+" ### rust
 " ---------------------------------------------
 
-" #### MarkMap (Currently not working)
-" Create markmap from the whole file
-nmap <Leader>m <Plug>(coc-markmap-create)
-" Create markmap from the selected lines
-vmap <Leader>m <Plug>(coc-markmap-create-v)
+let g:rustfmt_autosave = 1
+autocmd FileType rust nmap <leader>t :RustTest<CR>
 
 " ---------------------------------------------
 " ### vim-go
@@ -943,10 +821,23 @@ nnoremap <silent> cm :call NERDComment(0,"toggle")<CR>
 vnoremap <silent> cm :call NERDComment(0,"toggle")<CR>
 
 " ---------------------------------------------
-"  ### NERDTree
+"  ### NERDTree - Ctrl+B to toggle
 " ---------------------------------------------
 
-" NERDTree File highlighting
+let g:NERDTreeShowHidden = 1
+let g:NERDTreeMinimalUI = 1
+let g:NERDTreeIgnore = []
+let g:NERDTreeStatusline = ''
+let NERDTreeHighlightCursorline = 0
+
+" Automaticaly close nvim if NERDTree is only thing left open
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+" Toggle NERDTree in current buffer dir.
+nnoremap <silent> <C-b> :NERDTreeToggle %<CR>
+tnoremap <silent> <C-b> <C-\><C-n> :NERDTreeToggle .<CR>
+
+" File highlighting
 function! NERDTreeHighlightFile(extension, fg, bg, guifg, guibg)
   exec 'autocmd filetype nerdtree highlight ' . a:extension .' ctermbg='. a:bg .' ctermfg='. a:fg .' guibg='. a:guibg .' guifg='. a:guifg
   exec 'autocmd filetype nerdtree syn match ' . a:extension .' #^\s\+.*'. a:extension .'$#'
