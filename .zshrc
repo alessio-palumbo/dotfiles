@@ -35,16 +35,9 @@ plugins=(
   kubectl
   kops
   gcloud
-  # ssh-agent
   rust
   # vi-mode
 )
-
-# Autojump plugin was installed through apt
-. /usr/share/autojump/autojump.sh
-
-# Add version control identities to ssh-agent at startup
-# zstyle :omz:plugins:ssh-agent identities id_rsa #id_rsa_bb
 
 # Avoid exiting terminal when pressing ctrl+D
 setopt ignore_eof
