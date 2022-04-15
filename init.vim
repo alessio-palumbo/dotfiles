@@ -56,6 +56,7 @@ call plug#begin("~/.config/nvim/plugged")
 
   " Autopair
   Plug 'jiangmiao/auto-pairs'
+    let g:AutoPairsShortcutBackInsert = '<leader>b'
     " System Shortcuts:
     " <CR>  : Insert new indented line after return if cursor in blank brackets or quotes.
     " <BS>  : Delete brackets in pair
@@ -817,8 +818,8 @@ nmap [g <Plug>(GitGutterPrevHunk)
 " Add spaces after comment delimiters by default
 let g:NERDSpaceDelims = 1
 " Remap comment toggle
-nnoremap <silent> cm :call NERDComment(0,"toggle")<CR>
-vnoremap <silent> cm :call NERDComment(0,"toggle")<CR>
+nnoremap <silent> cm :call nerdcommenter#Comment(0,"toggle")<CR>
+vnoremap <silent> cm :call nerdcommenter#Comment(0,"toggle")<CR>
 
 " ---------------------------------------------
 "  ### NERDTree - Ctrl+B to toggle

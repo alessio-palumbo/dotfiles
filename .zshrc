@@ -35,16 +35,16 @@ plugins=(
   kubectl
   kops
   gcloud
-  ssh-agent
+  # ssh-agent
   rust
- # vi-mode
+  # vi-mode
 )
 
 # Autojump plugin was installed through apt
 . /usr/share/autojump/autojump.sh
 
 # Add version control identities to ssh-agent at startup
-zstyle :omz:plugins:ssh-agent identities id_rsa #id_rsa_bb
+# zstyle :omz:plugins:ssh-agent identities id_rsa #id_rsa_bb
 
 # Avoid exiting terminal when pressing ctrl+D
 setopt ignore_eof
@@ -91,7 +91,7 @@ alias gta='git add -A'
 alias gtc='git commit -m '
 alias gts='git status'
 alias gtp='git pull `git symbolic-ref --short HEAD`'
-alias gtpr='git pull --rebase'
+alias gtpm='git pull --rebase origin main'
 alias gcm='git checkout main'
 alias gcmp='git checkout main && git pull --rebase'
 alias gc-='git checkout -'
@@ -104,16 +104,25 @@ alias lg='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %
 
 # Git Scripts
 
+gtr () { git rebase ${1:=main} }
+
 gbc () {
-	if [[ "$1" == "-h" ]]; then
-		echo "Usage: remove all local branches except master"
-		return
-	fi
+    desc="Usage: remove all local branches except main/master.\nUse -f to remove unmerged.\nUse -m with 'pattern' to remove matching."
+	print_usage "$1" "$desc" && return
+
     merged="--merged"
-    [[ ! -z $1 ]] && [[ $1 == "-f" ]] && merged=""
+	case "$1" in
+		"-m") [[ "$#" -ne 2 ]] && echo "Missing pattern to match" && return
+            del=$(git branch --list $2)
+            echo -n "Do you want to delete the following? (y/n)\n$del\n"
+            read answer
+            [[ "$answer" != "${answer#[Yy]}" ]] && echo "$del" | xargs git branch -D; return ;;
+        "-f") merged="" ;;
+	esac
+
     git for-each-ref --format '%(refname:short)' "$merged" HEAD refs/heads/ |\
-        grep -v main | xargs git branch -D 2>/dev/null ||\
-        echo "No unmerged branches found. Use -f to remove unmerged (ecluding master)"
+        grep -v 'main\|master' | xargs git branch -D 2>/dev/null ||\
+        echo "No unmerged branches found. Use -f to remove unmerged (ecluding main/master)"
 }
 
 gh () {
@@ -125,7 +134,8 @@ ghl () {
     git log -p $(gh $1) -1
 }
 ghc () {
-    gh $1 | xclip -sel clip
+    [[ `uname` == "Darwin" ]] && cmd=pbcopy || cmd='xclip -sel clip'
+    gh $1 | $cmd
     echo $(ght $1)
 }
 ght () {
@@ -136,17 +146,9 @@ ght () {
 }
 
 gblt () {
-    cmd="git branch --sort=-committerdate -v"
-    lines=$1
-    if [[ "$lines" =~ "^[0-9]+$" ]]; then
-        if [[ "$lines" -eq 0 ]]; then
-            eval "$cmd" | awk 'NR==1 {print $1}'
-        else
-            eval "$cmd" | head -"$lines"
-        fi
-        return
-    fi
-    eval "$cmd"
+    cmd="git branch --sort=-committerdate -v | grep -v 'main\|master'"
+    [[ "$1" =~ "^[1-9]+$" ]] && lines="$1"
+    eval "$cmd" | awk -v lines="$lines" 'NR<=lines {print $1,$2,$3}'
 }
 
 ##### Other Aliases
@@ -222,15 +224,6 @@ alias mkc=microk8s.kubectl
 alias awl='AWS_SECRET_ACCESS_KEY=DUMMY_TEST_KEY AWS_ACCESS_KEY_ID=DUMMY_TEST_ID aws --endpoint-url http://localhost:4566 --region ap-southeast-2'
 
 ##### Path Languages
-
-# Ruby
-source /usr/local/share/chruby/chruby.sh
-source /usr/local/share/chruby/auto.sh
-export GEM_HOME=$HOME/.gem
-export GEM_PATH=$HOME/.gem
-# export PATH="$HOME/.rbenv/bin:$PATH"
-# start ruby server
-# alias ruby_s='ruby -run -e httpd . -p 8000'
 
 # Go
 export PATH="$HOME/Dev/go/bin:/usr/local/go/bin:$PATH"
@@ -340,6 +333,15 @@ ased() {
 }
 
 # kubectrl aliases
+kcu() {
+    env="$1"
+    kc config use-context "$env"
+}
+
+kcl() {
+    pod="$1"
+    kc logs -f $(kc get po | grep "$pod" | awk 'NR==1 {print $1}')
+}
 
 kcc() {
 	env="$1"
@@ -432,10 +434,14 @@ cpl () {
     cp -r $HOME/Downloads/"$latest" . && echo "$latest"
 }
 
-# alias cd into path (uses ~/bin/op script)
-cdf() {
-    cd $(op "$1" path)
-    [ -n "$2" ] && cd $(ls | awk "/$2/" | head -n 1)
+# converts bytes to their decimal value.
+# If the -r flag is used then it also converts it back to ASCII
+xxdb () {
+    cmd='while read -r line; do printf "%x" $(((2#$line))); done < ${1:-/dev/stdin}'
+    if [[ "$1" == "-r" ]]; then
+        shift; eval "$cmd | xxd -r -p"; return
+    fi
+    eval "$cmd"
 }
 
 # Vim script to be called when in vim termianl to change window local directory to pwd

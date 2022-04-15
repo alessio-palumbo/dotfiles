@@ -52,6 +52,9 @@
   "diagnostic.checkCurrentLine": true,
   "codeLens.enable": true,
   "rust-analyzer.checkOnSave.command": "clippy",
+  "rust-analyzer.diagnostics.disabled": [
+    "inactive-code"
+  ],
   "emmet.includeLanguages": {
     "javascript": "javascriptreact"
   }
