@@ -116,7 +116,8 @@ call plug#begin("~/.config/nvim/plugged")
     \'coc-rust-analyzer',
     \'coc-styled-components',
     \'coc-go',
-    \'coc-solargraph'
+    \'coc-solargraph',
+    \'coc-sh'
     \]
 
   " Format for C languages (C, C++, Obj-C, Js, Java, Ts, Protobuf)

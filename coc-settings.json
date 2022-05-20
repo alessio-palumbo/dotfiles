@@ -15,6 +15,18 @@
       "initializationOptions": {
         "usePlaceholders": true
       }
+    },
+    "bash": {
+      "command": "bash-language-server",
+      "args": [
+        "start"
+      ],
+      "filetypes": [
+        "sh"
+      ],
+      "ignoredRootPaths": [
+        "~"
+      ]
     }
   },
   "go.goplsOptions": {
@@ -43,13 +55,11 @@
   "yaml.format.enable": true,
   "yaml.format.bracketSpacing": false,
   "eslint.autoFixOnSave": true,
-  "suggest.echodocSupport": true,
   "suggest.maxCompleteItemCount": 20,
   "suggest.noselect": false,
   "git.addGBlameToVirtualText": true,
   "diagnostic.infoSign": "?",
   "diagnostic.errorSign": "x",
-  "diagnostic.checkCurrentLine": true,
   "codeLens.enable": true,
   "rust-analyzer.checkOnSave.command": "clippy",
   "rust-analyzer.diagnostics.disabled": [
