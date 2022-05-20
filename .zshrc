@@ -1,27 +1,7 @@
-# Path to your oh-my-zsh installation.
 export ZSH=$HOME/.oh-my-zsh
 
-# Theme
-# Favourites: mytheme, philips, refined, murilasso, gozilla, gnzh, tonotdo, kafeitu, frontcube, sunaku, amuse, jtriley
-ZSH_THEME="mytheme" #mytheme
+ZSH_THEME="mytheme"
 
-# Uncomment the following line to enable command auto-correction.
-# ENABLE_CORRECTION="true"
-
-# Uncomment the following line if you want to disable marking untracked files
-# under VCS as dirty. This makes repository status check for large repositories
-# much, much faster.
-# DISABLE_UNTRACKED_FILES_DIRTY="true"
-
-# Uncomment the following line if you want to change the command execution time
-# stamp shown in the history command output.
-# The optional three formats: "mm/dd/yyyy"|"dd.mm.yyyy"|"yyyy-mm-dd"
-# HIST_STAMPS="mm/dd/yyyy"
-
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
 plugins=(
   git
   extract
@@ -44,22 +24,7 @@ setopt ignore_eof
 
 source $ZSH/oh-my-zsh.sh
 
-# eksctl
-fpath=($fpath ~/.zsh/completion)
-
-# User configuration
-
-# export MANPATH="/usr/local/man:$MANPATH"
-
-# You may need to manually set your language environment
-# export LANG=en_US.UTF-8
-
 # Preferred editor for local and remote sessions
-# if [[ -n $SSH_CONNECTION ]]; then
-#   export EDITOR='vim'
-# else
-#   export EDITOR='mvim'
-# fi
 export EDITOR=nvim
 
 # Compilation flags
@@ -67,17 +32,6 @@ export EDITOR=nvim
 
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
-
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-# alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
-
-##### Git
 
 # Git aliases
 alias gta='git add -A'
@@ -88,10 +42,8 @@ alias gtpm='git pull --rebase origin main'
 alias gcm='git checkout main'
 alias gcmp='git checkout main && git pull --rebase'
 alias gc-='git checkout -'
-alias gtalias='cat ~/.zshrc | grep "alias g"'
 alias glm='git log --author=$(git config user.email)'
 alias gdc='git diff --cached'
-# git colorized logs
 alias glg='git log --date-order --all --graph --format="%C(green)%h%Creset %C(yellow)%an%Creset %C(blue bold)%ar%Creset %C(red bold)%d%Creset%s"'
 alias lg='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit'
 
@@ -189,19 +141,6 @@ jd() {
 alias ts='tmux new-session -s'
 alias ta='tmux attach -t'
 
-# start and stop mongoDB
-alias smsta='sudo service mongod start'
-alias smsto='sudo service mongod stop'
-
-# restart postgres
-alias sprsta='sudo service postgresql restart'
-
-## Platform specific
-
-# swagger compile and run
-# alias swag='swagger generate spec -o ./swagger.json && swagger serve ./swagger.json'
-# alias swagger="docker run --rm -it -e GOPATH=$HOME/go:/go -v $HOME:$HOME -w $(pwd) --user "$(id -u):$(id -g)" quay.io/goswagger/swagger:v0.25.0"
-
 # docker
 alias dc='docker-compose'
 alias dcc="docker ps -aq -f status=exited | xargs docker rm && docker images -f dangling=true -q | xargs docker rmi"
@@ -216,7 +155,7 @@ alias mkc=microk8s.kubectl
 # Aws localstack
 alias awl='AWS_SECRET_ACCESS_KEY=DUMMY_TEST_KEY AWS_ACCESS_KEY_ID=DUMMY_TEST_ID aws --endpoint-url http://localhost:4566 --region ap-southeast-2'
 
-##### Path Languages
+##### Path
 
 # Go
 export PATH="$HOME/Dev/go/bin:/usr/local/go/bin:$PATH"
@@ -377,9 +316,9 @@ pln() {
 }
 
 awkat() {
-    usage='print_usage "-h" "Usage: Concat string with awk output\n
-        => awkat <string> [opt]-o <lines to offset> [opt]-l <lines to return>"
-        [opt]-f <filename> [opt]-a (append instead of prepend); return'
+    usage='print_usage "-h" "Usage: Concat string with awk output
+    => awkat <string> [-o <lines to offset>] [-l <lines to return>]
+    [-f <filename>] [-a (append instead of prepend)]"; return'
 
     offset=0
     lines=0
