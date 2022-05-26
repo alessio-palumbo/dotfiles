@@ -203,9 +203,6 @@ inoremap <C-e> <C-o>A
 inoremap <silent> <C-s> <Esc>:w<Cr>
 nnoremap <silent> <C-s> :w<Cr>
 
-" Put a line break under the cursor
-nnoremap <silent> <leader>n a<Cr><Esc>
-
 set cursorline " highlight line the curson is on
 set copyindent " copy original indentation on autoindeting
 
@@ -236,6 +233,17 @@ set mouse=a
 
 " Keeps the cursor under current word instead of jumping to next when selecting word.
 nnoremap * :keepjumps normal! mi*`i<CR>
+
+" ---------------------------------------------
+" ### Editing
+" ---------------------------------------------
+
+" Map previous yank register
+nnoremap <silent> <leader>p "0p
+vnoremap <silent> <leader>p "0p
+
+" Put a line break under the cursor
+nnoremap <silent> <leader>n a<Cr><Esc>
 
 " ---------------------------------------------
 " ### General settings

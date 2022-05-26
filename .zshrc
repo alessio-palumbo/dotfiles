@@ -92,7 +92,7 @@ ght () {
 
 gblt () {
     cmd="git branch --sort=-committerdate -v | grep -v 'main\|master'"
-    [[ "$1" =~ "^[1-9]+$" ]] && lines="$1"
+    [[ "$1" =~ "^[1-9]+$" ]] && lines="$1" | lines=1
     eval "$cmd" | awk -v lines="$lines" 'NR<=lines {print $1,$2,$3}'
 }
 
