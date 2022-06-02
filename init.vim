@@ -431,6 +431,17 @@ endfunction
 command! -nargs=+ -complete=file -bar CopyLines call CopyLinesBelow(<q-args>)
 nnoremap <leader>cp :CopyLines<space>
 
+" Toggle spellcheck
+function! ToggleSpell()
+    if &spell
+        set nospell
+    else
+        set spell spelllang=en_au
+    endif
+endfunction
+
+nnoremap <silent> <leader>l :call ToggleSpell()<CR>
+
 " ---------------------------------------------
 " ### Vim-startify
 " ---------------------------------------------:vs
