@@ -820,7 +820,25 @@ autocmd FileType go nmap <silent>tr :GoRemoveTags<CR>
 autocmd FileType go nnoremap <leader>a :DlvToggleBreakpoint<CR>
 autocmd FileType go nnoremap <leader>A :DlvToggleTracepoint<CR>
 autocmd FileType go nnoremap <leader>ca :DlvClearAll<CR>
-autocmd FileType go nnoremap <leader>d :DlvDebug<CR>
+
+autocmd FileType go nnoremap <leader>d :GoDebugTestFunc<CR>
+
+let g:go_debug_mappings = {
+  \ '(go-debug-continue)': {'key': 'c', 'arguments': '<nowait>'},
+  \ '(go-debug-stop)': {'key': 'q', 'arguments': '<nowait>'},
+  \ '(go-debug-next)': {'key': 'n', 'arguments': '<nowait>'},
+  \ '(go-debug-step)': {'key': 's'},
+  \ '(go-debug-stepout)': {'key': 'o'},
+  \ '(go-debug-print)': {'key': 'p'},
+  \ '(go-debug-breakpoint)': {'key': 'b'},
+  \}
+
+let g:go_debug_windows = {
+  \ 'vars':       'rightbelow 60vnew',
+  \ 'stack':      'leftabove 10new',
+  \ 'goroutines': 'leftabove 5new',
+  \ 'out':        'botright 5new',
+  \ }
 
 " ---------------------------------------------
 "  ### git gutter
