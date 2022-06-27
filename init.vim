@@ -725,7 +725,18 @@ map gf <C-i>
 " endfunc
 
 " Use U to show documentation in preview window
-nnoremap <silent> U :call <SID>show_documentation()<CR>
+nnoremap <silent> K :call ShowDocumentation()<CR>
+
+function! ShowDocumentation()
+  if CocAction('hasProvider', 'hover')
+    silent call CocActionAsync('doHover')
+  else
+    call feedkeys('K', 'in')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
 
 " Remap for rename current word
 nmap <leader>rn <Plug>(coc-rename)
@@ -821,7 +832,9 @@ autocmd FileType go nnoremap <leader>a :DlvToggleBreakpoint<CR>
 autocmd FileType go nnoremap <leader>A :DlvToggleTracepoint<CR>
 autocmd FileType go nnoremap <leader>ca :DlvClearAll<CR>
 
-autocmd FileType go nnoremap <leader>d :GoDebugTestFunc<CR>
+autocmd FileType go nnoremap <leader>ds :GoDebugStart<CR>
+autocmd FileType go nnoremap <leader>de :GoDebugStop<CR>
+autocmd FileType go nnoremap <leader>dt :GoDebugTestFunc<CR>
 
 let g:go_debug_mappings = {
   \ '(go-debug-continue)': {'key': 'c', 'arguments': '<nowait>'},
