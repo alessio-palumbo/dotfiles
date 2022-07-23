@@ -65,6 +65,8 @@
   "rust-analyzer.diagnostics.disabled": [
     "inactive-code"
   ],
+  "typescript.referencesCodeLens.enable": false,
+  "tsserver.formatOnType": true,
   "emmet.includeLanguages": {
     "javascript": "javascriptreact"
   }
