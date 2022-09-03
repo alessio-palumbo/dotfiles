@@ -22,6 +22,8 @@ plugins=(
 # Avoid exiting terminal when pressing ctrl+D
 setopt ignore_eof
 
+fpath=( $ZSH/custom/completion "${fpath[@]}" )
+
 source $ZSH/oh-my-zsh.sh
 
 # Preferred editor for local and remote sessions

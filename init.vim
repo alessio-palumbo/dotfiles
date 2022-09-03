@@ -324,10 +324,12 @@ nnoremap <silent> <leader>v :vs<CR>
 " ---------------------------------------------
 
 function! DeleteBuffer()
-  let is_split = (winnr() > 1) && !(exists("g:NERDTree") && g:NERDTree.IsOpen())
+  let nerdtree_open = exists("g:NERDTree") && g:NERDTree.IsOpen()
+  let is_split = (winnr() > 1 && !nerdtree_open) || (nerdtree_open && winnr() > 2)
   if &buftype ==# 'terminal'
     Bdelete!
     if is_split | q! | endif
+  elseif winnr() == 1 && nerdtree_open | :NERDTreeToggle %
   elseif is_split | q
   else
     Bdelete
@@ -365,7 +367,7 @@ tnoremap <Esc> <C-\><C-n>
 " edit file from the directory the terminal is currently in
 tnoremap <C-N> cdv<CR><C-\><C-n>:e<space>
 " maintain behavior of mapping above for normal buffer
-nnoremap <C-N> :e<space>
+" nnoremap <C-N> :e<space>
 
 " Change terminal window local directory to the terminal working directory
 " when called.
@@ -536,11 +538,10 @@ let g:lightline = {
   \ }
 
 function! LightlineFugitive()
-  if exists('*fugitive#head')
-    let branch = fugitive#head()
+  if exists('*FugitiveHead')
+    let branch = FugitiveHead()
     return branch !=# '' ? ' '.branch : ''
   endif
-  return fugitive#head()
 endfunction
 
 function! LightlineFiletype()
@@ -821,7 +822,7 @@ autocmd FileType go nmap <leader>r  <Plug>(go-run)
 autocmd FileType go nmap <leader>t  <Plug>(go-test-func)
 
 " Automatically add/remove json tags to Go structs.
-autocmd FileType go nmap <silent>tg :GoAddTags<CR>
+autocmd FileType go nmap <silent>ta :GoAddTags<CR>
 autocmd FileType go nmap <silent>tr :GoRemoveTags<CR>
 
 " ---------------------------------------------
