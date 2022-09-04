@@ -2,6 +2,9 @@ export ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME="mytheme"
 
+# Use custom directory for completion dumpfile.
+ZSH_COMPDUMP="$ZSH/cache/.zcompdump"
+
 plugins=(
   git
   extract
