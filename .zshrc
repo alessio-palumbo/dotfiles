@@ -386,10 +386,10 @@ if [[ -n "$VIM_TERMINAL" ]]; then
   cdv() {
     printf -- '\033]51;["call", "Tapi_lcd", "%q"]\007' "$(pwd)"
   }
-elif [[ -n "$NVIM_LISTEN_ADDRESS" ]]; then
+elif [[ -n "$NVIM" ]]; then
   cdv() {
     # Requires neovim-remote installed
-    nvr --servername "$VIM_SERVERNAME" --remote-expr "$(printf -- 'Tapi_lcd(0, "%q")' "$(pwd)")"
+    nvr --servername "$NVIM" --remote-expr "$(printf -- 'Tapi_lcd(0, "%q")' "$(pwd)")"
   }
 
   # Make sure we are not nesting nvim sessions

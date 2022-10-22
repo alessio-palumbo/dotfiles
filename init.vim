@@ -16,7 +16,7 @@ call plug#begin("~/.config/nvim/plugged")
   " Notes/diary taking
   Plug 'vimwiki/vimwiki'
   " Markdown preview in buffer (:Glow to toggle)
-  Plug 'ellisonleao/glow.nvim', {'do': ':GlowInstall', 'branch': 'main'}
+  Plug 'ellisonleao/glow.nvim'
 
   " Delete buffers
   Plug 'moll/vim-bbye'
@@ -218,7 +218,7 @@ autocmd Filetype * AnyFoldActivate
 set foldlevel=99
 
 " use enter to clear search highlighting
-nnoremap <silent> <CR> :nohlsearch<CR>
+nnoremap <silent> <CR> :nohlsearch<CR><CR>
 
 " Remap up and down to avoid skipping wrapped lines
 nnoremap j gj
@@ -244,6 +244,13 @@ vnoremap <silent> <leader>p "0p
 
 " Put a line break under the cursor
 nnoremap <silent> <leader>n a<Cr><Esc>
+" Use neovim-remote as git editor
+if has('nvim')
+  let $GIT_EDITOR = 'nvr -cc split --remote-wait'
+endif
+
+" Close git editor buffer after saving
+autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
 
 " ---------------------------------------------
 " ### General settings
@@ -671,7 +678,7 @@ set signcolumn=yes
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>
   \ coc#pum#visible() ? coc#pum#next(1) :
-  \ CheckBackSpace() ? "\<TAB>" :
+  \ CheckBackSpace() ? "\<Tab>" :
   \ coc#refresh()
 inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 
@@ -813,13 +820,12 @@ function! s:build_go_files()
   endif
 endfunction
 
-" Map keys for most used commands.
-" Ex: `\b` for building, `\r` for running and `\b` for running test.
 autocmd FileType go nmap <leader>b :<C-u>call <SID>build_go_files()<CR>
-autocmd FileType go nmap <leader>r  <Plug>(go-run)
-" autocmd FileType go nmap <leader>t  <Plug>(go-test)
 " Run go test for function under cursor
 autocmd FileType go nmap <leader>t  <Plug>(go-test-func)
+
+" Rename
+autocmd FileType go nmap <leader>r :GoRename<space>
 
 " Automatically add/remove json tags to Go structs.
 autocmd FileType go nmap <silent>ta :GoAddTags<CR>
