@@ -7,8 +7,6 @@ call plug#begin("~/.config/nvim/plugged")
   " File manager
   Plug 'scrooloose/nerdtree'
   Plug 'ryanoasis/vim-devicons'
-  Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-  "  Plug 'Xuyuanp/nerdtree-git-plugin'
 
   " Fancy vim startup page
   Plug 'mhinz/vim-startify'
@@ -133,6 +131,9 @@ call plug#begin("~/.config/nvim/plugged")
   " za => toggle fold (1 level)
   " zA => toggle fold (all level recursively)
 
+  " Tmux integration
+  Plug 'christoomey/vim-tmux-navigator'
+
   " Go plugin
   Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
   Plug 'sebdah/vim-delve'
@@ -195,6 +196,10 @@ augroup END
 inoremap jk <Esc>
 tnoremap jk <C-\><C-n>
 inoremap jj <Esc>o
+
+" Shorten waiting time in insert mode, improve experience with above mappings.
+autocmd InsertEnter * set timeoutlen=200
+autocmd InsertLeave * set timeoutlen=1000
 
 " Add mapping to go to end of line when in insert mode
 inoremap <C-e> <C-o>A
