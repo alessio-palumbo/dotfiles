@@ -80,9 +80,16 @@ gh () {
     [ $# -eq 2 ] && FMT=$2 || FMT=H
     echo -n $(git log -1 --skip="$SKIP" --pretty="%$FMT")
 }
+
 ghl () {
-    git log -p $(gh $1) -1
+    desc="Usage: [ghl [<position-from-head>] [<dir>] Log changes for a commit from HEAD"
+    print_usage "$1" "$desc" && return
+
+    cmd="git log -p $(gh $1) -1"
+    [[ ! -z "$2" ]] && cmd+=" -- $2"
+    eval "$cmd"
 }
+
 ghc () {
     [[ `uname` == "Darwin" ]] && cmd=pbcopy || cmd='xclip -sel clip'
     gh $1 | $cmd
@@ -99,6 +106,26 @@ gblt () {
     cmd="git branch --sort=-committerdate -v | grep -v 'main\|master'"
     [[ "$1" =~ "^[1-9]+$" ]] && lines="$1" | lines=1
     eval "$cmd" | awk -v lines="$lines" 'NR<=lines {print $1,$2,$3}'
+}
+
+gdh () {
+    desc="Usage: [gdh <commit> [<dir>]] Diffs the given commit against HEAD~ in the given <dir> or defaults to the current dir"
+    print_usage "$1" "$desc" && return
+
+    commit="$1"
+    dir="$2"
+    [[ -z "$dir" ]] && dir="."
+    git diff "$commit" HEAD~ -- "$dir" ':!*test.go'
+}
+
+gln () {
+    desc="Usage: [gln <search term> [<depth>]] Looks up the last <number> of commits and prefixed by the index in the search returning only the ones with the search term"
+    print_usage "$1" "$desc" && return
+
+    [[ -z "$2" ]] && depth=10 || depth="$2"
+	arg="NR<$depth"
+	arg+=' {print NR": " $0}'
+    git log --oneline | awk "$arg" | grep "$1"
 }
 
 ##### Other Aliases

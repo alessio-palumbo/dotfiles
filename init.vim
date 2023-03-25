@@ -30,6 +30,8 @@ call plug#begin("~/.config/nvim/plugged")
 
   " Git
   Plug 'tpope/vim-fugitive'
+  " Open file in github
+  Plug 'tpope/vim-rhubarb'
 
   " Git diff and more
   Plug 'airblade/vim-gitgutter'
@@ -274,7 +276,7 @@ autocmd BufReadPost *
 autocmd BufEnter * silent! lcd %:p:h
 
 " Invert current paren  highlighting as it is confusing
-hi MatchParen ctermfg=blue ctermbg=black guifg=orange guibg=black term=none cterm=none gui=italic
+hi MatchParen ctermfg=blue ctermbg=white guifg=white guibg=black term=none cterm=none gui=italic
 
 set undofile
 set noswapfile
