@@ -223,6 +223,7 @@ set number relativenumber
 " Activate folding plugin on all files
 autocmd Filetype * AnyFoldActivate
 set foldlevel=99
+nnoremap <space><space> za
 
 " use enter to clear search highlighting
 nnoremap <silent> <CR> :nohlsearch<CR><CR>
@@ -248,6 +249,9 @@ nnoremap * :keepjumps normal! mi*`i<CR>
 " Map previous yank register
 nnoremap <silent> <leader>p "0p
 vnoremap <silent> <leader>p "0p
+
+" Show Yank list (Uses coc-yank)
+nnoremap <silent> <leader>y  :<C-u>CocList -A --normal yank<cr>
 
 " Put a line break under the cursor
 nnoremap <silent> <leader>n a<Cr><Esc>
