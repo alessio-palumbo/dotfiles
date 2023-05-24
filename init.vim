@@ -242,6 +242,17 @@ set mouse=a
 " Keeps the cursor under current word instead of jumping to next when selecting word.
 nnoremap * :keepjumps normal! mi*`i<CR>
 
+"
+nnoremap <silent> <leader>j :ScrollOneQuarter j<CR>
+nnoremap <silent> <leader>k :ScrollOneQuarter k<CR>
+
+function! OneQuarterScreen(...)
+  let direction = a:1
+  execute "normal! m'" . expand(winheight(win_getid())/4) . direction
+endfunction
+
+command! -nargs=+ -complete=file -bar ScrollOneQuarter call OneQuarterScreen(<q-args>)
+
 " ---------------------------------------------
 " ### Editing
 " ---------------------------------------------
@@ -270,8 +281,8 @@ autocmd FileType gitcommit,gitrebase,gitconfig set bufhidden=delete
 " When editing a file, always jump to the last cursor position
 autocmd BufReadPost *
   \ if ! exists("g:leave_my_cursor_position_alone") |
-  \ if line("'\"") > 0 && line ("'\"") <= line("$") | " use relative number in normal mode
-  \ exe "normal g'\"" |
+  \ if line("'\"") > 0 && line ("'\"") <= line("$") |
+  \ exe "normal! g`\"" |
   \ endif |
   \ endif
 
