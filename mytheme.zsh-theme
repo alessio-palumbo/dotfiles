@@ -1,14 +1,13 @@
-local return_code="%(?..%{$fg[red]%}%? ↵%{$reset_color%})"
-local user_host='%{$terminfo[bold]$FG[010]%}%n%{$reset_color%}'
-local current_dir='%{$terminfo[bold]$FG[004]%}%~%{$reset_color%}'
-local rvm_ruby='%{$fg[red]%}$(rvm_prompt_info || rbenv_prompt_info)%{$reset_color%}'
-local git_branch='%{$terminfo[bold]$fg[cyan]%}$(git_prompt_info)%{$reset_color%}'
+local return_code="%(?..%F{red}%? ✗%f)"
+local user_host='%F{010}%n%f'
+local current_dir='%F{004}%~%f'
+local git_branch='%F{cyan}$(git_prompt_info)%f'
 
-PROMPT="${user_host} ${current_dir} ${rvm_ruby}
-${git_branch} %B$%b "
-RPS1="${return_code}"
+NL=$'\n'
+PROMPT="%B${user_host} ${current_dir}$NL${git_branch} $%b "
+RPROMPT='${return_code} %T %D'
 
 ZSH_THEME_GIT_PROMPT_PREFIX=""
 ZSH_THEME_GIT_PROMPT_SUFFIX=""
-ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[red]%}✗%{$reset_color%}"
-ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[green]%}✔%{$reset_color%}"
+ZSH_THEME_GIT_PROMPT_DIRTY="%F{red}✗%f"
+ZSH_THEME_GIT_PROMPT_CLEAN="%F{green}✔%f"
