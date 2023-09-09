@@ -109,13 +109,13 @@ gblt () {
 }
 
 gdh () {
-    desc="Usage: [gdh <commit> [<dir>]] Diffs the given commit against HEAD~ in the given <dir> or defaults to the current dir"
+    desc="Usage: [gdh <commit> [<dir>]] Diffs the given commit against HEAD in the given <dir> or defaults to the current dir"
     print_usage "$1" "$desc" && return
 
     commit="$1"
     dir="$2"
     [[ -z "$dir" ]] && dir="."
-    git diff "$commit" HEAD~ -- "$dir" ':!*test.go'
+    git diff "$commit" HEAD -- "$dir" ':!*test.go'
 }
 
 gln () {

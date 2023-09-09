@@ -32,6 +32,8 @@ call plug#begin("~/.config/nvim/plugged")
   Plug 'tpope/vim-fugitive'
   " Open file in github
   Plug 'tpope/vim-rhubarb'
+  " :GBrowse open current git file in browser (select line to open at line
+  " under cursor)
 
   " Git diff and more
   Plug 'airblade/vim-gitgutter'
@@ -79,6 +81,10 @@ call plug#begin("~/.config/nvim/plugged")
     " yssb/yss) => wraps entire line in ) (use ( to add space in between)
     " ysiw<em>  => wraps entire word in between <em> tags
     " V+S<p class="important"> => wraps entire sentence in <p> tag
+
+  " Use . to repeat mappings
+  Plug 'tpope/vim-repeat'
+  " silent! call repeat#set("\<Plug>MyWonderfulMap", v:count)
 
   " Comment code
   Plug 'scrooloose/nerdcommenter'
@@ -151,6 +157,9 @@ call plug#begin("~/.config/nvim/plugged")
   " Ruby
   Plug 'vim-ruby/vim-ruby'
   Plug 'tpope/vim-rails'
+
+  " Snippets
+  Plug 'SirVer/ultisnips'
 
 call plug#end()
 
@@ -242,9 +251,14 @@ set mouse=a
 " Keeps the cursor under current word instead of jumping to next when selecting word.
 nnoremap * :keepjumps normal! mi*`i<CR>
 
-"
-nnoremap <silent> <leader>j :ScrollOneQuarter j<CR>
-nnoremap <silent> <leader>k :ScrollOneQuarter k<CR>
+" Scroll up/down with repeat
+nnoremap <silent> <Plug>ScrollJ :ScrollOneQuarter j<CR>
+\:call repeat#set("\<Plug>ScrollJ")<CR>
+nmap <leader>j <Plug>ScrollJ
+
+nnoremap <silent> <Plug>ScrollK :ScrollOneQuarter k<CR>
+\:call repeat#set("\<Plug>ScrollK")<CR>
+nmap <leader>k <Plug>ScrollK
 
 function! OneQuarterScreen(...)
   let direction = a:1
@@ -645,6 +659,8 @@ nnoremap fi :AgIn<space>
 
 " Check git commit history
 nnoremap fc :Commits<CR>
+" Git blame for current buffer
+nnoremap fb :BCommits<CR>
 " Check git status
 nnoremap fs :GFiles?<CR>
 
