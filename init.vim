@@ -839,6 +839,10 @@ let g:go_fmt_command = "goimports"
 " Status line types/signatures
 let g:go_auto_type_info = 1
 
+" Highlight multiple occurences of label
+" let g:go_auto_sameids = 1
+" hi def goSameId guibg=gray
+
 " Show name of failed test
 let g:go_test_show_name=1
 " Set quickfix window height
@@ -865,6 +869,11 @@ autocmd FileType go nmap <leader>t  <Plug>(go-test-func)
 " Rename
 autocmd FileType go nmap <leader>r :GoRename<space>
 
+" Alternate between go file and its test
+" Note: this override vim ga default of displaying ASCII char under cursor
+autocmd FileType go nmap ga :GoAlternate<CR>
+
+
 " Automatically add/remove json tags to Go structs.
 autocmd FileType go nmap <silent>ta :GoAddTags<CR>
 autocmd FileType go nmap <silent>tr :GoRemoveTags<CR>
@@ -873,10 +882,15 @@ autocmd FileType go nmap <silent>tr :GoRemoveTags<CR>
 "  ### Delve
 " ---------------------------------------------
 
-autocmd FileType go nnoremap <leader>a :DlvToggleBreakpoint<CR>
-autocmd FileType go nnoremap <leader>A :DlvToggleTracepoint<CR>
-autocmd FileType go nnoremap <leader>ca :DlvClearAll<CR>
+" vim-delve
+" autocmd FileType go nnoremap <leader>a :DlvToggleBreakpoint<CR>
+" autocmd FileType go nnoremap <leader>A :DlvToggleTracepoint<CR>
+" autocmd FileType go nnoremap <leader>ca :DlvClearAll<CR>
+" autocmd FileType go nnoremap <leader>ds :DlvDebug<CR>
+" autocmd FileType go nnoremap <leader>dt :DlvTestCurrent<CR>
 
+" vim-go
+autocmd FileType go nnoremap <leader>a :GoDebugBreakpoint<CR>
 autocmd FileType go nnoremap <leader>ds :GoDebugStart<CR>
 autocmd FileType go nnoremap <leader>de :GoDebugStop<CR>
 autocmd FileType go nnoremap <leader>dt :GoDebugTestFunc<CR>
