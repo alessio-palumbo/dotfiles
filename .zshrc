@@ -164,7 +164,8 @@ alias pclip="xclip -o"
 DIRSTACKSIZE=6
 # return list of dirs in stack
 alias lsd="dirs -v"
-alias cld="dirs -c"
+# clear the stack of dirs
+alias lsr="dirs -c"
 jd() {
 	[[ ! -z "$1" ]] && cd ~"$1"
 }
@@ -215,6 +216,14 @@ print_usage() {
 			true;;
 		*) false;;
 	esac
+}
+
+# cd into the dir at index
+lsc() {
+	desc="Usage: [lsc 'dirs index'] cd into the given index of dirs"
+	print_usage "$1" "$desc" && return
+
+    cd $(awk -v line=$1 'NR==line+1 {print $2}' <(dirs -lv ))
 }
 
 mkcd() {
