@@ -464,6 +464,58 @@ endfunction
 
 nnoremap <silent> <leader>u :call GenUUID()<CR>
 
+" Shows decimal representation of hex under cursor.
+" nnoremap <silent> <leader>x  :echo <C-r><C-w><CR>
+function! ShowTooltip(text)
+    let pos = getpos('.')
+    let tooltip_content = a:text
+
+    " Create a floating window for the tooltip
+    let opts = {
+        \ 'relative': 'win',
+        \ 'win': 0,
+        \ 'row': winline(),
+        \ 'col': wincol(),
+        \ 'width': len(tooltip_content),
+        \ 'height': 1,
+        \ 'style': 'minimal',
+        \ 'border': 'rounded',
+        \ }
+
+    let buf = nvim_create_buf(v:false, v:true)
+    call nvim_buf_set_lines(buf, 0, -1, v:true, [tooltip_content])
+    let win = nvim_open_win(buf, v:false, opts)
+
+    " Close the floating window after a delay
+    call timer_start(1000, {-> nvim_win_close(win, v:true)})
+
+    " Restore the cursor position
+    call setpos('.', pos)
+endfunction
+
+function! ConvertHexWordToDecimal()
+    " Get the word under the cursor
+    let word = expand('<cword>')
+
+    " Check if the word starts with '0x'
+    if word[:1] == '0x'
+        " Extract the hex part excluding '0x'
+        let hex_part = word[2:]
+
+        " Convert hex to decimal
+        let decimal_value = str2nr(hex_part, 16)
+
+        " Display the message as a tooltip
+        call ShowTooltip('Decimal: ' . decimal_value)
+    else
+        " If the word does not start with '0x', show a warning
+        call ShowTooltip('Not a valid hex word: ' . word)
+    endif
+endfunction
+
+" Map the function to a key (for example, F5)
+nnoremap <silent> <leader>x :call ConvertHexWordToDecimal()<CR>
+
 " Go to next capital letter. Useful when editing camelcase words.
 nmap <silent> <leader>e :call search('[A-Z]', 'W')<CR>
 
@@ -883,17 +935,17 @@ autocmd FileType go nmap <silent>tr :GoRemoveTags<CR>
 " ---------------------------------------------
 
 " vim-delve
-" autocmd FileType go nnoremap <leader>a :DlvToggleBreakpoint<CR>
-" autocmd FileType go nnoremap <leader>A :DlvToggleTracepoint<CR>
-" autocmd FileType go nnoremap <leader>ca :DlvClearAll<CR>
-" autocmd FileType go nnoremap <leader>ds :DlvDebug<CR>
-" autocmd FileType go nnoremap <leader>dt :DlvTestCurrent<CR>
+autocmd FileType go nnoremap <leader>a :DlvToggleBreakpoint<CR>
+autocmd FileType go nnoremap <leader>A :DlvToggleTracepoint<CR>
+autocmd FileType go nnoremap <leader>ca :DlvClearAll<CR>
+autocmd FileType go nnoremap <leader>ds :DlvDebug<CR>
+autocmd FileType go nnoremap <leader>dt :DlvTestCurrent<CR>
 
 " vim-go
-autocmd FileType go nnoremap <leader>a :GoDebugBreakpoint<CR>
-autocmd FileType go nnoremap <leader>ds :GoDebugStart<CR>
-autocmd FileType go nnoremap <leader>de :GoDebugStop<CR>
-autocmd FileType go nnoremap <leader>dt :GoDebugTestFunc<CR>
+" autocmd FileType go nnoremap <leader>a :GoDebugBreakpoint<CR>
+" autocmd FileType go nnoremap <leader>ds :GoDebugStart<CR>
+" autocmd FileType go nnoremap <leader>de :GoDebugStop<CR>
+" autocmd FileType go nnoremap <leader>dt :GoDebugTestFunc<CR>
 
 let g:go_debug_mappings = {
   \ '(go-debug-continue)': {'key': 'c', 'arguments': '<nowait>'},

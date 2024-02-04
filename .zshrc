@@ -56,6 +56,15 @@ alias lg='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %
 
 gtr () { git rebase ${1:=main} }
 
+gbdone () {
+    desc="Usage: checkout main branch pulling latest change and remove this branch"
+	print_usage "$1" "$desc" && return
+
+    curr=$(git symbolic-ref --short HEAD)
+    [[ "$curr" =~ "^(main|master)$" ]] && echo "branch '$curr': doing nothing" && return
+    gcmp && gb -D "$curr"
+}
+
 gbc () {
     desc="Usage: remove all local branches except main/master.\nUse -f to remove unmerged.\nUse -m with 'pattern' to remove matching."
 	print_usage "$1" "$desc" && return
@@ -76,6 +85,9 @@ gbc () {
 }
 
 gh () {
+    desc="Usage: return the hash of the commit n position from HEAD"
+	print_usage "$1" "$desc" && return
+
     [ -n "$1" ] && [ "$1" -gt 0 ] && SKIP=$(($1 - 1)) || SKIP=0
     [ $# -eq 2 ] && FMT=$2 || FMT=H
     echo -n $(git log -1 --skip="$SKIP" --pretty="%$FMT")
@@ -91,6 +103,9 @@ ghl () {
 }
 
 ghc () {
+    desc="Usage: copy hash of the commit n position from HEAD and print title"
+	print_usage "$1" "$desc" && return
+
     [[ `uname` == "Darwin" ]] && cmd=pbcopy || cmd='xclip -sel clip'
     gh $1 | $cmd
     echo $(ght $1)
@@ -103,8 +118,11 @@ ght () {
 }
 
 gblt () {
+    desc="Usage: display a list of all local branches and sort them based on the date of their last commit\nIf an integer is specified only n lines are returned"
+	print_usage "$1" "$desc" && return
+
     cmd="git branch --sort=-committerdate -v | grep -v 'main\|master'"
-    [[ "$1" =~ "^[1-9]+$" ]] && lines="$1" | lines=1
+    [[ "$1" =~ "^[1-9]+$" ]] && lines="$1" || lines=1
     eval "$cmd" | awk -v lines="$lines" 'NR<=lines {print $1,$2,$3}'
 }
 
