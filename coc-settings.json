@@ -32,24 +32,16 @@
   "go.goplsOptions": {
     "staticcheck": true
   },
-  "coc.preferences.formatOnSaveFiletypes": [
-    "go",
-    "python",
-    "markdown",
-    "javascriptreact",
-    "javascript",
-    "typescriptreact",
-    "typescript",
-    "json",
-    "jsonc",
-    "html"
-  ],
+  "[go][python][markdown][javascriptreact][typescriptreact][typescript][json][jsonc][html]": {
+    "coc.preferences.formatOnSave": true
+  },
   "prettier.disableLanguages": [
     "html",
     "css",
     "markdown",
     "yaml",
-    "json"
+    "json",
+    "javascript"
   ],
   "prettier.singleQuote": true,
   "yaml.format.enable": true,
@@ -65,8 +57,6 @@
   "rust-analyzer.diagnostics.disabled": [
     "inactive-code"
   ],
-  "typescript.referencesCodeLens.enable": false,
-  "tsserver.formatOnType": true,
   "emmet.includeLanguages": {
     "javascript": "javascriptreact"
   }
