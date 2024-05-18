@@ -121,7 +121,6 @@ call plug#begin("~/.config/nvim/plugged")
     \'coc-yaml',
     \'coc-rust-analyzer',
     \'coc-styled-components',
-    \'coc-go',
     \'coc-solargraph',
     \'coc-sh'
     \]
@@ -158,8 +157,16 @@ call plug#begin("~/.config/nvim/plugged")
   Plug 'vim-ruby/vim-ruby'
   Plug 'tpope/vim-rails'
 
+  " Copilot
+  Plug 'github/copilot.vim'
+
   " Snippets
   Plug 'SirVer/ultisnips'
+  Plug 'honza/vim-snippets'
+  " Set ultisnips triggers
+  " let g:UltiSnipsExpandTrigger="<tab>"
+  let g:UltiSnipsJumpForwardTrigger="<tab>"
+  " let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
 call plug#end()
 
@@ -189,7 +196,7 @@ highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE gui
 " ### Navigation
 " ---------------------------------------------
 
-let mapleader="'"
+let mapleader=";"
 
 set tabstop=4
 set shiftwidth=4
@@ -538,6 +545,14 @@ function! ToggleSpell()
 endfunction
 
 nnoremap <silent> <leader>l :call ToggleSpell()<CR>
+
+function! GBrowseLine()
+    let line_n = line('.')
+    echo &line
+    execute ':' . line_n . ',GBrowse'
+endfunction
+
+nnoremap <silent> <leader>g :call GBrowseLine()<CR>
 
 " ---------------------------------------------
 " ### Vim-startify
@@ -1019,6 +1034,17 @@ call NERDTreeHighlightFile('css', 'cyan', 'none', 'cyan', '#151515')
 call NERDTreeHighlightFile('coffee', 'Red', 'none', 'red', '#151515')
 call NERDTreeHighlightFile('js', 'Red', 'none', '#ffa500', '#151515')
 call NERDTreeHighlightFile('php', 'Magenta', 'none', '#ff00ff', '#151515')
+
+" ---------------------------------------------
+"  ### Copilot
+" ---------------------------------------------
+"
+imap <silent> <C-j> <Plug>(copilot-next)
+imap <silent> <C-k> <Plug>(copilot-previous)
+imap <silent> <C-l> <Plug>(copilot-dismiss)
+
+imap <silent><script><expr> <C-space> copilot#Accept("\<CR>")
+let g:copilot_no_tab_map = v:true
 
 " ---------------------------------------------
 " ############ Neovim Defaults #############
