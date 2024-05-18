@@ -42,7 +42,9 @@ export EDITOR=nvim
 alias gta='git add -A'
 alias gtc='git commit -m '
 alias gts='git status'
-alias gtp='git pull `git symbolic-ref --short HEAD`'
+alias gtp='git add -p'
+alias gt.='git checkout .'
+alias glp="git log --pretty=format:'%C(yellow)%h  %C(magenta)%ad %x09%C(cyan)%an%x09 %C(white)%d %Creset%C(green)%s' --date=short"
 alias gtpm='git pull --rebase origin main'
 alias gcm='git checkout main'
 alias gcmp='git checkout main && git pull --rebase'
@@ -51,6 +53,7 @@ alias glm='git log --author=$(git config user.email)'
 alias gdc='git diff --cached'
 alias glg='git log --date-order --all --graph --format="%C(green)%h%Creset %C(yellow)%an%Creset %C(blue bold)%ar%Creset %C(red bold)%d%Creset%s"'
 alias lg='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit'
+alias gtcap='git commit --amend --no-edit && git push --force-with-lease'
 
 # Git Scripts
 
