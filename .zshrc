@@ -44,8 +44,10 @@ alias gtc='git commit -m '
 alias gts='git status'
 alias gtp='git add -p'
 alias gt.='git checkout .'
+alias glo='git log'
 alias glp="git log --pretty=format:'%C(yellow)%h  %C(magenta)%ad %x09%C(cyan)%an%x09 %C(white)%d %Creset%C(green)%s' --date=short"
-alias gtpm='git pull --rebase origin main'
+alias gprm='git pull --rebase origin main'
+alias gup='git push -u origin $(git symbolic-ref --short HEAD)'
 alias gcm='git checkout main'
 alias gcmp='git checkout main && git pull --rebase'
 alias gc-='git checkout -'
@@ -54,6 +56,8 @@ alias gdc='git diff --cached'
 alias glg='git log --date-order --all --graph --format="%C(green)%h%Creset %C(yellow)%an%Creset %C(blue bold)%ar%Creset %C(red bold)%d%Creset%s"'
 alias lg='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit'
 alias gtcap='git commit --amend --no-edit && git push --force-with-lease'
+alias gsik='git stash --include-untracked --keep-index'
+alias gspo='git stash pop'
 
 # Git Scripts
 
@@ -144,9 +148,9 @@ gln () {
     print_usage "$1" "$desc" && return
 
     [[ -z "$2" ]] && depth=10 || depth="$2"
-	arg="NR<$depth"
+	arg="NR<$depth && /$1/"
 	arg+=' {print NR": " $0}'
-    git log --oneline | awk "$arg" | grep "$1"
+	glp | awk "$arg"
 }
 
 ##### Other Aliases
@@ -338,20 +342,29 @@ kcl() {
 }
 
 kcc() {
-	env="$1"
+	ns="$1"
 	app="$2"
 
 	[[ "$#" -eq 0 ]] && { echo "Missing args, required env and optional pod name"; return }
-	[[ "$#" -eq 1 ]] && { eval "kc -n $env get po"; return }
-	eval "kc -n $env describe po $app | grep Image: | cut -d: -f3"
+	[[ "$#" -eq 1 ]] && { eval "kc -n $ns get po"; return }
+	eval "kc -n $ns describe po $app | grep Image: | cut -d: -f3"
 }
 
 kvars() {
-	env="$1"
+	ns="$1"
 	app="$2"
 
-	[[ -z "env" ]] && { echo "Missing env"; return }
-	kc -n "$env" exec -it $(kcc "$env" | grep "$app" | head -1 | cut -d" " -f 1) env | grep URL
+	[[ -z "$ns" ]] && { echo "Missing env"; return }
+	kc -n "$ns" exec -it $(kcc "$ns" | grep "$app" | head -1 | cut -d" " -f 1) env | grep URL
+}
+
+kpoh() {
+	desc="Usage: Show pods created in the last hour => kpoh <label> [-n <namespace>]"
+	print_usage "$1" "$desc" && return
+
+	label="$1"
+	[[ -z "$label" ]] && { echo "Missing label"; return }
+	kc get po -l="app=$label" | awk '$5 ~ /^[0-9]{1,2}m/ {print $0}'
 }
 
 # Reset mouse when it gets stuck (e.g. when left click stops working)

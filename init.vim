@@ -122,7 +122,8 @@ call plug#begin("~/.config/nvim/plugged")
     \'coc-rust-analyzer',
     \'coc-styled-components',
     \'coc-solargraph',
-    \'coc-sh'
+    \'coc-sh',
+    \'coc-ultisnips'
     \]
 
   " Format for C languages (C, C++, Obj-C, Js, Java, Ts, Protobuf)
@@ -165,7 +166,7 @@ call plug#begin("~/.config/nvim/plugged")
   Plug 'honza/vim-snippets'
   " Set ultisnips triggers
   " let g:UltiSnipsExpandTrigger="<tab>"
-  let g:UltiSnipsJumpForwardTrigger="<tab>"
+  let g:UltiSnipsJumpForwardTrigger="<tab>k"
   " let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 
 call plug#end()
@@ -273,6 +274,8 @@ function! OneQuarterScreen(...)
 endfunction
 
 command! -nargs=+ -complete=file -bar ScrollOneQuarter call OneQuarterScreen(<q-args>)
+
+inoremap <silent> <A-l> <Esc>la
 
 " ---------------------------------------------
 " ### Editing
@@ -525,6 +528,14 @@ nnoremap <silent> <leader>x :call ConvertHexWordToDecimal()<CR>
 
 " Go to next capital letter. Useful when editing camelcase words.
 nmap <silent> <leader>e :call search('[A-Z]', 'W')<CR>
+" Highlight until the next capital letter. Useful when editing camelcase words.
+nmap <silent> vv :call VNextUpper()<CR>
+function! VNextUpper()
+    let l:cur_pos = col('.')        " Get cursor position within the word
+    let [l:lnum, l:col] = searchpos('[A-Z]', 'n')
+    let l:offset = l:col - l:cur_pos - 1
+    execute 'normal! v' . l:offset . 'l'
+endfunction
 
 " Copy a number of lines from cursor and paste them below the selection.
 function! CopyLinesBelow(...)
