@@ -1,5 +1,6 @@
 local map = vim.keymap.set
 local opts = { noremap = true, silent = true }
+local funcs = require("alessio.functions")
 
 -- Home shortcuts
 map("i", "jk", "<Esc>", opts)
@@ -52,7 +53,9 @@ map("n", "<leader>n", "o<Esc>", opts)   -- Insert new line below in normal mode
 
 map("n", "<leader>ww", ":FixWhitespace<CR>", opts)   -- Clear whitespace (requires plugin)
 
+map("n", "<leader>u", funcs.gen_uuid, { silent = true, desc = "Insert UUID" })
 
+map("n", "<leader>x", funcs.convert_hex_word_to_decimal, { silent = true })
 
 -- Move selected text up/down
 map("v", "J", ":m '>+1<CR>gv=gv", opts)
