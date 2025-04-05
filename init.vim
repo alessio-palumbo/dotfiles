@@ -274,6 +274,11 @@ endfunction
 command! -nargs=+ -complete=file -bar ScrollOneQuarter call OneQuarterScreen(<q-args>)
 
 inoremap <silent> <A-l> <Esc>la
+nnoremap L :vertical resize +2<CR>
+nnoremap H :vertical resize -2<CR>
+
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv
 
 " ---------------------------------------------
 " ### Editing
