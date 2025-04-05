@@ -56,8 +56,8 @@ alias gdc='git diff --cached'
 alias glg='git log --date-order --all --graph --format="%C(green)%h%Creset %C(yellow)%an%Creset %C(blue bold)%ar%Creset %C(red bold)%d%Creset%s"'
 alias lg='git log --graph --pretty=format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset" --abbrev-commit'
 alias gtcap='git commit --amend --no-edit && git push --force-with-lease'
-alias gsik='git stash --include-untracked --keep-index'
-alias gspo='git stash pop'
+alias gsi='git stash --include-untracked --keep-index'
+alias gso='git stash pop'
 
 # Git Scripts
 

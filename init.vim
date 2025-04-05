@@ -197,7 +197,7 @@ highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE gui
 " ### Navigation
 " ---------------------------------------------
 
-let mapleader=";"
+let mapleader=" "
 
 set tabstop=4
 set shiftwidth=4
@@ -473,6 +473,17 @@ function! GenUUID()
 endfunction
 
 nnoremap <silent> <leader>u :call GenUUID()<CR>
+
+function! GenerateRandomHex64()
+    let hex_chars = '0123456789abcdef'
+    let result = ''
+    for i in range(64)
+        let result .= hex_chars[rand() % 16]
+    endfor
+    execute "normal! i" . result
+endfunction
+
+nnoremap <silent> <leader>h :call GenerateRandomHex64()<CR>
 
 " Shows decimal representation of hex under cursor.
 " nnoremap <silent> <leader>x  :echo <C-r><C-w><CR>
