@@ -66,3 +66,33 @@ map("n", "<C-d>", "<C-d>zz", opts)
 map("n", "<C-u>", "<C-u>zz", opts)
 map("n", "n", "nzzzv", opts)
 map("n", "N", "Nzzzv", opts)
+
+-- #######################
+-- ### Plugins Keymaps ###
+-- #######################
+
+-- ### Bufferline ###
+
+-- Jump to buffer 1-10 with <leader>1 to <leader>0
+for i = 1, 9 do
+  vim.keymap.set("n", "<Leader>" .. i, function()
+    require("bufferline").go_to_buffer(i, true)
+  end, { desc = "Go to buffer " .. i })
+end
+
+-- Leader+0 goes to buffer 10
+vim.keymap.set("n", "<Leader>0", function()
+  require("bufferline").go_to_buffer(10, true)
+end, { desc = "Go to buffer 10" })
+
+-- Delete buffers with <BS>1 .. <BS>0
+for i = 1, 9 do
+  vim.keymap.set("n", "<BS>" .. i, function()
+    vim.cmd("bdelete " .. i)
+  end, { desc = "Delete buffer " .. i })
+end
+vim.keymap.set("n", "<BS>0", function()
+  vim.cmd("bdelete 10")
+end, { desc = "Delete buffer 10" })
+
+-- #######################
