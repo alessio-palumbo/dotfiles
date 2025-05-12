@@ -61,7 +61,7 @@ alias gso='git stash pop'
 
 # Git Scripts
 
-gtr () { git rebase ${1:=main} }
+grem () { git rebase ${1:=main} }
 
 gbdone () {
     desc="Usage: checkout main branch pulling latest change and remove this branch"
@@ -151,6 +151,21 @@ gln () {
 	arg="NR<$depth && /$1/"
 	arg+=' {print NR": " $0}'
 	glp | awk "$arg"
+}
+
+gbn () {
+    current_branch=$(git rev-parse --abbrev-ref HEAD)
+    base_branch="${current_branch%-*}"
+    suffix="${current_branch##*-}"
+
+    next_suffix=2
+    if [[ "$suffix" =~ ^[0-9]+$ ]]; then
+      next_suffix=$((suffix + 1))
+    else
+      base_branch="$current_branch"
+    fi
+
+    git checkout -b "$base_branch-$next_suffix"
 }
 
 ##### Other Aliases
@@ -468,3 +483,9 @@ fi
 
 # Source fzf (should be kept last)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/alessiopalumbo/Downloads/google-cloud-sdk 2/path.zsh.inc' ]; then . '/Users/alessiopalumbo/Downloads/google-cloud-sdk 2/path.zsh.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/alessiopalumbo/Downloads/google-cloud-sdk 2/completion.zsh.inc' ]; then . '/Users/alessiopalumbo/Downloads/google-cloud-sdk 2/completion.zsh.inc'; fi
