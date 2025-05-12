@@ -35,6 +35,9 @@
   "[go][python][markdown][javascriptreact][typescriptreact][typescript][json][jsonc][html]": {
     "coc.preferences.formatOnSave": true
   },
+  "[python]": {
+    "inlayHint.enable": false
+  },
   "prettier.disableLanguages": [
     "html",
     "css",

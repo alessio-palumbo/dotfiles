@@ -13,8 +13,9 @@ call plug#begin("~/.config/nvim/plugged")
 
   " Notes/diary taking
   Plug 'vimwiki/vimwiki'
-  " Markdown preview in buffer (:Glow to toggle)
-  Plug 'ellisonleao/glow.nvim'
+
+  " Markdown preview
+  Plug 'MeanderingProgrammer/render-markdown.nvim'
 
   " Delete buffers
   Plug 'moll/vim-bbye'
@@ -129,16 +130,6 @@ call plug#begin("~/.config/nvim/plugged")
   " Format for C languages (C, C++, Obj-C, Js, Java, Ts, Protobuf)
   Plug 'rhysd/vim-clang-format'
 
-  " Tags
-  " Plug 'vim-scripts/taglist.vim'
-
-  " Indenting pluging
-  Plug 'pseewald/anyfold'
-  " zM => close all folds (foldlevel=0)
-  " zR => open all folds
-  " za => toggle fold (1 level)
-  " zA => toggle fold (all level recursively)
-
   " Tmux integration
   Plug 'christoomey/vim-tmux-navigator'
 
@@ -160,6 +151,12 @@ call plug#begin("~/.config/nvim/plugged")
 
   " Copilot
   Plug 'github/copilot.vim'
+  Plug 'nvim-lua/plenary.nvim'
+  Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+  Plug 'olimorris/codecompanion.nvim'
+
+  " Sticky context window (shows current function/class at top)
+  Plug 'nvim-treesitter/nvim-treesitter-context'
 
   " Snippets
   Plug 'SirVer/ultisnips'
@@ -197,7 +194,7 @@ highlight LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE gui
 " ### Navigation
 " ---------------------------------------------
 
-let mapleader=";"
+let mapleader=" "
 
 set tabstop=4
 set shiftwidth=4
@@ -237,9 +234,10 @@ set number relativenumber
 :  autocmd BufLeave,FocusLost,InsertEnter   * set norelativenumber
 :augroup END
 
-" Activate folding plugin on all files
-autocmd Filetype * AnyFoldActivate
-set foldlevel=99
+" Folding with treesitter
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
+set nofoldenable  " Don't auto-fold on open, but folding works when triggered
 nnoremap <space><space> za
 
 " use enter to clear search highlighting
@@ -1102,3 +1100,22 @@ let g:copilot_no_tab_map = v:true
 " - 'viminfo' includes "!"
 " - 'wildmenu' is enabled
 " - 'wildoptions' defaults to "pum,tagfile"
+
+" ---------------------------------------------
+"  ### Lua init declarations
+" ---------------------------------------------
+
+lua << EOF
+
+require('nvim-treesitter.configs').setup({ highlight = { enable = true } })
+require('treesitter-context').setup{
+  enable = true,
+  max_lines = 3,
+}
+
+require("codecompanion").setup({})
+
+require('render-markdown').setup({
+  file_types = { 'markdown' },
+})
+EOF
