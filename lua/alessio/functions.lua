@@ -82,4 +82,13 @@ function M.delete_buffer()
   end
 end
 
+function M.git_root()
+  local handle = io.popen("git rev-parse --show-toplevel 2>/dev/null")
+  if handle then
+    local result = handle:read("*a"):gsub("\n", "")
+    handle:close()
+    return result ~= "" and result or nil
+  end
+end
+
 return M  -- Return the module
