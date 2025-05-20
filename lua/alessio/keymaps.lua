@@ -100,10 +100,38 @@ vim.keymap.set("n", "<BS>0", function() vim.cmd("bdelete 10") end, { desc = "Del
 
 vim.keymap.set('n', '<Tab>', '<Cmd>BufferLineCycleNext<CR>', {})
 vim.keymap.set('n', '<S-Tab>', '<Cmd>BufferLineCyclePrev<CR>', {})
---vim.keymap.set('n', '<leader>q', '<Cmd>bd<CR>', {})  -- Close current buffer
 
 -- #######################
 --
 -- ### NvimTree ###
 
 vim.keymap.set('n', '<C-b>', function() require("nvim-tree.api").tree.toggle() end, { desc = "Toggle NvimTree" })
+
+-- #######################
+--
+-- ### Fzf ###
+
+local fzf = require("fzf-lua")
+
+map("n", "ff", fzf.files, opts)
+map("n", "fh", function() fzf.files({ cwd = os.getenv("HOME") }) end, opts)
+map("n", "fr", function() fzf.files({ cwd = "/" }) end, opts)
+map("n", "fp", function()
+  local root = funcs.git_root()
+  if root then fzf.files({ cwd = root }) else fzf.files() end
+end, opts)
+
+-- Grep inside Git root or current dir
+map("n", "fg", function()
+  fzf.live_grep({ cwd = funcs.git_root() or vim.loop.cwd() })
+end, opts)
+
+map("n", "fi", function()
+  local dir = vim.fn.input("Search in dir: ", "", "dir")
+  if dir ~= "" then fzf.live_grep({ cwd = dir }) end
+end, opts)
+
+-- Git-related commands
+map("n", "fc", fzf.git_commits, opts)
+map("n", "fb", fzf.git_bcommits, opts)
+map("n", "fs", fzf.git_status, opts)

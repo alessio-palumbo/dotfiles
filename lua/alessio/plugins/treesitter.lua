@@ -10,7 +10,7 @@ return {
       -- ensure these language parsers are installed
       ensure_installed = {
         "lua",
-	"go",
+        "go",
         "markdown",
         "markdown_inline",
         "vim",
