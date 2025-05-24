@@ -65,6 +65,33 @@ vim.api.nvim_set_hl(0, "LineNr", { bg = "none", fg = "DarkGrey", bold = true })
 vim.api.nvim_set_hl(0, "MatchParen", { bg = "black", fg = "white", italic = true })
 
 -- Git
-if vim.fn.has("nvim") == 1 then
-  vim.env.GIT_EDITOR = "nvr -cc split --remote-wait"
-end
+if vim.fn.has("nvim") == 1 then vim.env.GIT_EDITOR = "nvr -cc split --remote-wait" end
+
+-- Diagnostic
+vim.diagnostic.config({
+  signs = {
+    text = {
+      [vim.diagnostic.severity.ERROR] = " ",
+      [vim.diagnostic.severity.WARN] = " ",
+      [vim.diagnostic.severity.HINT] = "󰠠 ",
+      [vim.diagnostic.severity.INFO] = " ",
+    },
+    -- Optional: control highlight group mapping
+    numhl = {
+      [vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
+      [vim.diagnostic.severity.WARN] = "DiagnosticSignWarn",
+      [vim.diagnostic.severity.HINT] = "DiagnosticSignHint",
+      [vim.diagnostic.severity.INFO] = "DiagnosticSignInfo",
+    },
+  },
+  virtual_text = { source = true },
+  underline = true,
+  update_in_insert = false,
+  severity_sort = true,
+  float = {
+    border = "rounded",
+    source = "always", -- show "gopls", etc.
+    header = "",
+    prefix = "",
+  },
+})
