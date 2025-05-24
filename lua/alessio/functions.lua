@@ -3,7 +3,7 @@ local M = {}
 -- Generate a UUID and insert it at the cursor position
 function M.gen_uuid()
   -- Check if 'uuidgen' exists
-  local exists = vim.fn.system('command -v uuidgen')
+  local exists = vim.fn.system("command -v uuidgen")
   if not exists:match("%w+") then
     print("command not found: uuidgen")
     return
@@ -18,45 +18,45 @@ end
 
 -- Function to show a floating tooltip
 function M.show_tooltip(text)
-    local pos = vim.api.nvim_win_get_cursor(0) -- Get cursor position (row, col)
-    local row, col = pos[1] - 1, pos[2]
+  local pos = vim.api.nvim_win_get_cursor(0) -- Get cursor position (row, col)
+  local row, col = pos[1] - 1, pos[2]
 
-    local buf = vim.api.nvim_create_buf(false, true)
-    vim.api.nvim_buf_set_lines(buf, 0, -1, false, { text })
+  local buf = vim.api.nvim_create_buf(false, true)
+  vim.api.nvim_buf_set_lines(buf, 0, -1, false, { text })
 
-    local opts = {
-        relative = "win",
-        row = row,
-        col = col,
-        width = #text,
-        height = 1,
-        style = "minimal",
-        border = "rounded",
-    }
+  local opts = {
+    relative = "win",
+    row = row,
+    col = col,
+    width = #text,
+    height = 1,
+    style = "minimal",
+    border = "rounded",
+  }
 
-    local win = vim.api.nvim_open_win(buf, false, opts)
+  local win = vim.api.nvim_open_win(buf, false, opts)
 
-    -- Close the floating window after 1 second
-    vim.defer_fn(function()
-        vim.api.nvim_win_close(win, true)
-    end, 1000)
+  -- Close the floating window after 1 second
+  vim.defer_fn(function()
+    vim.api.nvim_win_close(win, true)
+  end, 1000)
 end
 
 -- Function to convert a hex word to decimal and show it in a tooltip
 function M.convert_hex_word_to_decimal()
-    local word = vim.fn.expand("<cword>") -- Get the word under the cursor
+  local word = vim.fn.expand("<cword>") -- Get the word under the cursor
 
-    if word:sub(1, 2) == "0x" then
-        local hex_part = word:sub(3) -- Remove '0x' prefix
-        local decimal_value = tonumber(hex_part, 16) -- Convert hex to decimal
-        if decimal_value then
-            M.show_tooltip("Decimal: " .. decimal_value)
-        else
-            M.show_tooltip("Invalid hex number")
-        end
+  if word:sub(1, 2) == "0x" then
+    local hex_part = word:sub(3) -- Remove '0x' prefix
+    local decimal_value = tonumber(hex_part, 16) -- Convert hex to decimal
+    if decimal_value then
+      M.show_tooltip("Decimal: " .. decimal_value)
     else
-        M.show_tooltip("Not a valid hex word: " .. word)
+      M.show_tooltip("Invalid hex number")
     end
+  else
+    M.show_tooltip("Not a valid hex word: " .. word)
+  end
 end
 
 function M.delete_buffer()
@@ -91,4 +91,20 @@ function M.git_root()
   end
 end
 
-return M  -- Return the module
+function M.go_back_and_close()
+  local prev_buf = vim.api.nvim_get_current_buf()
+  vim.cmd([[execute "normal! \<c-o>"]])
+  local curr_buf = vim.api.nvim_get_current_buf()
+
+  if curr_buf ~= prev_buf then
+    local bufinfo = vim.fn.getbufinfo(prev_buf)
+    if bufinfo and bufinfo[1] and bufinfo[1].changed == 0 then
+      -- use a safer way to check buffer validity before deleting
+      if vim.api.nvim_buf_is_loaded(prev_buf) and vim.api.nvim_buf_is_valid(prev_buf) then
+        vim.cmd("bd " .. prev_buf)
+      end
+    end
+  end
+end
+
+return M -- Return the module

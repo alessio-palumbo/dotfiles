@@ -4,7 +4,6 @@ return {
   event = { "BufReadPost", "BufNewFile" },
   config = function()
     require("nvim-treesitter.configs").setup({
-      ensure_installed = { "lua", "go", "markdown", "vim", "bash" },
       highlight = { enable = true },
       indent = { enable = true },
       -- ensure these language parsers are installed
@@ -36,5 +35,5 @@ return {
         },
       },
     })
-  end
+  end,
 }
