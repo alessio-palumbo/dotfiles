@@ -4,27 +4,19 @@ return {
   config = function()
     local lualine = require("lualine")
 
-    local function is_readonly()
-      return vim.bo.readonly and "" or ""
-    end
+    local function is_readonly() return vim.bo.readonly and "" or "" end
 
-    local function is_modified()
-      return vim.bo.modified and "●" or ""
-    end
+    local function is_modified() return vim.bo.modified and "●" or "" end
 
     local function filetype_with_icon()
-      if vim.fn.winwidth(0) <= 70 then
-        return ""
-      end
+      if vim.fn.winwidth(0) <= 70 then return "" end
       local icon = require("nvim-web-devicons").get_icon_by_filetype(vim.bo.filetype) or ""
       local ft = vim.bo.filetype ~= "" and vim.bo.filetype or "no ft"
       return ft .. " " .. icon
     end
 
     local function fileformat_with_icon()
-      if vim.fn.winwidth(0) <= 70 then
-        return ""
-      end
+      if vim.fn.winwidth(0) <= 70 then return "" end
       local format = vim.bo.fileformat
       local icons = { unix = "", dos = "", mac = "" }
       return format .. " " .. (icons[format] or "")
@@ -40,10 +32,11 @@ return {
           statusline = {},
           winbar = {},
         },
+        globalstatus = true,
       },
       sections = {
         lualine_a = { "mode", "paste" },
-        lualine_b = { { "branch", icon = "" } },
+        lualine_b = { { "branch", icon = "" }, "diff" },
         lualine_c = {
           {
             "diagnostics",
@@ -59,7 +52,7 @@ return {
           is_modified,
         },
         lualine_x = { fileformat_with_icon, filetype_with_icon },
-        lualine_y = {},
+        lualine_y = { "progress" },
         lualine_z = { "location" },
       },
       extensions = { "fugitive", "nvim-tree" },

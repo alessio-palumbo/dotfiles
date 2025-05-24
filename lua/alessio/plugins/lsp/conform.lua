@@ -7,7 +7,14 @@ return {
     conform.setup({
       formatters = {
         stylua = {
-          prepend_args = { "--indent-type", "Spaces", "--indent-width", "2" },
+          prepend_args = {
+            "--indent-type",
+            "Spaces",
+            "--indent-width",
+            "2",
+            "--collapse-simple-statement",
+            "Always",
+          },
         },
       },
       formatters_by_ft = {
@@ -28,12 +35,17 @@ return {
       },
     })
 
-    vim.keymap.set({ "n", "v" }, "<leader>f", function()
-      conform.format({
-        lsp_fallback = true,
-        async = false,
-        timeout_ms = 500,
-      })
-    end, { desc = "Format file or range (in visual mode)" })
+    vim.keymap.set(
+      { "n", "v" },
+      "<leader>f",
+      function()
+        conform.format({
+          lsp_fallback = true,
+          async = false,
+          timeout_ms = 500,
+        })
+      end,
+      { desc = "Format file or range (in visual mode)" }
+    )
   end,
 }
