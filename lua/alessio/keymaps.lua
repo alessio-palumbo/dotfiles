@@ -104,24 +104,26 @@ vim.keymap.set("x", "cm", "gc", { remap = true, desc = "Toggle comment" })
 
 for i = 1, 9 do
   -- Jump to buffer 1-9 with <leader>1 to <leader>9
-  vim.keymap.set("n", "<Leader>" .. i, function()
-    require("bufferline").go_to_buffer(i, true)
-  end, { desc = "Go to buffer " .. i })
+  vim.keymap.set(
+    "n",
+    "<Leader>" .. i,
+    function() require("bufferline").go_to_buffer(i, true) end,
+    { desc = "Go to buffer " .. i }
+  )
 
   -- Delete buffers with <BS>1 .. <BS>9
-  vim.keymap.set("n", "<BS>" .. i, function()
-    vim.cmd("bdelete " .. i)
-  end, { desc = "Delete buffer " .. i })
+  vim.keymap.set("n", "<BS>" .. i, function() vim.cmd("bdelete " .. i) end, { desc = "Delete buffer " .. i })
 end
 
 -- <leader>0 goes to buffer 10
-vim.keymap.set("n", "<Leader>0", function()
-  require("bufferline").go_to_buffer(10, true)
-end, { desc = "Go to buffer 10" })
+vim.keymap.set(
+  "n",
+  "<Leader>0",
+  function() require("bufferline").go_to_buffer(10, true) end,
+  { desc = "Go to buffer 10" }
+)
 -- <BS>0 deletes buffer 10
-vim.keymap.set("n", "<BS>0", function()
-  vim.cmd("bdelete 10")
-end, { desc = "Delete buffer 10" })
+vim.keymap.set("n", "<BS>0", function() vim.cmd("bdelete 10") end, { desc = "Delete buffer 10" })
 
 vim.keymap.set("n", "<Tab>", "<Cmd>BufferLineCycleNext<CR>", {})
 vim.keymap.set("n", "<S-Tab>", "<Cmd>BufferLineCyclePrev<CR>", {})
@@ -130,9 +132,7 @@ vim.keymap.set("n", "<S-Tab>", "<Cmd>BufferLineCyclePrev<CR>", {})
 --
 -- ### NvimTree ###
 
-vim.keymap.set("n", "<C-b>", function()
-  require("nvim-tree.api").tree.toggle()
-end, { desc = "Toggle NvimTree" })
+vim.keymap.set("n", "<C-b>", function() require("nvim-tree.api").tree.toggle() end, { desc = "Toggle NvimTree" })
 
 -- #######################
 --
@@ -141,12 +141,8 @@ end, { desc = "Toggle NvimTree" })
 local fzf = require("fzf-lua")
 
 map("n", "ff", fzf.files, vim.tbl_extend("force", opts, { desc = "Find files" }))
-map("n", "fh", function()
-  fzf.files({ cwd = os.getenv("HOME") })
-end, opts)
-map("n", "fr", function()
-  fzf.files({ cwd = "/" })
-end, opts)
+map("n", "fh", function() fzf.files({ cwd = os.getenv("HOME") }) end, opts)
+map("n", "fr", function() fzf.files({ cwd = "/" }) end, opts)
 map("n", "fp", function()
   local root = funcs.git_root()
   if root then
@@ -164,12 +160,9 @@ end, opts)
 
 map("n", "fi", function()
   local dir = vim.fn.input("Search in dir: ", "", "dir")
-  if dir ~= "" then
-    fzf.live_grep({ cwd = dir })
-  end
+  if dir ~= "" then fzf.live_grep({ cwd = dir }) end
 end, opts)
 
---map("n", "<leader>fg", fzf.live_grep_native or fzf.live_grep, { desc = "Live grep" }) -- Use native if available
 map("n", "<leader>fb", fzf.buffers, { desc = "Find buffer" })
 map("n", "<leader>fo", fzf.oldfiles, { desc = "Recent files" })
 map("n", "<leader>fw", fzf.grep_cword, { desc = "Grep current word" })
