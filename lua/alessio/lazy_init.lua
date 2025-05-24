@@ -19,11 +19,11 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   spec = {
     { import = "alessio.plugins" },
---    { import = "alessio.plugins.lsp" },
+    { import = "alessio.plugins.lsp" },
   },
   -- automatically check for plugin updates
-  checker = { enabled = true },
-  change_detection = { notify = false }
+  checker = { enabled = true, notify = false },
+  change_detection = { notify = false },
 }, {
   profile = {
     enable = true,

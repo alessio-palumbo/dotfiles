@@ -3,7 +3,6 @@ return {
   dependencies = { "nvim-tree/nvim-web-devicons" },
   config = function()
     local nvimtree = require("nvim-tree")
-    local api = require("nvim-tree.api")
 
     -- recommended settings from nvim-tree documentation
     vim.g.loaded_netrw = 1
@@ -22,6 +21,7 @@ return {
 
       -- custom mappings
       vim.keymap.set("n", "u", api.tree.change_root_to_parent, opts("Up"))
+      vim.keymap.set("n", "<space>", api.node.open.edit, opts("Up"))
     end
 
     nvimtree.setup({
@@ -67,7 +67,7 @@ return {
       },
       update_focused_file = {
         enable = true,
-        update_cwd = true,
+        update_root = true,
       },
       diagnostics = {
         enable = true,
@@ -81,6 +81,6 @@ return {
       },
       sync_root_with_cwd = true,
       respect_buf_cwd = true,
-     })
-  end
+    })
+  end,
 }
