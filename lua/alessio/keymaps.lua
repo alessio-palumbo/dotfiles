@@ -197,3 +197,14 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("n", "K", vim.lsp.buf.hover, opts("Show documentation for what is under cursor", ev.buf))
   end,
 })
+
+-- #######################
+--
+-- ### Flash ###
+
+local flash = require("flash")
+
+map({ "n", "x", "o" }, "s", function() flash.jump() end, opts("Flash jump"))
+map({ "n", "x", "o" }, "<leader>s", function() flash.treesitter() end, opts("Flash Treesitter"))
+map("o", "r", function() flash.remote() end, opts("Remote Flash"))
+map("c", "<C-s>", function() flash.toggle() end, opts("Toggle Flash Search"))
