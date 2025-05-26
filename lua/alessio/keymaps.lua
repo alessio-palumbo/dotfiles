@@ -204,8 +204,8 @@ vim.api.nvim_create_autocmd("LspAttach", {
 
 local flash = require("flash")
 
-map({ "n", "x", "o" }, "s", function() flash.jump() end, opts("Flash jump"))
-map({ "n", "x", "o" }, "<leader>s", function() flash.treesitter() end, opts("Flash Treesitter"))
+map({ "n", "x", "o" }, "<leader>s", function() flash.jump() end, opts("Flash jump"))
+map({ "n", "x", "o" }, "<leader>S", function() flash.treesitter() end, opts("Flash Treesitter"))
 map("o", "r", function() flash.remote() end, opts("Remote Flash"))
 map("c", "<C-s>", function() flash.toggle() end, opts("Toggle Flash Search"))
 
@@ -250,3 +250,14 @@ vim.api.nvim_create_autocmd("FileType", {
     map("n", "<leader>tf", funcs.go_test_func_under_cursor, opts("Go: Run test under cursor", ev.buf))
   end,
 })
+
+-- #######################
+--
+-- ### Gitsigns ###
+
+local gitsigns = require("gitsigns")
+map("n", "]h", gitsigns.next_hunk, { desc = "Next Git hunk" })
+map("n", "[h", gitsigns.prev_hunk, { desc = "Prev Git hunk" })
+map("n", "<leader>hs", gitsigns.stage_hunk, { desc = "Stage hunk" })
+map("n", "<leader>hr", gitsigns.reset_hunk, { desc = "Reset hunk" })
+map("n", "<leader>hp", gitsigns.preview_hunk, { desc = "Preview hunk" })
