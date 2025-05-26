@@ -77,27 +77,38 @@ map("n", "n", "nzzzv", opts())
 map("n", "N", "Nzzzv", opts())
 
 -- Buffers delete
-vim.keymap.set("n", "<leader>q", funcs.delete_buffer, opts())
-vim.keymap.set("n", "<leader>!q", ":Bdelete!<CR>", opts())
-vim.keymap.set("t", "jkq", function()
+map("n", "<leader>q", funcs.delete_buffer, opts())
+map("n", "<leader>!q", ":Bdelete!<CR>", opts())
+map("t", "jkq", function()
   vim.cmd("stopinsert")
   funcs.delete_buffer()
 end, opts())
 
 -- Buffers navigation
-vim.keymap.set("n", "gb", funcs.go_back_and_close, opts("Go back and close previous buffer if unchanged"))
-
--- In terminal mode: <C-^> to switch to alternate buffer
-vim.keymap.set("t", "<C-^>", [[<C-\><C-n>:b#<CR>]], opts("Switch to previous buffer"))
+map("n", "gb", funcs.go_back_and_close, opts("Go back and close previous buffer if unchanged"))
 
 -- Comments - remap neovim native mappings
-vim.keymap.set("n", "cm", "gcc", { remap = true, desc = "Toggle comment" })
-vim.keymap.set("x", "cm", "gc", { remap = true, desc = "Toggle comment" })
+map("n", "cm", "gcc", { remap = true, desc = "Toggle comment" })
+map("x", "cm", "gc", { remap = true, desc = "Toggle comment" })
 
 -- Diagnostic
 map("n", "<leader>d", vim.diagnostic.open_float, opts("Show line diagnostics"))
 map("n", "[d", vim.diagnostic.goto_prev, opts("Go to previous diagnostic"))
 map("n", "]d", vim.diagnostic.goto_next, opts("Go to next diagnostic"))
+
+-- Terminal
+map("t", "<C-^>", [[<C-\><C-n>:b#<CR>]], opts("Switch to previous buffer"))
+map("t", "<Esc>", [[<C-\><C-n>]], opts("Escape to normal mode"))
+map("n", "<leader>tt", [[<C-\><C-n>]], opts("Escape to normal mode"))
+map("n", "ts", function() funcs.terminal_in_lcd(true) end, opts("Terminal split in current dir"))
+map("n", "tt", function() funcs.terminal_in_lcd(false) end, opts("Terminal in new buffer"))
+
+autocmd("BufEnter", {
+  pattern = "*",
+  callback = function()
+    if vim.bo.buftype == "terminal" then vim.cmd("startinsert") end
+  end,
+})
 
 -- #######################
 -- ### Plugins Keymaps ###
@@ -105,39 +116,28 @@ map("n", "]d", vim.diagnostic.goto_next, opts("Go to next diagnostic"))
 
 -- ### Bufferline ###
 
+local bufferline = require("bufferline")
 for i = 1, 9 do
   -- Jump to buffer 1-9 with <leader>1 to <leader>9
-  vim.keymap.set(
-    "n",
-    "<Leader>" .. i,
-    function() require("bufferline").go_to_buffer(i, true) end,
-    { desc = "Go to buffer " .. i }
-  )
-
+  map("n", "<Leader>" .. i, function() bufferline.go_to_buffer(i, true) end, opts("Go to buffer " .. i))
   -- Delete buffers with <BS>1 .. <BS>9
-  vim.keymap.set("n", "<BS>" .. i, function() vim.cmd("bdelete " .. i) end, { desc = "Delete buffer " .. i })
+  map("n", "<BS>" .. i, function() vim.cmd("bdelete " .. i) end, opts("Delete buffer " .. i))
 end
 
 -- <leader>0 goes to buffer 10
-vim.keymap.set(
-  "n",
-  "<Leader>0",
-  function() require("bufferline").go_to_buffer(10, true) end,
-  { desc = "Go to buffer 10" }
-)
-
+map("n", "<Leader>0", function() bufferline.go_to_buffer(10, true) end, opts("Go to buffer 10"))
 -- <BS>0 deletes buffer 10
-vim.keymap.set("n", "<BS>0", function() vim.cmd("bdelete 10") end, { desc = "Delete buffer 10" })
+map("n", "<BS>0", function() vim.cmd("bdelete 10") end, opts("Delete buffer 10"))
 
 -- Navigate through buffers
-vim.keymap.set("n", "<Tab>", "<Cmd>BufferLineCycleNext<CR>", {})
-vim.keymap.set("n", "<S-Tab>", "<Cmd>BufferLineCyclePrev<CR>", {})
+map("n", "<Tab>", function() bufferline.cycle(1) end, opts("Next buffer"))
+map("n", "<S-Tab>", function() bufferline.cycle(-1) end, opts("Prev buffer"))
 
 -- #######################
 --
 -- ### NvimTree ###
 
-vim.keymap.set("n", "<C-b>", function() require("nvim-tree.api").tree.toggle() end, { desc = "Toggle NvimTree" })
+map("n", "<C-b>", function() require("nvim-tree.api").tree.toggle() end, { desc = "Toggle NvimTree" })
 
 -- #######################
 --

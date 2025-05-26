@@ -57,6 +57,15 @@ function M.convert_hex_word_to_decimal()
   end
 end
 
+local function is_fzf_lua_open()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local buf = vim.api.nvim_win_get_buf(win)
+    local ft = vim.api.nvim_buf_get_option(buf, "filetype")
+    if ft == "fzf" then return true end
+  end
+  return false
+end
+
 function M.delete_buffer()
   local nvimtree_open = require("nvim-tree.view").is_visible()
   local buftype = vim.bo.buftype
@@ -65,7 +74,11 @@ function M.delete_buffer()
   local is_split = (win_count > 1 and not nvimtree_open) or (win_count > 2)
 
   -- Close buffer by type
-  if buftype == "terminal" then
+  if is_fzf_lua_open() then
+    print("is a lua")
+    -- Simulate pressing Esc to dismiss FZF
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
+  elseif buftype == "terminal" then
     vim.cmd("Bdelete!")
   elseif not is_split then
     vim.cmd("Bdelete")
@@ -148,6 +161,18 @@ function M.go_test_func_under_cursor()
     node = node:parent()
   end
   vim.notify("No enclosing test function found", vim.log.levels.WARN)
+end
+
+function M.terminal_in_lcd(split)
+  local dir = vim.fn.expand("%:p:h")
+  local term_cmd = "term://zsh"
+  if dir ~= "" then term_cmd = "term://" .. dir .. "//zsh" end
+  if split then
+    vim.cmd("split " .. term_cmd)
+    vim.cmd("resize 15")
+  else
+    vim.cmd("edit " .. term_cmd)
+  end
 end
 
 return M

@@ -1,4 +1,6 @@
 local opt = vim.opt
+local augroup = vim.api.nvim_create_augroup
+local autocmd = vim.api.nvim_create_autocmd
 
 -- Line Numbers
 opt.number = true -- Show absolute line numbers
@@ -94,4 +96,46 @@ vim.diagnostic.config({
     header = "",
     prefix = "",
   },
+})
+
+-- Filetype configs
+
+local filetype_indent = augroup("FiletypeIndent", { clear = true })
+
+autocmd("FileType", {
+  group = filetype_indent,
+  pattern = { "json", "proto", "html", "css", "javascript" },
+  callback = function()
+    vim.opt_local.tabstop = 2
+    vim.opt_local.shiftwidth = 2
+    vim.opt_local.expandtab = true
+  end,
+})
+
+autocmd("FileType", {
+  group = filetype_indent,
+  pattern = "go",
+  callback = function()
+    vim.opt_local.tabstop = 8
+    vim.opt_local.shiftwidth = 8
+    vim.opt_local.expandtab = false
+  end,
+})
+
+autocmd({ "BufNewFile", "BufReadPost" }, {
+  group = filetype_indent,
+  pattern = { "*.yml", "*.yaml" },
+  callback = function() vim.bo.filetype = "yaml" end,
+})
+
+-- YAML indentation settings
+vim.api.nvim_create_autocmd("FileType", {
+  group = filetype_indent,
+  pattern = "yaml",
+  callback = function()
+    vim.opt_local.tabstop = 2
+    vim.opt_local.softtabstop = 2
+    vim.opt_local.shiftwidth = 2
+    vim.opt_local.expandtab = true
+  end,
 })
