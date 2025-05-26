@@ -1,5 +1,7 @@
 local funcs = require("alessio.functions")
 local map = vim.keymap.set
+local autocmd = vim.api.nvim_create_autocmd
+local augroup = vim.api.nvim_create_augroup
 
 local function opts(desc, buf)
   local base = { noremap = true, silent = true }
@@ -180,8 +182,8 @@ map("n", "<leader>fs", fzf.git_status, opts("Git status"))
 --
 -- ### Lsp ###
 
-vim.api.nvim_create_autocmd("LspAttach", {
-  group = vim.api.nvim_create_augroup("UserLspConfig", {}),
+autocmd("LspAttach", {
+  group = augroup("UserLspConfig", {}),
   callback = function(ev)
     map("n", "gr", vim.lsp.buf.references, opts("Show LSP references", ev.buf))
     map("n", "gd", vim.lsp.buf.definition, opts("Go to definition", ev.buf))
@@ -191,9 +193,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
     map("i", "<C-k>", vim.lsp.buf.signature_help, opts("Signature help", ev.buf))
     map({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, opts("See available code actions", ev.buf))
     map("n", "<leader>rn", vim.lsp.buf.rename, opts("Smart rename", ev.buf))
-    map("n", "<leader>d", vim.diagnostic.open_float, opts("Show line diagnostics", ev.buf))
-    map("n", "[d", vim.diagnostic.goto_prev, opts("Go to previous diagnostic", ev.buf))
-    map("n", "]d", vim.diagnostic.goto_next, opts("Go to next diagnostic", ev.buf))
     map("n", "K", vim.lsp.buf.hover, opts("Show documentation for what is under cursor", ev.buf))
   end,
 })
@@ -211,9 +210,21 @@ map("c", "<C-s>", function() flash.toggle() end, opts("Toggle Flash Search"))
 
 -- #######################
 --
--- ### Gopher ###
+-- ### Gitsigns ###
 
-vim.api.nvim_create_autocmd("FileType", {
+local gitsigns = require("gitsigns")
+map("n", "]h", gitsigns.next_hunk, { desc = "Next Git hunk" })
+map("n", "[h", gitsigns.prev_hunk, { desc = "Prev Git hunk" })
+map("n", "<leader>hs", gitsigns.stage_hunk, { desc = "Stage hunk" })
+map("n", "<leader>hr", gitsigns.reset_hunk, { desc = "Reset hunk" })
+map("n", "<leader>hp", gitsigns.preview_hunk, { desc = "Preview hunk" })
+
+-- #######################
+--
+-- ### Go - Gopher ###
+--
+autocmd("FileType", {
+  group = augroup("GoGopherConfig", {}),
   pattern = "go",
   callback = function(ev)
     -- Alternate between test and implementation
@@ -253,11 +264,16 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- #######################
 --
--- ### Gitsigns ###
+-- ### Dap ###
 
-local gitsigns = require("gitsigns")
-map("n", "]h", gitsigns.next_hunk, { desc = "Next Git hunk" })
-map("n", "[h", gitsigns.prev_hunk, { desc = "Prev Git hunk" })
-map("n", "<leader>hs", gitsigns.stage_hunk, { desc = "Stage hunk" })
-map("n", "<leader>hr", gitsigns.reset_hunk, { desc = "Reset hunk" })
-map("n", "<leader>hp", gitsigns.preview_hunk, { desc = "Preview hunk" })
+autocmd("FileType", {
+  group = augroup("DapConfig", {}),
+  pattern = "go",
+  callback = function(ev)
+    local dap = require("dap")
+    map("n", "<leader>ds", function() dap.continue() end, opts("Start/Continue Debugging", ev.buffer))
+    map("n", "<leader>de", function() dap.terminate() end, { desc = "Terminate" })
+    map("n", "<leader>db", function() dap.toggle_breakpoint() end, { desc = "Toggle Breakpoint" })
+    map("n", "<leader>dt", function() require("dap-go").debug_test() end, { desc = "Debug Nearest Test" })
+  end,
+})
