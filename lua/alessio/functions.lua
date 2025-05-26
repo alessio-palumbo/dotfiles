@@ -37,9 +37,7 @@ function M.show_tooltip(text)
   local win = vim.api.nvim_open_win(buf, false, opts)
 
   -- Close the floating window after 1 second
-  vim.defer_fn(function()
-    vim.api.nvim_win_close(win, true)
-  end, 1000)
+  vim.defer_fn(function() vim.api.nvim_win_close(win, true) end, 1000)
 end
 
 -- Function to convert a hex word to decimal and show it in a tooltip
@@ -107,4 +105,49 @@ function M.go_back_and_close()
   end
 end
 
-return M -- Return the module
+local function move_to_struct_end(node)
+  local struct_node = node:field("type")[1]
+  if struct_node and struct_node:type() == "struct_type" then
+    local node_end_ln, _, _ = struct_node:end_()
+    vim.api.nvim_win_set_cursor(0, { node_end_ln + 1, 0 })
+    return true
+  end
+end
+
+function M.move_to_struct_end()
+  local node = require("nvim-treesitter.ts_utils").get_node_at_cursor()
+  while node do
+    if node:type() == "type_declaration" then
+      for child in node:iter_children() do
+        if child:type() == "type_spec" then return move_to_struct_end(child) end
+      end
+    end
+    if node:type() == "type_spec" then return move_to_struct_end(node) end
+    node = node:parent()
+  end
+  return false
+end
+
+function M.go_test_func_under_cursor()
+  local ts_utils = require("nvim-treesitter.ts_utils")
+  local node = ts_utils.get_node_at_cursor()
+  while node do
+    if node:type() == "function_declaration" then
+      local name_node = node:field("name")[1]
+      if name_node then
+        local func_name = vim.treesitter.get_node_text(name_node, 0)
+        if func_name:match("^Test") then
+          local cmd = "go test -run '^" .. func_name .. "$'"
+          vim.cmd("!" .. cmd)
+        else
+          vim.notify("Not a test function (name doesn't start with 'Test')", vim.log.levels.WARN)
+        end
+        return
+      end
+    end
+    node = node:parent()
+  end
+  vim.notify("No enclosing test function found", vim.log.levels.WARN)
+end
+
+return M

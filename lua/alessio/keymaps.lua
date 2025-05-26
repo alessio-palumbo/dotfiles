@@ -208,3 +208,45 @@ map({ "n", "x", "o" }, "s", function() flash.jump() end, opts("Flash jump"))
 map({ "n", "x", "o" }, "<leader>s", function() flash.treesitter() end, opts("Flash Treesitter"))
 map("o", "r", function() flash.remote() end, opts("Remote Flash"))
 map("c", "<C-s>", function() flash.toggle() end, opts("Toggle Flash Search"))
+
+-- #######################
+--
+-- ### Gopher ###
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "go",
+  callback = function(ev)
+    -- Alternate between test and implementation
+    map("n", "ga", function()
+      local file = vim.api.nvim_buf_get_name(0)
+      if file:match("_test%.go$") then
+        file = file:gsub("_test%.go$", ".go")
+      else
+        file = file:gsub("%.go$", "_test.go")
+      end
+      vim.cmd("edit " .. file)
+    end, opts("Go: Alternate file", ev.buf))
+
+    local gopher = require("gopher")
+    -- Gopher tag mappings
+    map("n", "<leader>ta", function() gopher.tags.add("json") end, opts("Go: Add JSON tags", ev.buf))
+    map("n", "<leader>tr", function() gopher.tags.rm("json") end, opts("Go: Remove JSON tags", ev.buf))
+    map("n", "<leader>gt", gopher.test.add, opts("Go: Add test for function", ev.buf))
+    map("n", "<leader>if", gopher.iferr, opts("Go: Add if err stub", ev.buf))
+    map("n", "<leader>im", function()
+      -- Handle bug in gopher goimpl that inserts interface inside struct.
+      if funcs.move_to_struct_end() then
+        vim.ui.input({ prompt = "Go interface to implement: " }, function(interface)
+          if interface and interface ~= "" then
+            gopher.impl(interface)
+          else
+            vim.notify("No interface provided", vim.log.levels.WARN)
+          end
+        end)
+      end
+      vim.notify("No struct found under cursor", vim.log.levels.ERROR)
+    end, opts("Go: Implement interface", ev.buf))
+
+    map("n", "<leader>tf", funcs.go_test_func_under_cursor, opts("Go: Run test under cursor", ev.buf))
+  end,
+})
