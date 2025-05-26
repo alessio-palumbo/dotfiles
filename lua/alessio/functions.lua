@@ -18,17 +18,15 @@ end
 
 -- Function to show a floating tooltip
 function M.show_tooltip(text)
-  local pos = vim.api.nvim_win_get_cursor(0) -- Get cursor position (row, col)
-  local row, col = pos[1] - 1, pos[2]
-
+  local width = vim.fn.strdisplaywidth(text)
   local buf = vim.api.nvim_create_buf(false, true)
   vim.api.nvim_buf_set_lines(buf, 0, -1, false, { text })
 
   local opts = {
-    relative = "win",
-    row = row,
-    col = col,
-    width = #text,
+    relative = "cursor", -- position relative to the cursor
+    row = 1, -- show tooltip just below the cursor
+    col = 0,
+    width = width,
     height = 1,
     style = "minimal",
     border = "rounded",
@@ -36,8 +34,9 @@ function M.show_tooltip(text)
 
   local win = vim.api.nvim_open_win(buf, false, opts)
 
-  -- Close the floating window after 1 second
-  vim.defer_fn(function() vim.api.nvim_win_close(win, true) end, 1000)
+  vim.defer_fn(function()
+    if vim.api.nvim_win_is_valid(win) then vim.api.nvim_win_close(win, true) end
+  end, 1000)
 end
 
 -- Function to convert a hex word to decimal and show it in a tooltip

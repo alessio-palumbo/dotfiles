@@ -2,7 +2,12 @@ return {
   "nvim-treesitter/nvim-treesitter",
   build = ":TSUpdate",
   event = { "BufReadPost", "BufNewFile" },
+  dependencies = { "nvim-treesitter/nvim-treesitter-context" },
   config = function()
+    require("treesitter-context").setup({
+      enable = true,
+      max_lines = 3,
+    })
     require("nvim-treesitter.configs").setup({
       highlight = { enable = true },
       indent = { enable = true },

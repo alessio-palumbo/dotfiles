@@ -103,13 +103,6 @@ map("n", "<leader>tt", [[<C-\><C-n>]], opts("Escape to normal mode"))
 map("n", "ts", function() funcs.terminal_in_lcd(true) end, opts("Terminal split in current dir"))
 map("n", "tt", function() funcs.terminal_in_lcd(false) end, opts("Terminal in new buffer"))
 
-autocmd("BufEnter", {
-  pattern = "*",
-  callback = function()
-    if vim.bo.buftype == "terminal" then vim.cmd("startinsert") end
-  end,
-})
-
 -- #######################
 -- ### Plugins Keymaps ###
 -- #######################
@@ -183,7 +176,7 @@ map("n", "<leader>fs", fzf.git_status, opts("Git status"))
 -- ### Lsp ###
 
 autocmd("LspAttach", {
-  group = augroup("UserLspConfig", {}),
+  group = augroup("UserLspConfig", { clear = true }),
   callback = function(ev)
     map("n", "gr", vim.lsp.buf.references, opts("Show LSP references", ev.buf))
     map("n", "gd", vim.lsp.buf.definition, opts("Go to definition", ev.buf))
@@ -224,7 +217,7 @@ map("n", "<leader>hp", gitsigns.preview_hunk, { desc = "Preview hunk" })
 -- ### Go - Gopher ###
 --
 autocmd("FileType", {
-  group = augroup("GoGopherConfig", {}),
+  group = augroup("GoGopherConfig", { clear = true }),
   pattern = "go",
   callback = function(ev)
     -- Alternate between test and implementation
@@ -267,7 +260,7 @@ autocmd("FileType", {
 -- ### Dap ###
 
 autocmd("FileType", {
-  group = augroup("DapConfig", {}),
+  group = augroup("DapConfig", { clear = true }),
   pattern = "go",
   callback = function(ev)
     local dap = require("dap")

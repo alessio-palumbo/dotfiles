@@ -139,3 +139,37 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.opt_local.expandtab = true
   end,
 })
+
+-- Terminal
+autocmd("BufEnter", {
+  group = augroup("TerminalConfig", { clear = true }),
+  pattern = "*",
+  callback = function()
+    if vim.bo.buftype == "terminal" then vim.cmd("startinsert") end
+  end,
+})
+
+-- Highligh on yank
+autocmd("TextYankPost", {
+  group = augroup("YankHighlight", { clear = true }),
+  callback = function() vim.highlight.on_yank({ higroup = "IncSearch", timeout = 500 }) end,
+})
+
+-- Set GIT_EDITOR to use Neovim Remote (nvr) if in Neovim
+vim.env.GIT_EDITOR = "nvr -cc split --remote-wait"
+-- Automatically delete Git-related buffers after use
+autocmd("FileType", {
+  group = augroup("GitConfig", { clear = true }),
+  pattern = { "gitcommit", "gitrebase", "gitconfig" },
+  callback = function() vim.opt_local.bufhidden = "delete" end,
+})
+
+-- When editing a file, always jump to the last cursor position
+autocmd("BufReadPost", {
+  group = augroup("CursorLastPos", { clear = true }),
+  callback = function()
+    if vim.g.leave_my_cursor_position_alone then return end
+    local mark_pos = vim.fn.line([['"]])
+    if mark_pos > 0 and mark_pos <= vim.fn.line("$") then vim.cmd([[normal! g`"]]) end
+  end,
+})
