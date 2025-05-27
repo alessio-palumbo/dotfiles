@@ -5,12 +5,12 @@ return {
     suggestion = {
       auto_trigger = true,
       keymap = {
-        accept = "<C-space>",
+        accept = "<leader>a",
         accept_word = false, -- we'll add a custom mapping for this below
         accept_line = false,
         next = false,
         prev = false,
-        dismiss = "<C-BS>",
+        dismiss = "<leader>d",
       },
     },
     panel = { enabled = false },
@@ -19,7 +19,7 @@ return {
     require("copilot").setup(opts)
     vim.keymap.set(
       "i",
-      "<S-space>",
+      "<leader>w",
       function() require("copilot.suggestion").accept_word() end,
       { desc = "Copilot Accept Word" }
     )

@@ -52,15 +52,11 @@ map("n", "<A-h>", ":vertical resize -2<CR>", opts())
 map("n", "<A-l>", ":vertical resize +2<CR>", opts())
 
 -- Misc
-map("n", "<CR>", ":nohlsearch", opts()) -- Clear highlights after search with enter
-map("n", "*", ":keepjumps normal! mi*`i<CR>", opts()) -- Keeps the cursor under current word when searching
-
-map("n", "<leader>p", '"0p', opts()) -- Paste last yanked register
-map("v", "<leader>p", '"0p', opts()) -- Paste last yanked register
-
-map("n", "<leader>n", "o<Esc>", opts()) -- Insert new line below in normal mode
-
-map("n", "<leader>ww", ":FixWhitespace<CR>", opts()) -- Clear whitespace (requires plugin)
+map("n", "<CR>", ":nohlsearch", opts("Clear highlighting"))
+map("n", "*", ":keepjumps normal! mi*`i<CR>", opts("Keeps the cursor under current word when searching"))
+map({ "n", "v" }, "<leader>p", '"0p', opts("Paste last yanked")) -- Paste last yanked register
+map("n", "<leader>n", "o<Esc>", opts("Insert new line"))
+map("n", "<leader>ww", ":FixWhitespace<CR>", opts("Clear whitespace"))
 
 map("n", "<leader>u", funcs.gen_uuid, opts("Insert UUID"))
 
@@ -92,7 +88,6 @@ map("n", "cm", "gcc", { remap = true, desc = "Toggle comment" })
 map("x", "cm", "gc", { remap = true, desc = "Toggle comment" })
 
 -- Diagnostic
-map("n", "<leader>d", vim.diagnostic.open_float, opts("Show line diagnostics"))
 map("n", "[d", vim.diagnostic.goto_prev, opts("Go to previous diagnostic"))
 map("n", "]d", vim.diagnostic.goto_next, opts("Go to next diagnostic"))
 
