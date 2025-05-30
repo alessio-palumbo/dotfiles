@@ -18,7 +18,6 @@ opt.smartcase = true -- Override ignorecase if search contains uppercase
 
 -- UI
 opt.termguicolors = true -- Enable true color support
-opt.cursorline = true -- Highlight the current line
 opt.signcolumn = "yes" -- Always show the sign column
 
 -- Splits
@@ -61,10 +60,11 @@ opt.title, opt.titlestring, opt.titlelen = true, "%<%F", 70 -- Set the title of 
 
 -- Highlighting
 opt.syntax = "enable" -- Enable syntax highlighting
+opt.cursorline = true -- Highlight the current line
 vim.api.nvim_set_hl(0, "Normal", { bg = "black", fg = "white" })
 vim.api.nvim_set_hl(0, "Visual", { bg = "orange", fg = "RoyalBlue" })
 vim.api.nvim_set_hl(0, "LineNr", { bg = "none", fg = "DarkGrey", bold = true })
-vim.api.nvim_set_hl(0, "MatchParen", { bg = "black", fg = "white", italic = true })
+vim.api.nvim_set_hl(0, "MatchParen", { bg = "RoyalBlue", fg = "white", italic = true })
 
 -- Git
 if vim.fn.has("nvim") == 1 then vim.env.GIT_EDITOR = "nvr -cc split --remote-wait" end
@@ -173,5 +173,21 @@ autocmd("BufReadPost", {
     if vim.g.leave_my_cursor_position_alone then return end
     local mark_pos = vim.fn.line([['"]])
     if mark_pos > 0 and mark_pos <= vim.fn.line("$") then vim.cmd([[normal! g`"]]) end
+  end,
+})
+
+-- Center cursor vertically in the window
+autocmd({ "BufEnter", "WinEnter", "WinNew", "VimResized" }, {
+  group = augroup("VCenterCursor", { clear = true }),
+  callback = function()
+    if vim.bo.buftype ~= "terminal" then vim.o.scrolloff = math.floor(vim.api.nvim_win_get_height(0) / 2) end
+  end,
+})
+
+autocmd("BufEnter", {
+  group = augroup("LocalCurrentDir", { clear = true }),
+  callback = function()
+    local path = vim.fn.expand("%:p:h")
+    if path ~= "" then vim.cmd("silent! lcd " .. path) end
   end,
 })
