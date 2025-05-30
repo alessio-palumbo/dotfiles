@@ -74,7 +74,6 @@ function M.delete_buffer()
 
   -- Close buffer by type
   if is_fzf_lua_open() then
-    print("is a lua")
     -- Simulate pressing Esc to dismiss FZF
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", false)
   elseif buftype == "terminal" then

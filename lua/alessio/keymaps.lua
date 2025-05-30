@@ -15,17 +15,16 @@ map("i", "jk", "<Esc>", opts())
 map("t", "jk", "<C-\\><C-n>", opts())
 
 -- Navigation shortcuts
-map("i", "jj", "<Esc>o", opts()) -- Insert line below without changing mode
-map("i", "<C-e>", "<C-o>A", opts()) -- Go to end of line in insert mode
-map("i", "<A-l>", "<Esc>la", opts()) -- Move right in insert mode
-map("n", "j", "gj", opts()) -- Move down without skipping wrapped lines
-map("n", "k", "gk", opts()) -- Move up without skipping wrapped lines
-map("n", "<leader>e", "<CR>", opts()) -- Alternative more ergonomic enter
+map("i", "jj", "<Esc>o", opts("Insert on line below"))
+map("i", "<C-e>", "<C-o>A", opts("Go to end of line"))
+map("i", "<A-l>", "<Esc>la", opts("Move right"))
+map("n", "j", "gj", opts("Move down wrapped"))
+map("n", "k", "gk", opts("Move up wrapped"))
 
 -- Save and Quit shortcuts
-map("i", "<C-s>", "<Esc>:w<CR>", opts()) -- Save
-map("n", "<C-s>", ":w<CR>", opts()) -- Save
-map("n", "<C-q>", ":q<CR>", opts()) -- Quit
+map("i", "<C-s>", "<Esc>:w<CR>", opts("Save buffer"))
+map("n", "<C-s>", ":w<CR>", opts("Save buffer"))
+map("n", "<C-q>", ":q<CR>", opts("Quit"))
 
 -- Shortcuts to edit config files
 map("n", "<leader>cf", ":e $MYVIMRC", opts())
@@ -45,25 +44,24 @@ map("t", "<C-l>", "<C-\\><C-N>C-w>l", opts())
 map("t", "<C-j>", "<C-\\><C-N>C-w>j", opts())
 map("t", "<C-k>", "<C-\\><C-N>C-w>k", opts())
 
-map("n", "<leader>v", ":vs<CR>", opts())
+map("n", "<leader>v", ":vs<CR>", opts("Split vertically"))
 
 -- Resize windows with arrow keys
-map("n", "<A-h>", ":vertical resize -2<CR>", opts())
-map("n", "<A-l>", ":vertical resize +2<CR>", opts())
+map("n", "<A-h>", ":vertical resize -2<CR>", opts("Vertical resize -2"))
+map("n", "<A-l>", ":vertical resize +2<CR>", opts("Vertical resize +2"))
 
 -- Misc
-map("n", "<CR>", ":nohlsearch", opts("Clear highlighting"))
+map("n", "<CR>", ":nohlsearch<CR>", opts("Clear highlighting"))
 map("n", "*", ":keepjumps normal! mi*`i<CR>", opts("Keeps the cursor under current word when searching"))
-map({ "n", "v" }, "<leader>p", '"0p', opts("Paste last yanked")) -- Paste last yanked register
+map({ "n", "v" }, "<leader>p", '"0p', opts("Paste last yanked"))
 map("n", "<leader>n", "o<Esc>", opts("Insert new line"))
 map("n", "<leader>ww", ":FixWhitespace<CR>", opts("Clear whitespace"))
 
 map("n", "<leader>u", funcs.gen_uuid, opts("Insert UUID"))
-
-map("n", "<leader>x", funcs.convert_hex_word_to_decimal, opts())
+map("n", "<leader>x", funcs.convert_hex_word_to_decimal, opts("Convert hex word to decimal"))
 
 -- Move selected text up/down
-map("v", "J", ":m '>+1<CR>gv=gv", opts())
+map("v", "J", ":m '>+1<CR>gv=gv", opts("Move selected text down"))
 map("v", "K", ":m '<-2<CR>gv=gv", opts())
 
 -- Keep cursor centered when scrolling
@@ -98,6 +96,16 @@ map("n", "<leader>tt", [[<C-\><C-n>]], opts("Escape to normal mode"))
 map("n", "ts", function() funcs.terminal_in_lcd(true) end, opts("Terminal split in current dir"))
 map("n", "tt", function() funcs.terminal_in_lcd(false) end, opts("Terminal in new buffer"))
 
+-- Spellcheck
+map("n", "<leader>l", function()
+  if vim.o.spell then
+    vim.opt.spell = false
+  else
+    vim.opt.spell = true
+    vim.opt.spelllang = "en_au"
+  end
+end, opts("Toggle spell check (en_au)"))
+
 -- #######################
 -- ### Plugins Keymaps ###
 -- #######################
@@ -109,13 +117,17 @@ for i = 1, 9 do
   -- Jump to buffer 1-9 with <leader>1 to <leader>9
   map("n", "<Leader>" .. i, function() bufferline.go_to_buffer(i, true) end, opts("Go to buffer " .. i))
   -- Delete buffers with <BS>1 .. <BS>9
-  map("n", "<BS>" .. i, function() vim.cmd("bdelete " .. i) end, opts("Delete buffer " .. i))
+  map("n", "<BS>" .. i, function()
+    bufferline.exec(i, function(buf) vim.cmd("Bdelete " .. buf.id) end)
+  end, opts("Delete buffer at position " .. i))
 end
 
 -- <leader>0 goes to buffer 10
 map("n", "<Leader>0", function() bufferline.go_to_buffer(10, true) end, opts("Go to buffer 10"))
 -- <BS>0 deletes buffer 10
-map("n", "<BS>0", function() vim.cmd("bdelete 10") end, opts("Delete buffer 10"))
+map("n", "<BS>0", function()
+  bufferline.exec(10, function(buf) vim.cmd("Bdelete " .. buf.id) end)
+end, opts("Delete buffer at position 10"))
 
 -- Navigate through buffers
 map("n", "<Tab>", function() bufferline.cycle(1) end, opts("Next buffer"))
@@ -148,12 +160,14 @@ end, opts())
 -- Grep inside Git root or current dir
 map("n", "fg", function()
   local cmd = fzf.live_grep_native or fzf.live_grep
-  cmd({ cwd = funcs.git_root() or vim.loop.cwd() })
+  local rgopts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --fixed-strings"
+  cmd({ cwd = funcs.git_root() or vim.loop.cwd(), rg_opts = rgopts })
 end, opts())
 
 map("n", "fi", function()
   local dir = vim.fn.input("Search in dir: ", "", "dir")
-  if dir ~= "" then fzf.live_grep({ cwd = dir }) end
+  local rgopts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --fixed-strings"
+  if dir ~= "" then fzf.live_grep({ cwd = dir, rg_opts = rgopts }) end
 end, opts())
 
 map("n", "<leader>fb", fzf.buffers, opts("Find buffer"))
