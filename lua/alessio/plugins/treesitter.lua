@@ -2,7 +2,10 @@ return {
   "nvim-treesitter/nvim-treesitter",
   build = ":TSUpdate",
   event = { "BufReadPost", "BufNewFile" },
-  dependencies = { "nvim-treesitter/nvim-treesitter-context" },
+  dependencies = {
+    "nvim-treesitter/nvim-treesitter-context",
+    "nvim-treesitter/nvim-treesitter-textobjects",
+  },
   config = function()
     require("treesitter-context").setup({
       enable = true,
@@ -37,6 +40,18 @@ return {
           node_incremental = "<C-space>",
           scope_incremental = false,
           node_decremental = "<bs>",
+        },
+      },
+      textobjects = {
+        select = {
+          enable = true,
+          lookahead = true, -- Automatically jump forward to textobj
+          keymaps = {
+            ["ao"] = "@block.outer", -- Select outer block (e.g., entire function or object)
+            ["io"] = "@block.inner", -- Select inner block
+            ["af"] = "@function.outer",
+            ["if"] = "@function.inner",
+          },
         },
       },
     })

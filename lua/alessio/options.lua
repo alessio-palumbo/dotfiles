@@ -16,6 +16,9 @@ opt.expandtab = true -- Convert tabs to spaces
 opt.ignorecase = true -- Ignore case in search patterns
 opt.smartcase = true -- Override ignorecase if search contains uppercase
 
+-- Replace
+opt.gdefault = true -- Use global replace by default
+
 -- UI
 opt.termguicolors = true -- Enable true color support
 opt.signcolumn = "yes" -- Always show the sign column

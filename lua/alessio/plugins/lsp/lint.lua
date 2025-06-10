@@ -8,6 +8,7 @@ return {
       javascript = { "eslint_d" },
       typescript = { "eslint_d" },
       python = { "pylint" },
+      yaml = { "yamllint" },
       go = {},
     }
 

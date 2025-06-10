@@ -106,6 +106,9 @@ map("n", "<leader>l", function()
   end
 end, opts("Toggle spell check (en_au)"))
 
+-- Search and replace helper
+vim.keymap.set("v", "<leader>r", ":s/", { noremap = true, silent = false })
+
 -- #######################
 -- ### Plugins Keymaps ###
 -- #######################
@@ -277,5 +280,14 @@ autocmd("FileType", {
     map("n", "<leader>de", function() dap.terminate() end, { desc = "Terminate" })
     map("n", "<leader>db", function() dap.toggle_breakpoint() end, { desc = "Toggle Breakpoint" })
     map("n", "<leader>dt", function() require("dap-go").debug_test() end, { desc = "Debug Nearest Test" })
+  end,
+})
+
+autocmd("FileType", {
+  group = augroup("QuickfixConfig", { clear = true }),
+  pattern = "qf",
+  callback = function(ev)
+    map("n", "<CR>", "<CR>", opts("Use enter to open quickfix file", ev.buffer))
+    map("n", "<Esc>", ":cclose<CR>", opts("Use enter to open quickfix file", ev.buffer))
   end,
 })

@@ -3,6 +3,7 @@ return {
   events = { "BufWritePre" },
   config = function()
     local conform = require("conform")
+    local custom_timeout = 4000
 
     conform.setup({
       formatters = {
@@ -20,18 +21,18 @@ return {
       formatters_by_ft = {
         lua = { "stylua" },
         go = { "goimports" },
-        rust = { "rustfmt", lsp_format = "fallback" },
+        rust = { "rustfmt" },
         javascript = { "prettier" },
         css = { "prettier" },
         html = { "prettier" },
         json = { "prettier" },
-        yaml = { "prettier" },
         markdown = { "prettier" },
         python = { "isort", "black" },
+        ["*"] = { "codespell", "trim_whitespace" },
       },
       format_on_save = {
-        lsp_fallback = true,
-        timeout_ms = 500,
+        lsp_format = "fallback",
+        timeout_ms = custom_timeout,
       },
     })
 
@@ -40,9 +41,9 @@ return {
       "<leader>f",
       function()
         conform.format({
-          lsp_fallback = true,
+          lsp_format = "fallback",
           async = false,
-          timeout_ms = 500,
+          timeout_ms = custom_timeout,
         })
       end,
       { desc = "Format file or range (in visual mode)" }
