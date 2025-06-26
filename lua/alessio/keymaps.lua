@@ -35,10 +35,6 @@ map("n", "<C-h>", "<C-w>h", opts())
 map("n", "<C-l>", "<C-w>l", opts())
 map("n", "<C-j>", "<C-w>j", opts())
 map("n", "<C-k>", "<C-w>k", opts())
-map("i", "<C-h>", "<C-\\><C-N>C-w>h", opts())
-map("i", "<C-l>", "<C-\\><C-N>C-w>l", opts())
-map("i", "<C-j>", "<C-\\><C-N>C-w>j", opts())
-map("i", "<C-k>", "<C-\\><C-N>C-w>k", opts())
 map("t", "<C-h>", "<C-\\><C-N>C-w>h", opts())
 map("t", "<C-l>", "<C-\\><C-N>C-w>l", opts())
 map("t", "<C-j>", "<C-\\><C-N>C-w>j", opts())
@@ -291,3 +287,12 @@ autocmd("FileType", {
     map("n", "<Esc>", ":cclose<CR>", opts("Use enter to open quickfix file", ev.buffer))
   end,
 })
+
+-- #######################
+--
+-- ### Tmux Navigator ###
+
+map("n", "<C-h>", "<cmd>TmuxNavigateLeft<CR>", opts())
+map("n", "<C-l>", "<cmd>TmuxNavigateRight<CR>", opts())
+map("n", "<C-j>", "<cmd>TmuxNavigateDown<CR>", opts())
+map("n", "<C-k>", "<cmd>TmuxNavigateUp<CR>", opts())
