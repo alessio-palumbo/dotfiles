@@ -54,6 +54,7 @@ map("n", "<leader>n", "o<Esc>", opts("Insert new line"))
 map("n", "<leader>ww", ":FixWhitespace<CR>", opts("Clear whitespace"))
 
 map("n", "<leader>u", funcs.gen_uuid, opts("Insert UUID"))
+map("n", "<leader>rx", funcs.gen_hex64, opts("Insert random hex64"))
 map("n", "<leader>x", funcs.convert_hex_word_to_decimal, opts("Convert hex word to decimal"))
 
 -- Move selected text up/down

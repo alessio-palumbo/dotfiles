@@ -16,6 +16,18 @@ function M.gen_uuid()
   vim.api.nvim_put({ uuid }, "c", true, true)
 end
 
+function M.gen_hex64()
+  local hex_chars = "0123456789abcdef"
+  local result = {}
+  math.randomseed(os.time())
+  for _ = 1, 64 do
+    local idx = math.random(1, 16)
+    result[#result + 1] = hex_chars:sub(idx, idx)
+  end
+  local final_str = table.concat(result)
+  vim.api.nvim_put({ final_str }, "c", true, true)
+end
+
 -- Function to show a floating tooltip
 function M.show_tooltip(text)
   local width = vim.fn.strdisplaywidth(text)
