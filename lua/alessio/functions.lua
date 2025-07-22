@@ -160,7 +160,7 @@ function M.go_test_func_under_cursor()
       if name_node then
         local func_name = vim.treesitter.get_node_text(name_node, 0)
         if func_name:match("^Test") then
-          local cmd = "go test -run '^" .. func_name .. "$'"
+          local cmd = "go test -timeout 10s -race -count 1 -run '^" .. func_name .. "$'"
           vim.cmd("!" .. cmd)
         else
           vim.notify("Not a test function (name doesn't start with 'Test')", vim.log.levels.WARN)
