@@ -88,11 +88,16 @@ local function count_normal_windows()
   return count
 end
 
+local function is_nvimtree_open()
+  local ok, view = pcall(require, "nvim-tree.view")
+  if not ok then return false end
+  return view.is_visible()
+end
+
 function M.delete_buffer()
-  local nvimtree_open = require("nvim-tree.view").is_visible()
   local buftype = vim.bo.buftype
   local win_count = count_normal_windows()
-  local is_split = (win_count > 1 and not nvimtree_open) or (win_count > 2)
+  local is_split = (win_count > 1 and not is_nvimtree_open()) or (win_count > 2)
 
   -- Close buffer by type
   if is_fzf_lua_open() then
