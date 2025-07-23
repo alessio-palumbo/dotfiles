@@ -77,11 +77,21 @@ local function is_fzf_lua_open()
   return false
 end
 
+-- Count open windows excluding relative windows which
+-- includes linters.
+local function count_normal_windows()
+  local count = 0
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    local cfg = vim.api.nvim_win_get_config(win)
+    if cfg.relative == "" then count = count + 1 end
+  end
+  return count
+end
+
 function M.delete_buffer()
   local nvimtree_open = require("nvim-tree.view").is_visible()
   local buftype = vim.bo.buftype
-  local wins = vim.api.nvim_list_wins()
-  local win_count = #wins
+  local win_count = count_normal_windows()
   local is_split = (win_count > 1 and not nvimtree_open) or (win_count > 2)
 
   -- Close buffer by type
