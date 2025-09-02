@@ -35,6 +35,21 @@ return {
           },
         },
       },
+      pyright = {
+        settings = {
+          pyright = {
+            autoImportCompletions = true,
+          },
+          python = {
+            analysis = {
+              autoSearchPaths = true,
+              diagnosticMode = "workspace",
+              typeCheckingMode = "basic",
+              useLibraryCodeForTypes = true,
+            },
+          },
+        },
+      },
     }
 
     -- Setup each LSP server
