@@ -12,8 +12,8 @@ return {
     },
     keymap = {
       builtin = {
-        ["<S-j>"] = "preview-page-down",
-        ["<S-k>"] = "preview-page-up",
+        ["<S-down>"] = "preview-page-down",
+        ["<S-up>"] = "preview-page-up",
       },
     },
   },
