@@ -28,6 +28,10 @@ return {
     cmp.setup({
       completion = {
         completeopt = "menu,menuone,preview,noselect",
+        keyword_length = 2,
+      },
+      performance = {
+        max_view_entries = 10,
       },
       snippet = { -- configure how nvim-cmp interacts with snippet engine
         expand = function(args) luasnip.lsp_expand(args.body) end,
@@ -41,12 +45,26 @@ return {
       }),
       -- sources for autocompletion
       sources = cmp.config.sources({
-        { name = "copilot" },
         { name = "nvim_lsp" },
+        { name = "copilot" },
         { name = "luasnip" }, -- snippets
-        { name = "buffer" }, -- text within current buffer
-        { name = "path" }, -- file system paths
+        { name = "path", max_item_count = 3 }, -- file system paths
+        { name = "buffer", keyword_length = 4, max_item_count = 5 }, -- text within current buffer
       }),
+
+      sorting = {
+        priority_weight = 2,
+        comparators = {
+          cmp.config.compare.exact,
+          cmp.config.compare.score,
+          cmp.config.compare.recently_used,
+          cmp.config.compare.locality,
+          cmp.config.compare.kind,
+          cmp.config.compare.sort_text,
+          cmp.config.compare.length,
+          cmp.config.compare.order,
+        },
+      },
 
       -- configure lspkind for vs-code like pictograms in completion menu
       formatting = {

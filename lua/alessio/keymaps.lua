@@ -157,18 +157,28 @@ map("n", "fp", function()
   end
 end, opts())
 
--- Grep inside Git root or current dir
-map("n", "fg", function()
-  local cmd = fzf.live_grep_native or fzf.live_grep
-  local rgopts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --fixed-strings"
-  cmd({ cwd = funcs.git_root() or vim.loop.cwd(), rg_opts = rgopts })
-end, opts())
+local rgopts =
+  "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --fixed-strings --glob '!*pb.go'"
+local rgoptsExTests =
+  "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --fixed-strings --glob '!{*pb.go,*_test.go}'"
 
-map("n", "fi", function()
+-- Grep inside Git root or current dir
+local agfindInRoot = function(rgcfg)
+  local cmd = fzf.live_grep_native or fzf.live_grep
+  cmd({ cwd = funcs.git_root() or vim.loop.cwd(), rg_opts = rgcfg })
+end
+
+map("n", "fg", function() agfindInRoot(rgopts) end, opts())
+map("n", "fG", function() agfindInRoot(rgoptsExTests) end, opts())
+
+-- Grep in dir
+local agFindInDir = function(rgcfg)
   local dir = vim.fn.input("Search in dir: ", "", "dir")
-  local rgopts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --fixed-strings"
-  if dir ~= "" then fzf.live_grep({ cwd = dir, rg_opts = rgopts }) end
-end, opts())
+  if dir ~= "" then fzf.live_grep({ cwd = dir, rg_opts = rgcfg }) end
+end
+
+map("n", "fi", function() agFindInDir(rgopts) end, opts())
+map("n", "fI", function() agFindInDir(rgoptsExTests) end, opts())
 
 map("n", "<leader>fb", fzf.buffers, opts("Find buffer"))
 map("n", "<leader>fo", fzf.oldfiles, opts("Recent files"))
@@ -242,8 +252,8 @@ autocmd("FileType", {
 
     local gopher = require("gopher")
     -- Gopher tag mappings
-    map("n", "<leader>ta", function() gopher.tags.add("json") end, opts("Go: Add JSON tags", ev.buf))
-    map("n", "<leader>tr", function() gopher.tags.rm("json") end, opts("Go: Remove JSON tags", ev.buf))
+    map("n", "<leader>ta", function() vim.cmd("GoTagAdd json") end, opts("Go: Add JSON tags", ev.buf))
+    map("n", "<leader>tr", function() vim.cmd("GoTagRm json") end, opts("Go: Remove JSON tags", ev.buf))
     map("n", "<leader>gt", gopher.test.add, opts("Go: Add test for function", ev.buf))
     map("n", "<leader>if", gopher.iferr, opts("Go: Add if err stub", ev.buf))
     map("n", "<leader>im", function()
